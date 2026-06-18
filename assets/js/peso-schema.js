@@ -1,12 +1,11 @@
 /* Clynia — esquema del cuestionario de PÉRDIDA DE PESO.
    Reconstruido del Typeform mHfc5R7g (62 campos, lógica de cribado y riesgo).
    El bloque de paciente añade los campos que exige REMPE (tipo doc, nacionalidad, dirección).
-   Cuando n8n esté con dominio+SSL, poner webhook = webhookTODO. */
+   El formulario envía las respuestas al webhook de n8n (HTTPS) y recibe el casoId. */
 window.CLYNIA_FORM = {
   product: "Pérdida de peso",
   storeKey: "clynia_peso_v1",
-  webhook: "", // pendiente: ver webhookTODO
-  webhookTODO: "https://api.clynia.es/webhook/peso-intake",
+  webhook: "https://n8n-ixwg.srv1722506.hstgr.cloud/webhook/peso-intake",
 
   // pago = URL del Payment Link de Stripe (https://buy.stripe.com/...). Pegar los 3 enlaces aquí.
   plans: [
