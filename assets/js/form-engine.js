@@ -241,8 +241,8 @@
     var payload = { product: F.product, answers: answers, triage: vars, submittedAt: new Date().toISOString() };
     var plan = (F.plans || []).filter(function (p) { return p.id === answers.plan; })[0];
     var redirected = false;
-    // casoId enlaza el cobro de Stripe con el caso exacto (client_reference_id)
-    function gotoPago(casoId) {
+    // Ruta por defecto y fallback: Payment Link estático. casoId -> client_reference_id (emparejamiento del pago).
+    function payViaLink(casoId) {
       if (redirected) return; redirected = true;
       localStorage.removeItem(F.storeKey);
       if (plan && plan.pago) {
@@ -251,13 +251,27 @@
         window.location.href = url;
       } else { go(byId("ending_ok"), false); }
     }
-    if (!F.webhook) { gotoPago(null); return; }
-    // Si el backend tarda demasiado, no bloqueamos al paciente: redirige igual (el pago se conciliará por email)
-    var failsafe = setTimeout(function () { gotoPago(null); }, 9000);
+    // Ruta preferida si está configurada: Stripe Checkout Session creada en servidor (n8n) con el email BLOQUEADO.
+    function proceedToPayment(casoId) {
+      if (!F.checkoutEndpoint || !casoId || !plan) { payViaLink(casoId); return; }
+      var settled = false;
+      var t = setTimeout(function () { if (settled) return; settled = true; payViaLink(casoId); }, 6000);
+      fetch(F.checkoutEndpoint, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ casoId: casoId, email: answers.email || "", tipo_caso: answers.plan }) })
+        .then(function (r) { return r.json().catch(function () { return {}; }); })
+        .then(function (d) {
+          if (settled) return; settled = true; clearTimeout(t);
+          if (d && d.url) { if (redirected) return; redirected = true; localStorage.removeItem(F.storeKey); window.location.href = d.url; }
+          else { payViaLink(casoId); }
+        })
+        .catch(function () { if (settled) return; settled = true; clearTimeout(t); payViaLink(casoId); });
+    }
+    if (!F.webhook) { proceedToPayment(null); return; }
+    // Si el intake tarda demasiado, no bloqueamos al paciente: seguimos al pago igualmente.
+    var failsafe = setTimeout(function () { proceedToPayment(null); }, 9000);
     fetch(F.webhook, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) })
       .then(function (r) { return r.json().catch(function () { return {}; }); })
-      .then(function (data) { clearTimeout(failsafe); gotoPago(data && data.casoId ? data.casoId : null); })
-      .catch(function () { clearTimeout(failsafe); try { localStorage.setItem(F.storeKey + "_pending", JSON.stringify(payload)); } catch (e) {} gotoPago(null); });
+      .then(function (data) { clearTimeout(failsafe); proceedToPayment(data && data.casoId ? data.casoId : null); })
+      .catch(function () { clearTimeout(failsafe); try { localStorage.setItem(F.storeKey + "_pending", JSON.stringify(payload)); } catch (e) {} proceedToPayment(null); });
   }
 
   document.body.classList.add("cq-body");

@@ -6,6 +6,9 @@ window.CLYNIA_FORM = {
   product: "Pérdida de peso",
   storeKey: "clynia_peso_v1",
   webhook: "https://n8n-ixwg.srv1722506.hstgr.cloud/webhook/peso-intake",
+  // Pago con email BLOQUEADO (Stripe Checkout Session creada en n8n). Vacío = se usa el Payment Link estático.
+  // Activar poniendo: "https://n8n-ixwg.srv1722506.hstgr.cloud/webhook/crear-checkout" cuando la credencial Stripe esté en n8n.
+  checkoutEndpoint: "",
 
   // pago = URL del Payment Link de Stripe (https://buy.stripe.com/...). Pegar los 3 enlaces aquí.
   plans: [
