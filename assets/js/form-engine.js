@@ -1,0 +1,258 @@
+/* Clynia — motor de formulario multipaso, dirigido por esquema.
+   Lee window.CLYNIA_FORM = { storeKey, webhook, plans, steps[], computeVars(answers) }.
+   Tipos de paso: statement | text | longtext | email | tel | number | date |
+                  single | multi | yesno | file | consent | plans | gate | ending */
+(function () {
+  "use strict";
+  var F = window.CLYNIA_FORM;
+  var root = document.getElementById("cq");
+  if (!F || !root) return;
+
+  var answers = load();
+  var vars = {};
+  var history = [];
+  var current = null;
+
+  function load() {
+    try { return JSON.parse(localStorage.getItem(F.storeKey)) || {}; } catch (e) { return {}; }
+  }
+  function save() {
+    try { localStorage.setItem(F.storeKey, JSON.stringify(answers)); } catch (e) {}
+  }
+  function byId(id) { for (var i = 0; i < F.steps.length; i++) if (F.steps[i].id === id) return F.steps[i]; return null; }
+  function idx(id) { for (var i = 0; i < F.steps.length; i++) if (F.steps[i].id === id) return i; return -1; }
+  function visible(s) { return !s.showIf || s.showIf(answers, vars) !== false; }
+  function esc(t) { return String(t == null ? "" : t).replace(/[&<>"]/g, function (c) { return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]; }); }
+  function interp(t) {
+    return String(t || "").replace(/\{\{(\w+)\}\}/g, function (_, k) {
+      return (vars[k] != null ? vars[k] : (answers[k] != null ? answers[k] : ""));
+    });
+  }
+
+  // Resuelve a partir de un id el siguiente paso renderizable (saltando ocultos y gates)
+  function resolveFrom(startIdx) {
+    for (var i = startIdx; i < F.steps.length; i++) {
+      var s = F.steps[i];
+      if (!visible(s)) continue;
+      if (s.type === "gate") { var t = s.route(answers, vars); if (t) return byId(t); else continue; }
+      return s;
+    }
+    return null;
+  }
+  function nextOf(step) {
+    if (step.next) { var nid = step.next(answers, vars); if (nid) { var t = byId(nid); if (t && t.type === "gate") return resolveFrom(idx(nid)); return t; } }
+    return resolveFrom(idx(step.id) + 1);
+  }
+
+  function go(step, push) {
+    if (!step) return;
+    if (push && current) history.push(current.id);
+    current = step;
+    vars = F.computeVars ? F.computeVars(answers) : {};
+    render();
+    window.scrollTo(0, 0);
+  }
+  function back() {
+    if (!history.length) return;
+    var id = history.pop();
+    current = byId(id);
+    vars = F.computeVars ? F.computeVars(answers) : {};
+    render();
+    window.scrollTo(0, 0);
+  }
+
+  function progress() {
+    var done = idx(current.id), total = F.steps.length;
+    return Math.max(6, Math.min(96, Math.round((done / total) * 100)));
+  }
+
+  function render() {
+    vars = F.computeVars ? F.computeVars(answers) : {};
+    var s = current;
+    if (s.type === "ending") return renderEnding(s);
+    if (s.type === "statement") return renderStatement(s);
+
+    var h = '<header class="cq__bar">';
+    h += '<button class="cq__back" type="button" aria-label="Atrás"' + (history.length ? "" : " disabled") + ">&#8592;</button>";
+    h += '<div class="cq__progress"><i style="width:' + progress() + '%"></i></div>';
+    h += '<span class="cq__brand">Clynia</span></header>';
+    h += '<main class="cq__stage"><div class="cq__step">';
+    h += '<p class="cq__eyebrow">' + esc(s.section || "Tu valoración") + "</p>";
+    h += '<h1 class="cq__q">' + interp(s.q) + "</h1>";
+    if (s.help) h += '<p class="cq__help">' + interp(s.help) + "</p>";
+    if (s.visual) h += s.visual(answers, vars);
+    h += '<div class="cq__field" id="cqField">' + fieldHTML(s) + "</div>";
+    h += '<div class="cq__err" id="cqErr" style="display:none"></div>';
+    h += "</div></main>";
+    h += '<footer class="cq__foot"><div class="in"><button class="cq__next" type="button" id="cqNext">' + esc(s.cta || "Continuar") + "</button>" + (history.length ? '<button class="cq__backlow" type="button" id="cqBackLow">&#8592; Atrás</button>' : "") + "</div></footer>";
+    root.innerHTML = h;
+
+    var backBtn = root.querySelector(".cq__back");
+    if (backBtn) backBtn.onclick = back;
+    bind(s);
+    document.getElementById("cqNext").onclick = function () { submitStep(s); };
+    var bl = document.getElementById("cqBackLow"); if (bl) bl.onclick = back;
+  }
+
+  function fieldHTML(s) {
+    var v = answers[s.key];
+    switch (s.type) {
+      case "text": return '<input class="cq__input" id="cqIn" type="text" autocomplete="' + (s.autocomplete || "on") + '" value="' + esc(v || "") + '" placeholder="' + esc(s.placeholder || "") + '">';
+      case "longtext": return '<textarea class="cq__input" id="cqIn" placeholder="' + esc(s.placeholder || "") + '">' + esc(v || "") + "</textarea>";
+      case "email": return '<input class="cq__input" id="cqIn" type="email" inputmode="email" autocomplete="email" value="' + esc(v || "") + '" placeholder="tucorreo@email.com">';
+      case "tel": return '<input class="cq__input" id="cqIn" type="tel" inputmode="tel" autocomplete="tel" value="' + esc(v || "") + '" placeholder="600 000 000">';
+      case "number": return '<div class="cq__suffix"><input class="cq__input" id="cqIn" type="number" inputmode="decimal" value="' + esc(v == null ? "" : v) + '" placeholder="' + esc(s.placeholder || "") + '"' + (s.min != null ? ' min="' + s.min + '"' : "") + (s.max != null ? ' max="' + s.max + '"' : "") + ">" + (s.unit ? "<span>" + esc(s.unit) + "</span>" : "") + "</div>";
+      case "date": return '<input class="cq__input" id="cqIn" type="date" value="' + esc(v || "") + '">';
+      case "file": return '<div class="cq__file"><label for="cqIn">&#128206; ' + esc(s.cta2 || "Subir archivo") + '</label><input id="cqIn" type="file" accept="' + esc(s.accept || "image/*,.pdf") + '"><span class="name" id="cqFileName">' + esc(v ? v.name || "Archivo adjunto" : "Opcional") + "</span></div>";
+      case "yesno": return optBtns(s, [{ label: "Sí", value: true }, { label: "No", value: false }], false);
+      case "single": return optBtns(s, s.options, false);
+      case "multi": return optBtns(s, s.options, true);
+      case "consent": return s.items.map(function (it) {
+        var ck = (answers[it.key] === true) ? " checked" : "";
+        return '<label class="cq__consent"><input type="checkbox" data-ck="' + esc(it.key) + '"' + ck + ">" + '<span>' + it.label + (it.required ? "" : ' <em style="color:var(--muted)">(opcional)</em>') + "</span></label>";
+      }).join("");
+      case "plans": return F.plans.map(function (p, i) {
+        var sel = (v === p.id) ? " is-sel" : "";
+        return '<button type="button" class="cq__plan' + (p.featured ? " feat" : "") + sel + '" data-plan="' + esc(p.id) + '">' +
+          (p.tag ? '<span class="tag">' + esc(p.tag) + "</span>" : "") +
+          '<div class="name">' + esc(p.nombre) + "</div>" +
+          '<div class="price">' + esc(p.precio) + '€ <small>' + esc(p.meta || "") + "</small></div>" +
+          (p.desc ? '<div class="desc">' + esc(p.desc) + "</div>" : "") + "</button>";
+      }).join("");
+    }
+    return "";
+  }
+  function optBtns(s, opts, multi) {
+    var v = answers[s.key];
+    return opts.map(function (o, i) {
+      var val = ("value" in o) ? o.value : o.label;
+      var sel = multi ? (Array.isArray(v) && v.indexOf(val) > -1) : (v === val);
+      return '<button type="button" class="cq__opt' + (multi ? " multi" : "") + (sel ? " is-sel" : "") + '" data-i="' + i + '">' +
+        "<span>" + esc(o.label) + '</span><span class="tick"></span></button>';
+    }).join("");
+  }
+
+  function bind(s) {
+    var field = document.getElementById("cqField");
+    if (!field) return;
+    if (s.type === "single" || s.type === "yesno" || s.type === "multi") {
+      var opts = (s.type === "yesno") ? [{ label: "Sí", value: true }, { label: "No", value: false }] : s.options;
+      var multi = s.type === "multi";
+      field.querySelectorAll(".cq__opt").forEach(function (btn) {
+        btn.onclick = function () {
+          var o = opts[+btn.getAttribute("data-i")];
+          var val = ("value" in o) ? o.value : o.label;
+          if (multi) {
+            var arr = Array.isArray(answers[s.key]) ? answers[s.key].slice() : [];
+            // "ninguna/exclusiva" deselecciona el resto y viceversa
+            if (o.exclusive) { arr = (arr.indexOf(val) > -1) ? [] : [val]; }
+            else {
+              var p = arr.indexOf(val); if (p > -1) arr.splice(p, 1); else arr.push(val);
+              arr = arr.filter(function (x) { var oo = opts.filter(function (z) { return (("value" in z) ? z.value : z.label) === x; })[0]; return !(oo && oo.exclusive); });
+            }
+            answers[s.key] = arr; save(); render();
+          } else {
+            answers[s.key] = val; save();
+            if (s.autoNext !== false) submitStep(s); else render();
+          }
+        };
+      });
+    } else if (s.type === "plans") {
+      field.querySelectorAll(".cq__plan").forEach(function (btn) {
+        btn.onclick = function () { answers[s.key] = btn.getAttribute("data-plan"); save(); render(); };
+      });
+    } else if (s.type === "file") {
+      var inp = document.getElementById("cqIn");
+      inp.onchange = function () { var f = inp.files[0]; if (f) { answers[s.key] = { name: f.name, size: f.size }; save(); document.getElementById("cqFileName").textContent = f.name; } };
+    } else if (s.type === "consent") {
+      field.querySelectorAll("input[data-ck]").forEach(function (c) {
+        c.onchange = function () { answers[c.getAttribute("data-ck")] = c.checked; save(); };
+      });
+    } else {
+      var el = document.getElementById("cqIn");
+      if (el) {
+        var setv = function () { answers[s.key] = (s.type === "number") ? (el.value === "" ? null : +el.value) : el.value; save(); };
+        el.oninput = setv;
+        if (s.type !== "longtext") {
+          el.onkeydown = function (e) { if (e.key === "Enter") { e.preventDefault(); setv(); submitStep(s); } };
+          setTimeout(function () { try { el.focus(); } catch (e) {} }, 40);
+        }
+      }
+    }
+  }
+
+  function err(msg) { var e = document.getElementById("cqErr"); if (e) { e.textContent = msg; e.style.display = "block"; } }
+
+  function validate(s) {
+    var v = answers[s.key];
+    if (s.required === false) return true;
+    switch (s.type) {
+      case "multi": return Array.isArray(v) && v.length > 0;
+      case "yesno": return v === true || v === false;
+      case "file": return true;
+      case "plans": return !!v;
+      case "consent": return s.items.every(function (it) { return !it.required || answers[it.key] === true; });
+      case "email": return v && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+      case "number": return v != null && v !== "" && !isNaN(v);
+      default: return v != null && String(v).trim() !== "";
+    }
+  }
+
+  function submitStep(s) {
+    if (!validate(s)) { err(s.errMsg || "Responde para continuar."); return; }
+    if (s.id === "plans") return finish();
+    go(nextOf(s), true);
+  }
+
+  function renderStatement(s) {
+    var h = '<header class="cq__bar"><button class="cq__back" type="button"' + (history.length ? "" : " disabled") + ">&#8592;</button>";
+    h += '<div class="cq__progress"><i style="width:' + progress() + '%"></i></div><span class="cq__brand">Clynia</span></header>';
+    h += '<main class="cq__stage"><div class="cq__step"><h1 class="cq__q">' + interp(s.q) + "</h1>";
+    if (s.body) h += '<p class="cq__help">' + interp(s.body) + "</p></div></main>";
+    h += '<footer class="cq__foot"><div class="in"><button class="cq__next" type="button" id="cqNext">' + esc(s.cta || "Continuar") + "</button>" + (history.length ? '<button class="cq__backlow" type="button" id="cqBackLow">&#8592; Atrás</button>' : "") + "</div></footer>";
+    root.innerHTML = h;
+    var b = root.querySelector(".cq__back"); if (b) b.onclick = back;
+    document.getElementById("cqNext").onclick = function () { go(nextOf(s), true); };
+    var bl = document.getElementById("cqBackLow"); if (bl) bl.onclick = back;
+  }
+
+  function renderEnding(s) {
+    var stop = s.variant === "stop";
+    var ico = stop
+      ? '<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>'
+      : '<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
+    var h = '<div class="cq__center ' + (stop ? "stop" : "") + '"><div class="ico">' + ico + "</div>";
+    h += "<h1>" + interp(s.q) + "</h1>";
+    if (s.body) h += "<p>" + interp(s.body) + "</p>";
+    if (stop && history.length) {
+      h += '<button class="btn" type="button" id="cqEndBack">&#8592; Volver y corregir</button>';
+      if (s.href) h += '<a class="cq__endlink" href="' + esc(s.href) + '">Salir a Clynia</a>';
+    } else if (s.cta && s.href) {
+      h += '<a class="btn" href="' + esc(s.href) + '">' + esc(s.cta) + "</a>";
+    }
+    h += "</div>";
+    root.innerHTML = h;
+    var eb = document.getElementById("cqEndBack"); if (eb) eb.onclick = back;
+  }
+
+  function finish() {
+    vars = F.computeVars ? F.computeVars(answers) : {};
+    root.innerHTML = '<div class="cq__center"><div class="cq__loading"><span class="cq__spin"></span> Enviando tu información de forma segura...</div></div>';
+    var payload = { product: F.product, answers: answers, triage: vars, submittedAt: new Date().toISOString() };
+    var plan = (F.plans || []).filter(function (p) { return p.id === answers.plan; })[0];
+    var done = function () {
+      localStorage.removeItem(F.storeKey);
+      if (plan && plan.pago) {
+        window.location.href = plan.pago + (plan.pago.indexOf("?") > -1 ? "&" : "?") + "prefilled_email=" + encodeURIComponent(answers.email || "");
+      } else { go(byId("ending_ok"), false); }
+    };
+    if (!F.webhook) { done(); return; }
+    fetch(F.webhook, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) })
+      .then(function () { done(); })
+      .catch(function () { try { localStorage.setItem(F.storeKey + "_pending", JSON.stringify(payload)); } catch (e) {} done(); });
+  }
+
+  document.body.classList.add("cq-body");
+  // Reanudar si había progreso, si no empezar por el primer paso
+  go(resolveFrom(0), false);
+})();

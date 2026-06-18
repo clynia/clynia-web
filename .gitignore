@@ -1,0 +1,12 @@
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs / temporales
+*.log
+*.tmp
+
+# Nada de secretos ni configs locales en este repo (la web es estática y pública)
+.env
+.env.*

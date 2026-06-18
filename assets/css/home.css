@@ -1,0 +1,291 @@
+/* ===========================================================
+   Clynia · Home de marca
+   Estilos propios de la portada. Reutiliza tokens y componentes
+   de styles.css (cargar styles.css ANTES que este archivo).
+   =========================================================== */
+
+/* ---------- Nav fija ---------- */
+.topnav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: transparent;
+  transition: background-color 0.3s var(--ease), box-shadow 0.3s var(--ease), border-color 0.3s var(--ease);
+  border-bottom: 1px solid transparent;
+}
+.topnav.is-scrolled {
+  background: rgba(246, 244, 239, 0.97);
+  border-bottom-color: var(--line);
+  box-shadow: 0 8px 24px -20px rgba(28, 36, 33, 0.6);
+}
+.topnav__inner {
+  max-width: 1080px;
+  margin-inline: auto;
+  padding: 14px var(--pad);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.topnav__brand img { height: 27px; width: auto; display: block; }
+.topnav__links { display: none; }
+.topnav__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 20px;
+  background: var(--green);
+  color: #fff;
+  font-weight: 600;
+  font-size: 14.5px;
+  border-radius: 12px;
+  transition: background-color 0.2s var(--ease), transform 0.18s var(--ease);
+}
+.topnav__cta:hover { background: var(--green-700); }
+.topnav__cta:active { transform: translateY(1px); }
+
+/* ---------- Hero de marca ---------- */
+.home-hero {
+  position: relative;
+  text-align: center;
+  padding: 52px 0 40px;
+  overflow: hidden;
+}
+.home-hero::before {
+  content: "";
+  position: absolute;
+  top: -120px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 520px;
+  height: 420px;
+  background: radial-gradient(closest-side, rgba(67, 112, 102, 0.16), rgba(67, 112, 102, 0));
+  pointer-events: none;
+  z-index: 0;
+  animation: heroGlow 9s var(--ease) infinite alternate;
+}
+@keyframes heroGlow {
+  from { transform: translateX(-50%) scale(0.9); opacity: 0.7; }
+  to   { transform: translateX(-50%) scale(1.12); opacity: 1; }
+}
+/* Micro-interacción coherente: la flecha de los botones se desplaza al pasar el ratón */
+.btn:hover svg { transform: translateX(2px); }
+@media (prefers-reduced-motion: reduce) {
+  .home-hero::before { animation: none; }
+}
+.home-hero .wrap { position: relative; z-index: 1; max-width: 720px; }
+.home-hero__eyebrow {
+  margin: 0 0 18px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--green);
+}
+.home-hero__title {
+  margin: 0 0 18px;
+  font-family: "Lora", Georgia, serif;
+  font-weight: 500;
+  font-size: clamp(34px, 9vw, 56px);
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+}
+.home-hero__title em { font-style: italic; color: var(--green); }
+.home-hero__sub {
+  margin: 0 auto 28px;
+  max-width: 38ch;
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
+.home-hero__trust {
+  margin: 20px auto 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px 16px;
+  font-size: 13px;
+  color: var(--ink-faint);
+}
+.home-hero__trust span { display: inline-flex; align-items: center; gap: 7px; }
+.home-hero__trust svg { width: 15px; height: 15px; color: var(--green); }
+
+/* ---------- Rejilla de categorías ---------- */
+.cats { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.cat {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  overflow: hidden;
+  color: inherit;
+  transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease);
+}
+.cat:hover { transform: translateY(-4px); box-shadow: var(--shadow-card); }
+.cat:active { transform: translateY(-1px) scale(0.99); }
+.cat:focus-visible { outline: 3px solid var(--green-tint-2); outline-offset: 3px; }
+.cat--live { border-color: var(--green); }
+.cat__media { position: relative; aspect-ratio: 1 / 1; overflow: hidden; background: var(--green-tint); }
+.cat__media img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s var(--ease); }
+.cat:hover .cat__media img { transform: scale(1.04); }
+.cat__chip {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  padding: 5px 11px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.95);
+  color: var(--ink-soft);
+}
+.cat__chip--live { background: var(--green); color: #fff; }
+.cat__body { display: flex; flex-direction: column; gap: 7px; padding: 16px 16px 18px; flex: 1; }
+.cat__title { margin: 0; font-family: "Lora", Georgia, serif; font-weight: 500; font-size: 19px; color: var(--ink); }
+.cat__desc { margin: 0; font-size: 13px; line-height: 1.5; color: var(--ink-soft); flex: 1; }
+.cat__cta {
+  margin-top: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  align-self: flex-start;
+  padding: 8px 15px;
+  border-radius: 999px;
+  font-size: 13.5px;
+  font-weight: 600;
+  transition: background-color 0.2s var(--ease), color 0.2s var(--ease), gap 0.2s var(--ease);
+}
+.cat__cta svg { width: 15px; height: 15px; transition: transform 0.25s var(--ease); }
+.cat:hover .cat__cta svg { transform: translateX(3px); }
+.cat--live .cat__cta { background: var(--green); color: #fff; }
+.cat--live:hover .cat__cta { background: var(--green-700); }
+.cat--soon .cat__cta { background: transparent; color: var(--green); border: 1.5px solid var(--green-tint-2); }
+.cat--soon:hover .cat__cta { border-color: var(--green); background: var(--green-tint); }
+
+.cats__note { margin: 22px auto 0; max-width: 50ch; text-align: center; font-size: 13px; color: var(--ink-faint); }
+
+/* Si el número de categorías es impar, la última se centra para que la rejilla quede cuadrada */
+.cats .cat:last-child:nth-child(odd) { grid-column: 1 / -1; width: calc(50% - 7px); margin-inline: auto; }
+@media (min-width: 880px) {
+  .cats .cat:last-child:nth-child(odd) { width: calc(50% - 10px); }
+}
+
+/* ---------- Por qué Clynia (tiles) ---------- */
+.whys { display: grid; gap: 16px; }
+.why {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 24px 22px;
+  transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease), border-color 0.25s var(--ease);
+}
+.why:hover { transform: translateY(-4px); box-shadow: var(--shadow-card); border-color: var(--green-tint-2); }
+.why__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  background: var(--green-tint);
+  color: var(--green);
+  margin-bottom: 14px;
+}
+.why__icon svg { width: 23px; height: 23px; }
+.why__title { margin: 0 0 6px; font-family: "Lora", Georgia, serif; font-weight: 500; font-size: 19px; color: var(--ink); }
+.why__text { margin: 0; font-size: 14.5px; line-height: 1.55; color: var(--ink-soft); }
+
+/* ---------- Banda de médicos ---------- */
+.docs { background: var(--green); color: #fff; padding: 56px 0; }
+.docs__head { max-width: 640px; }
+.docs__eyebrow { color: rgba(255, 255, 255, 0.7); font-size: 12px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; margin: 0 0 14px; }
+.docs__title { font-family: "Lora", Georgia, serif; font-weight: 500; font-size: clamp(26px, 6.5vw, 36px); line-height: 1.2; margin: 0 0 14px; color: #fff; }
+.docs__sub { color: rgba(255, 255, 255, 0.85); font-size: 16px; margin: 0 0 28px; }
+.docs__pillars { list-style: none; margin: 0 0 30px; padding: 0; display: grid; gap: 14px; }
+.docs__pillar { display: flex; align-items: flex-start; gap: 12px; font-size: 15.5px; color: rgba(255, 255, 255, 0.95); }
+.docs__pillar svg { width: 21px; height: 21px; flex: none; margin-top: 1px; color: rgba(255, 255, 255, 0.9); }
+
+/* ---------- Cierre lista ---------- */
+.home-close { text-align: center; }
+.home-close__title { font-family: "Lora", Georgia, serif; font-weight: 500; font-size: clamp(27px, 7vw, 40px); line-height: 1.18; color: var(--ink); margin: 0 0 16px; }
+.home-close__sub { max-width: 50ch; margin: 0 auto 28px; font-size: 16px; color: var(--ink-soft); }
+.home-close__actions { display: flex; flex-direction: column; gap: 12px; align-items: center; }
+
+/* ---------- Footer columnas ---------- */
+.site-footer { background: var(--green-900); color: rgba(255, 255, 255, 0.78); padding: 52px 0 40px; }
+.site-footer__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px 20px;
+  flex-wrap: wrap;
+  padding-bottom: 28px;
+  margin-bottom: 34px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+}
+.site-footer__home img { height: 28px; width: auto; display: block; filter: brightness(0) invert(1); opacity: 0.95; }
+.site-footer__docs {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #fff;
+  font-weight: 600;
+  font-size: 15px;
+  transition: opacity 0.2s var(--ease);
+}
+.site-footer__docs:hover { opacity: 0.78; }
+.site-footer__docs svg { width: 17px; height: 17px; transition: transform 0.25s var(--ease); }
+.site-footer__docs:hover svg { transform: translateX(3px); }
+.site-footer__cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px 20px;
+}
+.site-footer__brand { grid-column: 1 / -1; }
+.site-footer__brand img { height: 26px; filter: brightness(0) invert(1); opacity: 0.92; }
+.site-footer__tag { margin: 14px 0 0; font-size: 13px; line-height: 1.6; color: rgba(255, 255, 255, 0.6); max-width: 30ch; }
+.site-footer h4 { margin: 0 0 12px; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255, 255, 255, 0.55); font-weight: 600; }
+.site-footer ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 9px; }
+.site-footer a { color: rgba(255, 255, 255, 0.82); font-size: 14px; transition: color 0.2s var(--ease); }
+.site-footer a:hover { color: #fff; }
+.site-footer__legal { margin: 34px 0 0; padding-top: 22px; border-top: 1px solid rgba(255, 255, 255, 0.14); font-size: 11.5px; line-height: 1.65; color: rgba(255, 255, 255, 0.5); text-align: justify; -webkit-hyphens: auto; hyphens: auto; }
+.site-footer__copy { margin: 14px 0 0; font-size: 12px; color: rgba(255, 255, 255, 0.45); }
+
+/* ===========================================================
+   Desktop
+   =========================================================== */
+@media (min-width: 880px) {
+  .topnav__links {
+    display: flex;
+    align-items: center;
+    gap: 26px;
+  }
+  .topnav__links a {
+    font-size: 14.5px;
+    font-weight: 500;
+    color: var(--ink-soft);
+    transition: color 0.2s var(--ease);
+  }
+  .topnav__links a:hover { color: var(--green); }
+
+  .home-hero { padding: 88px 0 60px; }
+  .home-hero::before { width: 760px; height: 560px; top: -160px; }
+
+  .cats { gap: 20px; max-width: 920px; margin-inline: auto; }
+  .cat__body { padding: 22px 22px 24px; }
+  .cat__title { font-size: 22px; }
+  .cat__desc { font-size: 14px; }
+
+  .whys { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+
+  .docs { padding: 84px 0; }
+  .docs__inner { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
+  .docs__pillars { grid-template-columns: 1fr 1fr; gap: 16px 28px; }
+
+  .home-close__actions { flex-direction: row; justify-content: center; }
+
+  .site-footer__cols { grid-template-columns: repeat(3, 1fr); gap: 40px; }
+}
