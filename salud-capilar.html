@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Clynia · Caída del cabello con respaldo médico, online en España</title>
-  <meta name="description" content="Te conectamos con médicos colegiados en España que valoran tu caída del cabello y la alopecia androgenética y, si tu médico lo considera adecuado, indican un tratamiento médico personalizado con receta y seguimiento. Todo online, desde casa. Próximamente." />
+  <meta name="description" content="Te conectamos con médicos colegiados en España que valoran tu caída del cabello y, si lo consideran adecuado, indican un tratamiento médico personalizado con receta y seguimiento. Online y discreto. Cuanto antes lo valoras, más opciones tienes." />
   <meta name="theme-color" content="#f6f4ef" />
   <link rel="icon" type="image/png" href="assets/img/favicon.png" />
 
@@ -13,6 +13,70 @@
   <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,500&family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 
   <link rel="stylesheet" href="assets/css/styles.css" />
+
+  <!-- Estilos exclusivos de la sección "¿En qué punto estás?" (prefijo .hair-) -->
+  <style>
+    .hair { padding: 56px 0; }
+    .hair__stages {
+      width: 100%;
+      max-width: 460px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+    }
+    .hair-stage {
+      background: #ffffff;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 30px 26px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: border-color 0.4s var(--ease), box-shadow 0.4s var(--ease), transform 0.4s var(--ease);
+    }
+    .hair-stage:hover {
+      border-color: var(--green);
+      box-shadow: var(--shadow-soft);
+      transform: translateY(-3px);
+    }
+    .hair-stage__art { width: 92px; height: 92px; margin-bottom: 18px; }
+    .hair-stage__art svg { width: 100%; height: 100%; display: block; }
+    .hair-stage__title {
+      font-family: "Lora", Georgia, serif;
+      font-size: 19px;
+      font-weight: 600;
+      color: var(--ink);
+      margin: 0 0 8px;
+    }
+    .hair-stage__text {
+      margin: 0;
+      font-size: 14.5px;
+      line-height: 1.55;
+      color: var(--ink-soft);
+      max-width: 26ch;
+    }
+    .hair__line {
+      margin: 40px auto 22px;
+      max-width: 30ch;
+      text-align: center;
+      font-family: "Lora", Georgia, serif;
+      font-style: italic;
+      font-size: 21px;
+      line-height: 1.4;
+      color: var(--green-900);
+    }
+    .hair__cta { text-align: center; }
+    @media (min-width: 720px) {
+      .hair__stages {
+        max-width: 920px;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 22px;
+      }
+      .hair__line { font-size: 23px; }
+    }
+  </style>
 </head>
 <body>
 
@@ -21,7 +85,7 @@
     <a class="nav__brand" href="/" aria-label="Clynia, inicio">
       <img src="assets/logos/clynia-wordmark.png" alt="Clynia" />
     </a>
-    <a class="nav__link" href="#planes">Qué incluirá</a>
+    <a class="nav__link" href="#empezar">Avísame</a>
   </header>
 
   <main>
@@ -34,7 +98,7 @@
           <figure class="hero__media reveal d1">
             <img
               src="assets/img/cat-pelo.webp"
-              alt="Persona tranquila en casa tras su valoración de salud capilar con Clynia"
+              alt="Hombre tranquilo en casa tras su valoración de salud capilar con Clynia"
               width="1080" height="1350"
               fetchpriority="high"
             />
@@ -46,12 +110,13 @@
 
           <div class="hero__copy">
             <h1 class="hero__title reveal d3">
-              Tu caída del cabello, valorada por <em>médicos de verdad</em>.
+              Cuanto antes lo valoras, <em>más opciones tienes</em>.
             </h1>
             <p class="hero__sub reveal d4">
-              Te conectaremos con médicos colegiados que valoran tu caso y, si tu médico lo
-              considera adecuado, indican un tratamiento médico personalizado con receta y
-              seguimiento. Todo online, desde casa.
+              Las primeras entradas o la coronilla que clarea son el mejor momento para actuar,
+              no para resignarse. Te conectaremos con médicos colegiados que valoran tu caso y,
+              si lo consideran adecuado, indican un tratamiento con receta y seguimiento. Online
+              y discreto.
             </p>
 
             <div class="reveal d5">
@@ -75,19 +140,19 @@
     <!-- ===================== FRANJA DE CONFIANZA ===================== -->
     <section class="trust">
       <div class="wrap">
-        <p class="trust__title reveal-up">Un servicio médico de verdad, cómodo y privado</p>
+        <p class="trust__title reveal-up">La vía médica seria, sin promesas de quirófano ni champú milagro</p>
         <ul class="trust__grid">
           <li class="trust__item reveal-up">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
-            Médicos colegiados en España
+            Médicos colegiados, con criterio dermatológico
+          </li>
+          <li class="trust__item reveal-up">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11H5a2 2 0 0 0-2 2v7h6"/><path d="M15 7h4a2 2 0 0 1 2 2v11h-6"/><path d="M9 21V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v16"/></svg>
+            Criterio médico, no algoritmos
           </li>
           <li class="trust__item reveal-up">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8"/><path d="M12 16v4"/></svg>
-            Valoración 100% online y privada
-          </li>
-          <li class="trust__item reveal-up">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.5 20.5 3.5 13.5a5 5 0 0 1 7-7l7 7a5 5 0 0 1-7 7z"/><path d="m8.5 8.5 7 7"/></svg>
-            Tratamiento personalizado si procede
+            100% online y discreto
           </li>
           <li class="trust__item reveal-up">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9h18"/><path d="M5 9V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v4"/><path d="M4 9h16l-1 11a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1Z"/></svg>
@@ -101,45 +166,53 @@
       </div>
     </section>
 
-    <!-- ===================== REFRAME ===================== -->
-    <section class="reframe">
-      <div class="wrap">
-        <div class="reframe__card reveal-up">
-          <h2 class="reframe__title">La caída del cabello no es algo que tengas que asumir sin más.</h2>
-          <p class="reframe__text">
-            Las entradas que avanzan, la coronilla que clarea o el cabello que pierde densidad
-            no siempre son cosa de la edad. Suelen tener una causa concreta, y un médico puede
-            ayudarte a entenderla y a decidir qué hacer. No se trata de resignarse, sino de
-            valorarlo bien y a tiempo.
-          </p>
-          <a class="btn btn--primary btn--inline" href="https://form.typeform.com/to/fAyeBbWg?categoria=cabello">
-            Avísame
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
-          </a>
-        </div>
-      </div>
-    </section>
-
-    <!-- ===================== SEÑALES ===================== -->
-    <section class="section" id="sintomas">
+    <!-- ===================== SECCIÓN ÚNICA: ¿EN QUÉ PUNTO ESTÁS? ===================== -->
+    <section class="hair" id="punto">
       <div class="wrap">
         <header class="section__head reveal-up">
-          <h2 class="h2">¿Has notado alguna de estas señales?</h2>
-          <p class="lead">Si reconoces varias, puede que estés ante una alopecia androgenética u otra causa de caída. Cuando abramos, un médico colegiado valorará tu caso para saber qué la provoca.</p>
+          <h2 class="h2">¿En qué punto estás?</h2>
+          <p class="lead">La alopecia androgenética avanza por fases. Reconocer la tuya ayuda a entender qué se puede hacer y, sobre todo, cuándo conviene moverse.</p>
         </header>
-        <ul class="symptoms">
-          <li class="symptoms__item reveal-up">Entradas que avanzan poco a poco</li>
-          <li class="symptoms__item reveal-up">La coronilla cada vez más clara</li>
-          <li class="symptoms__item reveal-up">Pérdida de densidad general</li>
-          <li class="symptoms__item reveal-up">Caída más fuerte de lo habitual</li>
-          <li class="symptoms__item reveal-up">El pelo nace más fino y débil</li>
-          <li class="symptoms__item reveal-up">Más cabellos en la almohada o el peine</li>
-          <li class="symptoms__item reveal-up">La raya del pelo se ve más ancha</li>
-          <li class="symptoms__item reveal-up">Cuero cabelludo más visible al peinarte</li>
-          <li class="symptoms__item reveal-up">Antecedentes familiares de alopecia</li>
-          <li class="symptoms__item reveal-up">El pelo tarda más en crecer</li>
-        </ul>
-        <div class="section__cta reveal-up">
+      </div>
+
+      <div class="hair__stages">
+        <article class="hair-stage reveal-up">
+          <div class="hair-stage__art">
+            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <ellipse cx="50" cy="50" rx="34" ry="42" fill="none" stroke="#c9cfcc" stroke-width="2"/>
+              <path d="M50 8 C34 8 24 16 22 30 C30 22 40 20 50 20 C60 20 70 22 78 30 C76 16 66 8 50 8 Z" fill="#437066" fill-opacity="0.18"/>
+            </svg>
+          </div>
+          <h3 class="hair-stage__title">Entradas y línea frontal</h3>
+          <p class="hair-stage__text">La línea del pelo empieza a retroceder por las sienes. La fase más temprana y la más sensible a actuar pronto.</p>
+        </article>
+
+        <article class="hair-stage reveal-up">
+          <div class="hair-stage__art">
+            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <ellipse cx="50" cy="50" rx="34" ry="42" fill="none" stroke="#c9cfcc" stroke-width="2"/>
+              <ellipse cx="50" cy="40" rx="17" ry="15" fill="#437066" fill-opacity="0.28"/>
+            </svg>
+          </div>
+          <h3 class="hair-stage__title">Coronilla</h3>
+          <p class="hair-stage__text">El cabello clarea en la parte alta de la cabeza. A menudo cuesta verlo uno mismo hasta que ya ha avanzado.</p>
+        </article>
+
+        <article class="hair-stage reveal-up">
+          <div class="hair-stage__art">
+            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <ellipse cx="50" cy="50" rx="34" ry="42" fill="none" stroke="#c9cfcc" stroke-width="2"/>
+              <ellipse cx="50" cy="46" rx="28" ry="34" fill="#437066" fill-opacity="0.38"/>
+            </svg>
+          </div>
+          <h3 class="hair-stage__title">Difusa o más avanzada</h3>
+          <p class="hair-stage__text">La pérdida de densidad es general o la situación está más adelantada. Aun así, valorarlo bien sigue mereciendo la pena.</p>
+        </article>
+      </div>
+
+      <div class="wrap">
+        <p class="hair__line reveal-up">Cuanto antes lo valoras, más opciones tienes.</p>
+        <div class="hair__cta reveal-up">
           <a class="btn btn--primary btn--inline" href="https://form.typeform.com/to/fAyeBbWg?categoria=cabello">
             Avísame
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
@@ -148,29 +221,29 @@
       </div>
     </section>
 
-    <!-- ===================== CÓMO FUNCIONARÁ ===================== -->
+    <!-- ===================== ASÍ ACTUAMOS CONTIGO ===================== -->
     <section class="section section--tint" id="como-funciona">
       <div class="wrap">
         <header class="section__head reveal-up">
-          <h2 class="h2">Así de sencillo, así de cuidado.</h2>
-          <p class="lead">Sin cita ni salas de espera. Empezarás con una valoración online y un médico tomará tu caso cuando lo haya revisado, nunca un algoritmo.</p>
+          <h2 class="h2">Así actuamos contigo.</h2>
+          <p class="lead">Sin cita ni salas de espera. Empiezas online y tu caso lo toma un médico cuando lo ha revisado, nunca un algoritmo.</p>
         </header>
 
         <ol class="steps">
           <li class="step reveal-up">
             <span class="step__num">1</span>
-            <h3 class="step__title">Cuéntanos tu caso</h3>
-            <p class="step__text">Responderás unas preguntas sobre tu caída del cabello en unos minutos, desde el móvil. Si tu situación necesita otro tipo de atención, te lo diremos y te orientamos.</p>
+            <h3 class="step__title">Déjanos tus datos</h3>
+            <p class="step__text">Nos cuentas tu caso en unos minutos, desde el móvil. Discreto y sin moverte de casa.</p>
           </li>
           <li class="step reveal-up">
             <span class="step__num">2</span>
-            <h3 class="step__title">Elige tu plan</h3>
-            <p class="step__text">Si procede, eliges el plan que prefieras. Los planes estarán disponibles próximamente.</p>
+            <h3 class="step__title">Te valora un médico colegiado</h3>
+            <p class="step__text">Un médico revisa tu caso para entender qué provoca tu caída y en qué fase estás. Si no procede tratar, te lo dice con transparencia.</p>
           </li>
           <li class="step reveal-up">
             <span class="step__num">3</span>
-            <h3 class="step__title">Te valora tu médico</h3>
-            <p class="step__text">Un médico colegiado toma tu caso y te llama. Si considera que el tratamiento no es adecuado para ti, te lo dirá con transparencia. Si procede, indica un tratamiento médico personalizado y hace seguimiento.</p>
+            <h3 class="step__title">Tu tratamiento y seguimiento</h3>
+            <p class="step__text">Si lo considera adecuado, tu médico indica un tratamiento personalizado con receta y sigue de cerca cómo respondes.</p>
           </li>
         </ol>
 
@@ -178,187 +251,6 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
           <span>Un médico te llamará cuando haya valorado tu caso. Si no consigue localizarte, lo intentará de nuevo o te escribirá por email o por tu portal. Mantente atento al teléfono.</span>
         </p>
-      </div>
-    </section>
-
-    <!-- ===================== PROGRAMA ===================== -->
-    <section class="section" id="programa">
-      <div class="wrap">
-        <div class="program">
-          <div class="program__copy">
-            <header class="section__head section__head--left reveal-up">
-              <h2 class="h2">Un acompañamiento médico completo, con todo en un mismo sitio.</h2>
-              <p class="lead">Cuando empieces con Clynia no comprarás un producto: contarás con un médico colegiado que cuida cada paso.</p>
-            </header>
-            <ul class="pillars">
-              <li class="pillar reveal-up">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
-                Valoración por un médico colegiado e independiente
-              </li>
-              <li class="pillar reveal-up">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
-                Si tu médico lo indica, tu tratamiento preparado en farmacia y enviado a tu casa
-              </li>
-              <li class="pillar reveal-up">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-                Seguimiento periódico para ver cómo respondes
-              </li>
-              <li class="pillar reveal-up">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
-                Tu médico siempre a mano por el portal para tus dudas
-              </li>
-            </ul>
-            <p class="program__note reveal-up">
-              Cuando esté indicado, tu médico podrá pautar un tratamiento médico personalizado
-              para la caída del cabello. Sólo lo prescribe un médico colegiado, tras valorarte,
-              y se dispensa con receta en farmacia. No publicitamos ni recomendamos ningún
-              medicamento concreto: la decisión es siempre del médico.
-            </p>
-          </div>
-          <figure class="program__media reveal-up">
-            <img
-              src="assets/img/portalclynia.png"
-              alt="Portal de Clynia en el móvil con el seguimiento del paciente y sus próximos controles"
-              width="860" height="1146" loading="lazy"
-            />
-          </figure>
-        </div>
-      </div>
-    </section>
-
-    <!-- ===================== RESPALDO ===================== -->
-    <section class="section section--tint" id="respaldo">
-      <div class="wrap">
-        <header class="section__head reveal-up">
-          <h2 class="h2">Un médico contigo, no un pedido más.</h2>
-        </header>
-        <ul class="stats stats--two">
-          <li class="stat reveal-up">
-            <span class="stat__num"><span data-count="100">0</span>%</span>
-            <span class="stat__label">de las decisiones sobre tu tratamiento las toma un médico colegiado, nunca un algoritmo</span>
-          </li>
-          <li class="stat reveal-up">
-            <span class="stat__num">24<span class="stat__unit"> a </span>48 h</span>
-            <span class="stat__label">es el tiempo en el que tu médico te dará una respuesta cuando el servicio esté disponible</span>
-          </li>
-        </ul>
-      </div>
-    </section>
-
-    <!-- ===================== QUÉ INCLUIRÁ TU PLAN ===================== -->
-    <section class="section" id="planes">
-      <div class="wrap">
-        <header class="section__head reveal-up">
-          <h2 class="h2">Qué incluirá tu plan.</h2>
-          <p class="lead">El servicio aún no está disponible. Estamos terminando de prepararlo para que, cuando abramos, tengas el acompañamiento médico completo en un solo sitio. Esto es lo que incluirá.</p>
-        </header>
-
-        <div class="plans">
-          <article class="plan reveal-up">
-            <h3 class="plan__name">Valoración médica</h3>
-            <p class="plan__meta">Próximamente</p>
-            <ul class="plan__list">
-              <li>Tu caso revisado por un médico colegiado</li>
-              <li>Estudio de la causa de tu caída</li>
-              <li>Orientación clara, también si no procede tratar</li>
-              <li>Atención online y privada</li>
-            </ul>
-            <p class="plan__for">El primer paso para entender qué te pasa.</p>
-            <a class="btn btn--ghost" href="https://form.typeform.com/to/fAyeBbWg?categoria=cabello">Avísame</a>
-          </article>
-
-          <article class="plan plan--featured reveal-up">
-            <span class="plan__tag">Lo más completo</span>
-            <h3 class="plan__name">Tratamiento y seguimiento</h3>
-            <p class="plan__meta">Próximamente</p>
-            <ul class="plan__list">
-              <li>Tratamiento médico personalizado, si tu médico lo indica</li>
-              <li>Con receta y dispensación en farmacia</li>
-              <li>Enviado a tu casa, sin desplazamientos</li>
-              <li>Controles para ajustar lo que haga falta</li>
-            </ul>
-            <p class="plan__for">El cuidado completo, de principio a fin.</p>
-            <a class="btn btn--primary" href="https://form.typeform.com/to/fAyeBbWg?categoria=cabello">Avísame</a>
-          </article>
-
-          <article class="plan reveal-up">
-            <h3 class="plan__name">Tu médico a mano</h3>
-            <p class="plan__meta">Próximamente</p>
-            <ul class="plan__list">
-              <li>Acceso a tu médico por el portal</li>
-              <li>Resolución de dudas durante el tratamiento</li>
-              <li>Seguimiento de cómo respondes</li>
-              <li>Datos protegidos conforme al RGPD</li>
-            </ul>
-            <p class="plan__for">Acompañamiento real mientras dura el proceso.</p>
-            <a class="btn btn--ghost" href="https://form.typeform.com/to/fAyeBbWg?categoria=cabello">Avísame</a>
-          </article>
-        </div>
-
-        <p class="plans__note reveal-up">
-          Planes disponibles próximamente. Déjanos tus datos y te avisaremos en cuanto el
-          servicio esté abierto, con todos los detalles. Cualquier tratamiento dependerá
-          siempre de la valoración de un médico colegiado.
-        </p>
-      </div>
-    </section>
-
-    <!-- ===================== EQUIPO MÉDICO ===================== -->
-    <section class="section section--tint" id="equipo">
-      <div class="wrap">
-        <header class="section__head reveal-up">
-          <h2 class="h2">Detrás de tu tratamiento, médicos de verdad.</h2>
-          <p class="lead">Profesionales colegiados en España, independientes y con experiencia en salud capilar y dermatología. Cada decisión la toma un médico, nunca un algoritmo.</p>
-        </header>
-
-        <blockquote class="quote reveal-up">
-          <p>Cada tratamiento lo personaliza un médico según tu tipo de caída, tu historia y tu caso, y sólo cuando es adecuado para ti.</p>
-        </blockquote>
-      </div>
-    </section>
-
-    <!-- ===================== QUÉ ESPERAR ===================== -->
-    <section class="section" id="que-esperar">
-      <div class="wrap">
-        <header class="section__head reveal-up">
-          <h2 class="h2">Qué podrás esperar al empezar.</h2>
-          <p class="lead">Sin promesas mágicas. Un proceso médico, ordenado y a tu ritmo. La caída del cabello lleva su tiempo, y eso es normal.</p>
-        </header>
-
-        <ol class="timeline">
-          <li class="timeline__item reveal-up">
-            <span class="timeline__dot"></span>
-            <h3 class="timeline__title">Primeras semanas</h3>
-            <p class="timeline__text">Tu valoración con un médico colegiado y, si tu médico lo considera adecuado, el inicio del tratamiento, que recibes en casa.</p>
-          </li>
-          <li class="timeline__item reveal-up">
-            <span class="timeline__dot"></span>
-            <h3 class="timeline__title">Primeros meses</h3>
-            <p class="timeline__text">Un periodo de adaptación. Tu médico hace seguimiento de cómo respondes y ajusta lo que haga falta.</p>
-          </li>
-          <li class="timeline__item reveal-up">
-            <span class="timeline__dot"></span>
-            <h3 class="timeline__title">A medio plazo</h3>
-            <p class="timeline__text">Los resultados en salud capilar son graduales y varían según cada persona. El seguimiento periódico es lo que permite valorar la evolución y mantener el tratamiento bajo control.</p>
-          </li>
-        </ol>
-        <p class="timeline__note reveal-up">Cada cuero cabelludo es distinto y la respuesta al tratamiento no es la misma para todos. El acompañamiento del médico es lo que marca la diferencia, porque permite ajustar el tratamiento a tu evolución real.</p>
-      </div>
-    </section>
-
-    <!-- ===================== SEGURIDAD Y ELEGIBILIDAD ===================== -->
-    <section class="section section--tint" id="seguridad">
-      <div class="wrap">
-        <header class="section__head reveal-up">
-          <h2 class="h2">Un tratamiento serio, supervisado de principio a fin.</h2>
-          <p class="lead">El tratamiento médico de la caída del cabello no es para todo el mundo, y eso es justo lo que lo hace serio. Tu médico valora siempre tu caso.</p>
-        </header>
-        <ul class="safety">
-          <li class="safety__item reveal-up">No todos los tipos de caída se tratan igual, y algunos requieren otra atención. Tu médico lo valora en cada caso.</li>
-          <li class="safety__item reveal-up">Siempre con seguimiento médico: controles para ajustar el tratamiento y cuidar tu salud.</li>
-          <li class="safety__item reveal-up">Quien decide si un tratamiento es adecuado para ti es siempre el médico colegiado, tras tu valoración. Si no lo es, te lo diremos con transparencia.</li>
-          <li class="safety__item reveal-up">Nunca debes automedicarte. Cualquier tratamiento se prescribe y se supervisa por un profesional, con receta.</li>
-        </ul>
       </div>
     </section>
 
@@ -370,38 +262,37 @@
         </header>
         <div class="faq">
           <details name="faq" class="faq__item reveal-up">
-            <summary>¿El servicio ya está disponible?</summary>
-            <div class="faq__body"><p>Todavía no. Estamos terminando de preparar el servicio de salud capilar. Déjanos tus datos y te avisaremos en cuanto abramos, antes que a nadie y sin compromiso.</p></div>
-          </details>
-          <details name="faq" class="faq__item reveal-up">
-            <summary>¿Tendré que pedir cita?</summary>
-            <div class="faq__body"><p>No. En Clynia no hay citas ni salas de espera. Nos cuentas tu caso y un médico te llama cuando lo ha valorado. Si no consigue localizarte, lo intentará de nuevo o te escribirá por email o por tu portal.</p></div>
+            <summary>¿Sirve de algo actuar pronto?</summary>
+            <div class="faq__body"><p>El cabello que ya se ha perdido por completo no vuelve solo. Por eso, cuanto antes valora un médico tu caso, más opciones hay de cuidar el cabello que todavía conservas. La fase en la que estás importa, y reconocerla a tiempo es media batalla.</p></div>
           </details>
           <details name="faq" class="faq__item reveal-up">
             <summary>¿Qué es la alopecia androgenética?</summary>
-            <div class="faq__body"><p>Es la causa más frecuente de caída del cabello. Suele tener un componente hereditario y se manifiesta de forma gradual, con entradas, pérdida de densidad o aclaramiento de la coronilla. Un médico puede confirmar si es tu caso y orientarte sobre qué hacer.</p></div>
+            <div class="faq__body"><p>Es la causa más frecuente de caída en hombres. Suele tener un componente hereditario y avanza de forma gradual: primero las entradas y la línea frontal, después la coronilla. Un médico puede confirmar si es tu caso y orientarte sobre qué hacer.</p></div>
           </details>
           <details name="faq" class="faq__item reveal-up">
-            <summary>¿Quién me valorará y me recetará?</summary>
-            <div class="faq__body"><p>Un médico colegiado e independiente, con experiencia en salud capilar y dermatología, y sólo si es clínicamente apropiado tras tu valoración. Clynia nunca receta: la decisión y la receta son siempre del médico.</p></div>
+            <summary>¿Quién me valora y me receta?</summary>
+            <div class="faq__body"><p>Un médico colegiado e independiente, con criterio en salud capilar y dermatología, y sólo si lo considera clínicamente apropiado tras valorarte. Clynia nunca receta: la decisión y la receta son siempre del médico.</p></div>
           </details>
           <details name="faq" class="faq__item reveal-up">
-            <summary>¿Qué incluirá el servicio?</summary>
-            <div class="faq__body"><p>Tu valoración con un médico colegiado, el seguimiento de cómo respondes y, si tu médico lo indica, un tratamiento médico personalizado con receta, preparado en farmacia y enviado a tu casa. Tendrás a tu médico a mano por el portal para tus dudas.</p></div>
-          </details>
-          <details name="faq" class="faq__item reveal-up">
-            <summary>¿Es seguro?</summary>
-            <div class="faq__body"><p>Cualquier tratamiento se prescribe sólo si tu médico lo considera adecuado, y se acompaña de seguimiento. No es apto en todos los casos. Por eso la valoración médica y los controles son imprescindibles, y nunca debes automedicarte.</p></div>
-          </details>
-          <details name="faq" class="faq__item reveal-up">
-            <summary>¿Cómo recibiré el tratamiento?</summary>
-            <div class="faq__body"><p>Si tu médico lo prescribe, tu tratamiento se prepara en una farmacia y lo recibes en casa, con receta. No tendrás que ir a recogerlo.</p></div>
-          </details>
-          <details name="faq" class="faq__item reveal-up">
-            <summary>¿Mis datos están seguros?</summary>
-            <div class="faq__body"><p>Tus datos de salud se tratan conforme al RGPD, cifrados y visibles únicamente para el médico que te atiende. Nunca los compartimos con terceros con fines comerciales.</p></div>
+            <summary>¿Es discreto y están seguros mis datos?</summary>
+            <div class="faq__body"><p>Todo el proceso es online, sin salas de espera ni miradas. Tus datos de salud se tratan conforme al RGPD, cifrados y visibles únicamente para el médico que te atiende. Nunca los compartimos con terceros con fines comerciales.</p></div>
           </details>
         </div>
+      </div>
+    </section>
+
+    <!-- ===================== SEGURIDAD / ELEGIBILIDAD ===================== -->
+    <section class="section section--tint" id="seguridad">
+      <div class="wrap">
+        <header class="section__head reveal-up">
+          <h2 class="h2">Un tratamiento serio, no para todos los casos.</h2>
+          <p class="lead">Que un médico valore si es para ti es justo lo que lo hace serio.</p>
+        </header>
+        <ul class="safety">
+          <li class="safety__item reveal-up">El tratamiento médico de la caída no es adecuado en todos los casos. Lo valora siempre un médico colegiado, tras revisar el tuyo.</li>
+          <li class="safety__item reveal-up">El cabello que ya se ha perdido del todo no se recupera. Por eso actuar a tiempo es lo que más juega a tu favor.</li>
+          <li class="safety__item reveal-up">Si considera que no procede tratar, te lo dirá con transparencia y te orientará sobre qué hacer.</li>
+        </ul>
       </div>
     </section>
 
@@ -409,7 +300,7 @@
     <section class="closing" id="empezar">
       <div class="wrap">
         <div class="closing__inner reveal-up">
-          <h2 class="closing__title">Tu caída del cabello, mejor acompañada.</h2>
+          <h2 class="closing__title">No esperes a que se note más.</h2>
           <p class="closing__sub">El servicio aún no está disponible. Déjanos tus datos y serás de los primeros en saberlo cuando abramos, sin compromiso. Siempre habrá un médico colegiado al otro lado.</p>
           <a class="btn btn--light" id="ctaFinal" href="https://form.typeform.com/to/fAyeBbWg?categoria=cabello">
             Avísame
@@ -452,7 +343,7 @@
   <!-- ===================== STICKY CTA (móvil) ===================== -->
   <div class="sticky-cta" id="stickyCta" aria-hidden="true">
     <div class="sticky-cta__inner">
-      <span class="sticky-cta__hint">Gratis y sin compromiso</span>
+      <span class="sticky-cta__hint">Sin compromiso</span>
       <a class="btn btn--primary" href="https://form.typeform.com/to/fAyeBbWg?categoria=cabello">
         Avísame
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>

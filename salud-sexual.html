@@ -13,6 +13,66 @@
   <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,500&family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 
   <link rel="stylesheet" href="assets/css/styles.css" />
+
+  <style>
+    /* Sección única: privacidad */
+    .privacy__grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      margin-top: 8px;
+    }
+    .privacy-card {
+      background: #fff;
+      border: 1px solid rgba(67, 112, 102, 0.16);
+      border-radius: 16px;
+      padding: 28px 26px;
+      box-shadow: 0 1px 2px rgba(31, 41, 38, 0.04), 0 12px 30px rgba(31, 41, 38, 0.05);
+      transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+    }
+    .privacy-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(67, 112, 102, 0.34);
+      box-shadow: 0 1px 2px rgba(31, 41, 38, 0.05), 0 18px 40px rgba(31, 41, 38, 0.08);
+    }
+    .privacy-card__icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 46px;
+      height: 46px;
+      border-radius: 12px;
+      background: rgba(67, 112, 102, 0.10);
+      color: #437066;
+      margin-bottom: 16px;
+    }
+    .privacy-card__icon svg { width: 23px; height: 23px; }
+    .privacy-card__title {
+      font-family: 'Lora', Georgia, serif;
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: #1f2926;
+      margin: 0 0 8px;
+      line-height: 1.3;
+    }
+    .privacy-card__text {
+      margin: 0;
+      color: #4a5450;
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+    @media (min-width: 600px) {
+      .privacy__grid { grid-template-columns: repeat(2, 1fr); gap: 18px; }
+    }
+    @media (min-width: 980px) {
+      .privacy__grid { grid-template-columns: repeat(4, 1fr); gap: 20px; }
+    }
+
+    /* Plan único centrado */
+    .plans--solo { display: flex; justify-content: center; }
+    .plans--solo .plan { max-width: 360px; width: 100%; }
+    .plans--solo .plan--featured { transform: none; }
+  </style>
 </head>
 <body>
 
@@ -21,7 +81,7 @@
     <a class="nav__brand" href="/" aria-label="Clynia, inicio">
       <img src="assets/logos/clynia-wordmark.png" alt="Clynia" />
     </a>
-    <a class="nav__link" href="#planes">Ver planes</a>
+    <a class="nav__link" href="#empezar">Avísame</a>
   </header>
 
   <main>
@@ -46,13 +106,13 @@
 
           <div class="hero__copy">
             <h1 class="hero__title reveal d3">
-              Tu salud sexual, tratada con <em>discreción y rigor médico</em>.
+              Le pasa a más hombres de los que crees, y <em>tiene quien lo trate</em>.
             </h1>
             <p class="hero__sub reveal d4">
-              Te conectaremos con médicos colegiados que valoran dificultades como la
-              erección, el deseo o la eyaculación y, si lo consideran adecuado para ti,
-              indican un tratamiento médico con receta y seguimiento. Todo online,
-              desde casa y con total privacidad.
+              Las dificultades de erección o de rendimiento son habituales y casi nunca se
+              hablan. Te conectaremos con médicos colegiados que valoran tu caso en privado
+              y, si lo consideran adecuado, indican un tratamiento con receta y seguimiento.
+              Todo online, desde casa y sin que se entere nadie.
             </p>
 
             <div class="reveal d5">
@@ -60,7 +120,7 @@
                 Avísame
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
               </a>
-              <p class="hero__assurance">Próximamente. Déjanos tus datos y te avisamos en cuanto esté disponible.</p>
+              <p class="hero__assurance">Próximamente. Déjanos tus datos y te avisamos en privado en cuanto esté disponible.</p>
             </div>
           </div>
 
@@ -79,20 +139,16 @@
         <p class="trust__title reveal-up">Un servicio médico de verdad, discreto y privado</p>
         <ul class="trust__grid">
           <li class="trust__item reveal-up">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+            Trato discreto, sin dar la cara
+          </li>
+          <li class="trust__item reveal-up">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
             Médicos colegiados en España
           </li>
           <li class="trust__item reveal-up">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
-            Trato discreto, sin pasar por consulta
-          </li>
-          <li class="trust__item reveal-up">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8"/><path d="M12 16v4"/></svg>
-            Valoración 100% online y privada
-          </li>
-          <li class="trust__item reveal-up">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9h18"/><path d="M5 9V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v4"/><path d="M4 9h16l-1 11a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1Z"/></svg>
-            Envío sobrio, sin referencias en el paquete
+            Valoración 100% online
           </li>
           <li class="trust__item reveal-up">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
@@ -102,17 +158,17 @@
       </div>
     </section>
 
-    <!-- ===================== REFRAME ===================== -->
+    <!-- ===================== REFRAME (normalización) ===================== -->
     <section class="reframe">
       <div class="wrap">
         <div class="reframe__card reveal-up">
-          <h2 class="reframe__title">Hablar de tu salud sexual no debería costar tanto.</h2>
+          <h2 class="reframe__title">Le pasa a más hombres de los que crees.</h2>
           <p class="reframe__text">
-            Las dificultades de erección, la falta de deseo o la eyaculación precoz son más
-            comunes de lo que parece, y casi nunca se hablan. No tienes que resolverlas solo,
-            ni aguantar la incomodidad de pedir cita y explicarte en una consulta. Un médico
-            puede ayudarte a entender qué pasa y a tratarlo, con la misma naturalidad que
-            cualquier otra cuestión de salud.
+            Las dificultades de erección o de rendimiento son mucho más frecuentes de lo que
+            parece, a cualquier edad, y casi nadie las cuenta. No es para tomárselo a broma
+            ni algo que tengas que llevar solo. Es una cuestión de salud como otra cualquiera,
+            con causas concretas que a menudo tienen tratamiento. Lo sensato es que la valore
+            un médico, sin juicios y a tu ritmo.
           </p>
           <a class="btn btn--primary btn--inline" href="https://form.typeform.com/to/fAyeBbWg?categoria=salud-sexual">
             Avísame
@@ -122,149 +178,69 @@
       </div>
     </section>
 
-    <!-- ===================== SÍNTOMAS ===================== -->
-    <section class="section" id="sintomas">
+    <!-- ===================== SECCIÓN ÚNICA: PRIVACIDAD ===================== -->
+    <section class="section privacy" id="privacidad">
       <div class="wrap">
         <header class="section__head reveal-up">
-          <h2 class="h2">¿Te preocupa alguna de estas situaciones?</h2>
-          <p class="lead">Si te reconoces en alguna, no estás solo y tiene sentido valorarlo con un médico. Cuando el servicio esté disponible, podrás contarlo en privado y un médico colegiado revisará tu caso.</p>
+          <h2 class="h2">Tu intimidad, protegida en cada paso.</h2>
+          <p class="lead">Pensado para que nadie de tu entorno tenga por qué enterarse. Desde cómo aparece el cargo hasta quién ve tus datos, todo está cuidado para que te sientas tranquilo.</p>
         </header>
-        <ul class="symptoms">
-          <li class="symptoms__item reveal-up">Dificultad para conseguir una erección</li>
-          <li class="symptoms__item reveal-up">Dificultad para mantener la erección</li>
-          <li class="symptoms__item reveal-up">Erecciones menos firmes que antes</li>
-          <li class="symptoms__item reveal-up">Eyaculación precoz</li>
-          <li class="symptoms__item reveal-up">Falta o descenso del deseo sexual</li>
-          <li class="symptoms__item reveal-up">Cansancio o bajón de energía</li>
-          <li class="symptoms__item reveal-up">Inseguridad o ansiedad de rendimiento</li>
-          <li class="symptoms__item reveal-up">Dudas que te incomoda llevar a una consulta</li>
-        </ul>
-        <div class="section__cta reveal-up">
-          <a class="btn btn--primary btn--inline" href="https://form.typeform.com/to/fAyeBbWg?categoria=salud-sexual">
-            Avísame
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
-          </a>
+
+        <div class="privacy__grid">
+          <article class="privacy-card reveal-up">
+            <span class="privacy-card__icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/><path d="M6 15h4"/></svg>
+            </span>
+            <h3 class="privacy-card__title">Facturación discreta</h3>
+            <p class="privacy-card__text">En el cargo de tu banco no aparece nada explícito ni que delate de qué se trata. Sólo un nombre neutro.</p>
+          </article>
+
+          <article class="privacy-card reveal-up">
+            <span class="privacy-card__icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9h18"/><path d="M5 9V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v4"/><path d="M4 9h16l-1 11a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1Z"/></svg>
+            </span>
+            <h3 class="privacy-card__title">Envío en paquete neutro</h3>
+            <p class="privacy-card__text">Si tu médico te indica un tratamiento, llega a casa en un paquete sobrio, sin marcas ni referencias por fuera.</p>
+          </article>
+
+          <article class="privacy-card reveal-up">
+            <span class="privacy-card__icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+            </span>
+            <h3 class="privacy-card__title">Tus datos, sólo tu médico</h3>
+            <p class="privacy-card__text">Lo que cuentas se trata conforme al RGPD, cifrado y visible únicamente para el médico que te atiende. Nunca para terceros.</p>
+          </article>
+
+          <article class="privacy-card reveal-up">
+            <span class="privacy-card__icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8"/><path d="M12 16v4"/></svg>
+            </span>
+            <h3 class="privacy-card__title">Sin salas de espera</h3>
+            <p class="privacy-card__text">Ni citas ni miradas incómodas. Cuentas tu caso desde el móvil, cuando quieras, sin dar la cara para empezar.</p>
+          </article>
         </div>
-      </div>
-    </section>
-
-    <!-- ===================== CÓMO FUNCIONA ===================== -->
-    <section class="section section--tint" id="como-funciona">
-      <div class="wrap">
-        <header class="section__head reveal-up">
-          <h2 class="h2">Discreto, sencillo y a tu ritmo.</h2>
-          <p class="lead">Sin cita ni salas de espera, sin tener que dar la cara para empezar. Cuentas tu caso, y un médico colegiado lo valora cuando lo revisa, nunca un algoritmo.</p>
-        </header>
-
-        <ol class="steps">
-          <li class="step reveal-up">
-            <span class="step__num">1</span>
-            <h3 class="step__title">Cuéntanos tu caso</h3>
-            <p class="step__text">Respondes unas preguntas en privado, desde el móvil y en unos minutos. Nadie de tu entorno tiene por qué enterarse.</p>
-          </li>
-          <li class="step reveal-up">
-            <span class="step__num">2</span>
-            <h3 class="step__title">Elige tu plan</h3>
-            <p class="step__text">Si tu caso es apto para una valoración, eliges el plan que prefieras. No pagas nada hasta aquí.</p>
-          </li>
-          <li class="step reveal-up">
-            <span class="step__num">3</span>
-            <h3 class="step__title">Te valora un médico</h3>
-            <p class="step__text">Un médico colegiado revisa tu caso y, si lo considera adecuado para ti, indica un tratamiento médico con receta y hace seguimiento. Si no es adecuado, te lo dice con transparencia.</p>
-          </li>
-        </ol>
-
-        <p class="callout reveal-up">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-          <span>El médico se pondrá en contacto cuando haya valorado tu caso. Si no consigue localizarte, lo intentará de nuevo o te escribirá por email o por tu portal, siempre de forma discreta.</span>
-        </p>
-      </div>
-    </section>
-
-    <!-- ===================== PROGRAMA ===================== -->
-    <section class="section" id="programa">
-      <div class="wrap">
-        <div class="program">
-          <div class="program__copy">
-            <header class="section__head section__head--left reveal-up">
-              <h2 class="h2">Un acompañamiento médico completo, en privado.</h2>
-              <p class="lead">Cuando empiezas con Clynia no compras un producto sin más: cuentas con un médico que valora tu caso y te acompaña en cada paso.</p>
-            </header>
-            <ul class="pillars">
-              <li class="pillar reveal-up">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
-                Valoración por un médico colegiado e independiente
-              </li>
-              <li class="pillar reveal-up">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
-                Si tu médico lo prescribe, tu tratamiento llega a casa en un envío sobrio
-              </li>
-              <li class="pillar reveal-up">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-                Seguimiento para ver cómo respondes y ajustar lo que haga falta
-              </li>
-              <li class="pillar reveal-up">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
-                Tu médico a mano por el portal para tus dudas, en privado
-              </li>
-            </ul>
-            <p class="program__note reveal-up">
-              Cuando un médico lo considera adecuado, el tratamiento se decide caso por caso,
-              según tu situación, tus antecedentes y lo que cuentas. Sólo lo prescribe un
-              médico colegiado, tras valorarte, y se dispensa con receta en farmacia. No
-              recomendamos ningún medicamento ni lo publicitamos: esa decisión es siempre
-              del médico.
-            </p>
-          </div>
-          <figure class="program__media reveal-up">
-            <img
-              src="assets/img/portalclynia.png"
-              alt="Portal de Clynia en el móvil con el seguimiento del paciente y el acceso a su médico"
-              width="860" height="1146" loading="lazy"
-            />
-          </figure>
-        </div>
-      </div>
-    </section>
-
-    <!-- ===================== RESPALDO ===================== -->
-    <section class="section section--tint" id="respaldo">
-      <div class="wrap">
-        <header class="section__head reveal-up">
-          <h2 class="h2">Un médico contigo, no un pedido más.</h2>
-        </header>
-        <ul class="stats stats--two">
-          <li class="stat reveal-up">
-            <span class="stat__num"><span data-count="100">0</span>%</span>
-            <span class="stat__label">de las decisiones sobre tu tratamiento las toma un médico colegiado, nunca un algoritmo</span>
-          </li>
-          <li class="stat reveal-up">
-            <span class="stat__num">24<span class="stat__unit"> a </span>48 h</span>
-            <span class="stat__label">es el tiempo en el que tu médico te da una respuesta, en privado</span>
-          </li>
-        </ul>
       </div>
     </section>
 
     <!-- ===================== PLANES ===================== -->
-    <section class="section" id="planes">
+    <section class="section section--tint" id="planes">
       <div class="wrap">
         <header class="section__head reveal-up">
           <h2 class="h2">Planes disponibles próximamente.</h2>
-          <p class="lead">Estamos terminando de prepararlo. Cuando esté en marcha, podrás empezar dejando tu caso, y sólo pagas si decides seguir. Esto es lo que incluirá tu plan.</p>
+          <p class="lead">Estamos terminando de prepararlo. Cuando esté en marcha, podrás empezar contando tu caso, y sólo decides seguir si te encaja. Esto es lo que incluirá.</p>
         </header>
 
-        <div class="plans">
+        <div class="plans plans--solo">
           <article class="plan plan--featured reveal-up">
-            <span class="plan__tag">Qué incluirá tu plan</span>
+            <span class="plan__tag">Próximamente</span>
             <h3 class="plan__name">Acompañamiento completo</h3>
             <p class="plan__meta">Suscripción, todo incluido</p>
             <ul class="plan__list">
               <li>Valoración con un médico colegiado e independiente</li>
-              <li>Si tu médico lo prescribe, tu tratamiento enviado a casa en un envío sobrio</li>
+              <li>Si tu médico lo indica, tratamiento enviado a casa en paquete neutro</li>
               <li>Seguimiento para ver cómo respondes y ajustar si hace falta</li>
-              <li>Tu médico a mano por el portal para tus dudas</li>
-              <li>Trato discreto y datos protegidos conforme al RGPD</li>
+              <li>Tu médico a mano por el portal para tus dudas, en privado</li>
+              <li>Facturación discreta y datos protegidos conforme al RGPD</li>
             </ul>
             <p class="plan__for">Te avisamos en cuanto puedas empezar. Sin compromiso.</p>
             <a class="btn btn--primary" href="https://form.typeform.com/to/fAyeBbWg?categoria=salud-sexual">Avísame</a>
@@ -273,69 +249,9 @@
 
         <p class="plans__note reveal-up">
           Aún no está disponible y todavía no hay precios definidos. Déjanos tus datos y serás
-          de los primeros en saberlo. Empezar será gratis y no pagarás hasta suscribirte. Si
-          tras tu valoración el médico considera que el tratamiento no es adecuado para ti,
-          te lo dirá con transparencia.
+          de los primeros en saberlo. Si tras tu valoración el médico considera que el
+          tratamiento no es adecuado para ti, te lo dirá con transparencia.
         </p>
-      </div>
-    </section>
-
-    <!-- ===================== EQUIPO MÉDICO ===================== -->
-    <section class="section section--tint" id="equipo">
-      <div class="wrap">
-        <header class="section__head reveal-up">
-          <h2 class="h2">Detrás de tu caso, médicos de verdad.</h2>
-          <p class="lead">Profesionales colegiados en España, independientes, de medicina general y urología, habituados a tratar la salud sexual masculina sin dramatismos. Cada decisión la toma un médico, nunca un algoritmo.</p>
-        </header>
-
-        <blockquote class="quote reveal-up">
-          <p>Cada caso lo valora un médico según tu situación, tus antecedentes y lo que cuentas, y sólo se indica un tratamiento cuando es adecuado para ti.</p>
-        </blockquote>
-      </div>
-    </section>
-
-    <!-- ===================== QUÉ ESPERAR ===================== -->
-    <section class="section" id="que-esperar">
-      <div class="wrap">
-        <header class="section__head reveal-up">
-          <h2 class="h2">Qué puedes esperar al empezar.</h2>
-          <p class="lead">Sin promesas mágicas. Un proceso médico, ordenado, discreto y a tu ritmo.</p>
-        </header>
-
-        <ol class="timeline">
-          <li class="timeline__item reveal-up">
-            <span class="timeline__dot"></span>
-            <h3 class="timeline__title">Primeros días</h3>
-            <p class="timeline__text">Cuentas tu caso en privado y un médico colegiado lo valora. Si lo considera adecuado, te indica el siguiente paso, que recibes en casa de forma discreta.</p>
-          </li>
-          <li class="timeline__item reveal-up">
-            <span class="timeline__dot"></span>
-            <h3 class="timeline__title">Las primeras semanas</h3>
-            <p class="timeline__text">Ves cómo respondes y, si hace falta, tu médico ajusta el enfoque. Cualquier duda la resuelves por el portal, sin tener que dar explicaciones a nadie.</p>
-          </li>
-          <li class="timeline__item reveal-up">
-            <span class="timeline__dot"></span>
-            <h3 class="timeline__title">Más adelante</h3>
-            <p class="timeline__text">Seguimiento para acompañarte mientras lo necesites, con tu médico a mano. Cada persona es distinta, y ese acompañamiento es lo que marca la diferencia.</p>
-          </li>
-        </ol>
-        <p class="timeline__note reveal-up">La valoración y el acceso a tu médico van incluidos en tu suscripción. Sólo tienes que contar tu caso con sinceridad; del resto nos ocupamos contigo, con discreción.</p>
-      </div>
-    </section>
-
-    <!-- ===================== SEGURIDAD Y ELEGIBILIDAD ===================== -->
-    <section class="section section--tint" id="seguridad">
-      <div class="wrap">
-        <header class="section__head reveal-up">
-          <h2 class="h2">Un tratamiento serio, supervisado de principio a fin.</h2>
-          <p class="lead">El tratamiento médico no es para todos, y eso es justo lo que lo hace serio. Tu médico valora siempre tu caso antes de decidir.</p>
-        </header>
-        <ul class="safety">
-          <li class="safety__item reveal-up">Hay situaciones de salud, como problemas de corazón o ciertos tratamientos en curso, en las que no es adecuado. Tu médico lo valora en cada caso.</li>
-          <li class="safety__item reveal-up">Siempre con seguimiento médico, para ver cómo respondes y ajustar lo que haga falta cuidando tu salud.</li>
-          <li class="safety__item reveal-up">Quien decide si es adecuado para ti es siempre un médico colegiado, tras tu valoración. Si no lo es, te lo diremos con transparencia.</li>
-          <li class="safety__item reveal-up">Nunca debes automedicarte ni comprar tratamientos por tu cuenta. La salud sexual se valora y se supervisa por un profesional.</li>
-        </ul>
       </div>
     </section>
 
@@ -347,32 +263,16 @@
         </header>
         <div class="faq">
           <details name="faq" class="faq__item reveal-up">
-            <summary>¿Cuándo estará disponible?</summary>
-            <div class="faq__body"><p>Todavía no lo está. Estamos terminando de prepararlo. Si nos dejas tus datos, te avisamos en privado en cuanto puedas empezar, sin compromiso.</p></div>
-          </details>
-          <details name="faq" class="faq__item reveal-up">
             <summary>¿Es discreto de verdad?</summary>
-            <div class="faq__body"><p>Sí. Todo es online, cuentas tu caso desde el móvil y el contacto con tu médico se hace por email o por tu portal privado. Si tu médico prescribe un tratamiento, el envío es sobrio y sin referencias en el paquete.</p></div>
-          </details>
-          <details name="faq" class="faq__item reveal-up">
-            <summary>¿Tengo que pedir cita o ir a una consulta?</summary>
-            <div class="faq__body"><p>No. No hay citas ni salas de espera. Cuentas tu caso en privado y un médico colegiado lo valora cuando lo revisa. Si necesita más información, se pone en contacto contigo.</p></div>
+            <div class="faq__body"><p>Sí, está pensado para eso. Todo es online y cuentas tu caso desde el móvil. El contacto con tu médico se hace por email o por tu portal privado, el cargo en tu banco es neutro y, si te indican un tratamiento, el envío llega en un paquete sobrio sin referencias por fuera.</p></div>
           </details>
           <details name="faq" class="faq__item reveal-up">
             <summary>¿Quién me valora?</summary>
-            <div class="faq__body"><p>Un médico colegiado e independiente, de medicina general o urología según el caso. Sólo indica un tratamiento si es clínicamente apropiado tras tu valoración. Clynia nunca receta: la decisión es siempre del médico.</p></div>
-          </details>
-          <details name="faq" class="faq__item reveal-up">
-            <summary>¿Qué tratamiento voy a recibir?</summary>
-            <div class="faq__body"><p>No lo decidimos nosotros ni se puede saber de antemano. Si tu médico lo considera adecuado tras valorarte, te indicará un tratamiento médico con receta y seguimiento, ajustado a tu caso. No recomendamos ni publicitamos ningún medicamento.</p></div>
-          </details>
-          <details name="faq" class="faq__item reveal-up">
-            <summary>¿La disfunción eréctil tiene tratamiento?</summary>
-            <div class="faq__body"><p>En muchos casos se puede abordar, pero el enfoque depende de cada persona y de qué lo esté causando. Por eso lo importante es que un médico valore tu caso. Si lo considera adecuado, te indicará qué hacer, con receta y seguimiento.</p></div>
+            <div class="faq__body"><p>Un médico colegiado e independiente, de medicina general o urología según el caso. Valora tu situación en privado y sólo indica un tratamiento si lo considera adecuado para ti. Clynia es una plataforma de telemedicina y nunca receta: la decisión es siempre del médico.</p></div>
           </details>
           <details name="faq" class="faq__item reveal-up">
             <summary>¿Es seguro?</summary>
-            <div class="faq__body"><p>El tratamiento sólo se indica si un médico lo considera adecuado, y se acompaña de seguimiento. No es apto en todos los casos, por ejemplo con ciertos problemas de corazón o tratamientos en curso. Por eso la valoración médica y el seguimiento son imprescindibles.</p></div>
+            <div class="faq__body"><p>El tratamiento sólo se indica si un médico lo considera adecuado para ti, y se acompaña de seguimiento. No es apto en todos los casos, por ejemplo con ciertos problemas de corazón o tratamientos en curso. Por eso lo importante es que un médico valore tu caso antes de nada, y nunca te automediques por tu cuenta.</p></div>
           </details>
           <details name="faq" class="faq__item reveal-up">
             <summary>¿Mis datos están seguros?</summary>
@@ -386,7 +286,7 @@
     <section class="closing" id="empezar">
       <div class="wrap">
         <div class="closing__inner reveal-up">
-          <h2 class="closing__title">Tu salud sexual, tratada con discreción.</h2>
+          <h2 class="closing__title">Da el paso, en privado y sin prisa.</h2>
           <p class="closing__sub">Aún no está disponible, pero puedes ser de los primeros. Déjanos tus datos y te avisamos en privado en cuanto puedas empezar. Sin compromiso y siempre con un médico colegiado al otro lado.</p>
           <a class="btn btn--light" id="ctaFinal" href="https://form.typeform.com/to/fAyeBbWg?categoria=salud-sexual">
             Avísame
@@ -429,7 +329,7 @@
   <!-- ===================== STICKY CTA (móvil) ===================== -->
   <div class="sticky-cta" id="stickyCta" aria-hidden="true">
     <div class="sticky-cta__inner">
-      <span class="sticky-cta__hint">Gratis y sin compromiso</span>
+      <span class="sticky-cta__hint">Sin compromiso</span>
       <a class="btn btn--primary" href="https://form.typeform.com/to/fAyeBbWg?categoria=salud-sexual">
         Avísame
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
