@@ -240,16 +240,24 @@
     root.innerHTML = '<div class="cq__center"><div class="cq__loading"><span class="cq__spin"></span> Enviando tu información de forma segura...</div></div>';
     var payload = { product: F.product, answers: answers, triage: vars, submittedAt: new Date().toISOString() };
     var plan = (F.plans || []).filter(function (p) { return p.id === answers.plan; })[0];
-    var done = function () {
+    var redirected = false;
+    // casoId enlaza el cobro de Stripe con el caso exacto (client_reference_id)
+    function gotoPago(casoId) {
+      if (redirected) return; redirected = true;
       localStorage.removeItem(F.storeKey);
       if (plan && plan.pago) {
-        window.location.href = plan.pago + (plan.pago.indexOf("?") > -1 ? "&" : "?") + "prefilled_email=" + encodeURIComponent(answers.email || "");
+        var url = plan.pago + (plan.pago.indexOf("?") > -1 ? "&" : "?") + "prefilled_email=" + encodeURIComponent(answers.email || "");
+        if (casoId) url += "&client_reference_id=" + encodeURIComponent(casoId);
+        window.location.href = url;
       } else { go(byId("ending_ok"), false); }
-    };
-    if (!F.webhook) { done(); return; }
+    }
+    if (!F.webhook) { gotoPago(null); return; }
+    // Si el backend tarda demasiado, no bloqueamos al paciente: redirige igual (el pago se conciliará por email)
+    var failsafe = setTimeout(function () { gotoPago(null); }, 9000);
     fetch(F.webhook, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) })
-      .then(function () { done(); })
-      .catch(function () { try { localStorage.setItem(F.storeKey + "_pending", JSON.stringify(payload)); } catch (e) {} done(); });
+      .then(function (r) { return r.json().catch(function () { return {}; }); })
+      .then(function (data) { clearTimeout(failsafe); gotoPago(data && data.casoId ? data.casoId : null); })
+      .catch(function () { clearTimeout(failsafe); try { localStorage.setItem(F.storeKey + "_pending", JSON.stringify(payload)); } catch (e) {} gotoPago(null); });
   }
 
   document.body.classList.add("cq-body");
