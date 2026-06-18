@@ -30,7 +30,7 @@
     box.setAttribute("aria-label", "Aviso de cookies"); box.setAttribute("aria-live", "polite");
     box.innerHTML =
       '<p>Usamos cookies propias y de terceros para mejorar tu experiencia y por motivos analíticos. '
-      + 'Puedes aceptarlas todas, rechazarlas o leer nuestra <a href="cookies.html">política de cookies</a>.</p>'
+      + 'Puedes aceptarlas todas, rechazarlas o leer nuestra <a href="cookies">política de cookies</a>.</p>'
       + '<div class="ck-actions">'
       + '<button class="ck-btn ck-reject" type="button">Rechazar todo</button>'
       + '<button class="ck-btn ck-accept" type="button">Aceptar todo</button>'

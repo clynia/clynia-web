@@ -144,7 +144,7 @@ window.CLYNIA_FORM = {
     { id: "mensaje_equipo", section: "Casi listo", type: "longtext", key: "mensaje_equipo", q: "Cuéntanoslo", showIf: function (a) { return a.algo_mas === true; } },
 
     { id: "consent", section: "Casi listo", type: "consent", key: "consent", q: "Tus datos, protegidos", cta: "Acepto y continúo", items: [
-      { key: "acepta_privacidad", required: true, label: 'He leído y acepto la <a href="privacidad.html" target="_blank">Política de Privacidad</a> de Clynia.' },
+      { key: "acepta_privacidad", required: true, label: 'He leído y acepto la <a href="privacidad" target="_blank">Política de Privacidad</a> de Clynia.' },
       { key: "acepta_datos_salud", required: true, label: "Doy mi consentimiento explícito al tratamiento de mis datos de salud con fines asistenciales." },
       { key: "acepta_comercial", required: false, label: "Quiero recibir comunicaciones de Clynia sobre mi tratamiento y novedades." }
     ] },
@@ -155,8 +155,8 @@ window.CLYNIA_FORM = {
 
     // ---------- FINALES ----------
     { id: "ending_ok", type: "ending", variant: "ok", q: "¡Gracias! Hemos recibido tu solicitud", body: "El siguiente paso es el pago de tu plan; lo habilitaremos en cuanto conectemos la pasarela. Después, un médico colegiado revisará tu caso y te contactará. No tienes que hacer nada más por ahora." },
-    { id: "ending_menor", type: "ending", variant: "stop", q: "Este servicio es solo para mayores de 18 años", body: "Por ahora solo podemos atender a personas mayores de edad. Si te has equivocado con la fecha, vuelve atrás y corrígela.", href: "perdida-de-peso.html" },
-    { id: "ending_rojo", type: "ending", variant: "stop", q: "Por tu seguridad, esto debe valorarlo un médico en persona", body: "Según lo que nos has contado, el tratamiento online no es lo más adecuado para ti ahora mismo. Te recomendamos acudir a tu médico de cabecera o a un centro de forma presencial para una valoración. Hemos guardado tus respuestas: si quieres que te orientemos, escríbenos a clynia@clynia.es.", cta: "Volver a Clynia", href: "perdida-de-peso.html" }
+    { id: "ending_menor", type: "ending", variant: "stop", q: "Este servicio es solo para mayores de 18 años", body: "Por ahora solo podemos atender a personas mayores de edad. Si te has equivocado con la fecha, vuelve atrás y corrígela.", href: "perdida-de-peso" },
+    { id: "ending_rojo", type: "ending", variant: "stop", q: "Por tu seguridad, esto debe valorarlo un médico en persona", body: "Según lo que nos has contado, el tratamiento online no es lo más adecuado para ti ahora mismo. Te recomendamos acudir a tu médico de cabecera o a un centro de forma presencial para una valoración. Hemos guardado tus respuestas: si quieres que te orientemos, escríbenos a clynia@clynia.es.", cta: "Volver a Clynia", href: "perdida-de-peso" }
   ],
 
   computeVars: function (a) {

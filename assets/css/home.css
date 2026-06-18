@@ -27,7 +27,7 @@
   justify-content: space-between;
   gap: 16px;
 }
-.topnav__brand img { height: 27px; width: auto; display: block; }
+.topnav__brand img { height: 32px; width: auto; display: block; }
 .topnav__links { display: none; }
 .topnav__cta {
   display: inline-flex;
