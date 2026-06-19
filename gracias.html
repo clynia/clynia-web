@@ -29,6 +29,11 @@
     .ty__num{flex:none;width:27px;height:27px;border-radius:50%;background:#437066;color:#fff;font-size:13px;font-weight:600;display:grid;place-items:center;font-family:'Raleway',sans-serif;margin-top:1px}
     .ty__note{font-size:13px;color:#8a948e;margin-top:14px}
     .ty__note a{color:#437066}
+    .ty__call{display:flex;gap:14px;align-items:center;text-align:left;max-width:440px;margin:0 auto 30px;padding:16px 18px;background:rgba(67,112,102,.08);border:1px solid rgba(67,112,102,.2);border-radius:15px}
+    .ty__call-ico{flex:none;width:42px;height:42px;border-radius:50%;background:#437066;color:#fff;display:grid;place-items:center}
+    .ty__call-ico svg{width:20px;height:20px}
+    .ty__call p{margin:0;font-size:14.5px;line-height:1.55;color:#3a463f}
+    .ty__call b{color:#1f2a25}
   </style>
 </head>
 <body>
@@ -51,6 +56,13 @@
           <div class="ty__step"><span class="ty__num">1</span><span>Un <b>médico colegiado</b> revisará tu cuestionario clínico.</span></div>
           <div class="ty__step"><span class="ty__num">2</span><span>Si valora que el tratamiento es <b>adecuado para ti</b>, te lo indicará junto con su seguimiento. Si no lo fuera, te lo explicaremos y te devolvemos el importe.</span></div>
           <div class="ty__step"><span class="ty__num">3</span><span>Te <b>escribiremos por email</b> con los siguientes pasos. Revisa también tu carpeta de spam.</span></div>
+        </div>
+
+        <div class="ty__call">
+          <span class="ty__call-ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.97.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.84.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          </span>
+          <p>Es muy probable que <b>el médico te llame por teléfono</b> para conocer mejor tu caso. Mantén tu móvil a mano y, en la medida de lo posible, atento a llamadas estos días.</p>
         </div>
 
         <a class="btn btn--primary" href="/">Volver a Clynia</a>
