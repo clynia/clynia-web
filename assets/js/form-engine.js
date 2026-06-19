@@ -98,6 +98,7 @@
     var v = answers[s.key];
     switch (s.type) {
       case "text": return '<input class="cq__input" id="cqIn" type="text" autocomplete="' + (s.autocomplete || "on") + '" value="' + esc(v || "") + '" placeholder="' + esc(s.placeholder || "") + '">';
+      case "select": return '<select class="cq__input" id="cqIn"><option value="" disabled' + (v ? "" : " selected") + ">" + esc(s.placeholder || "Selecciona una opción") + "</option>" + (s.options || []).map(function (o) { var val = ("value" in o) ? o.value : o.label; return '<option value="' + esc(val) + '"' + (v === val ? " selected" : "") + ">" + esc(o.label) + "</option>"; }).join("") + "</select>";
       case "longtext": return '<textarea class="cq__input" id="cqIn" placeholder="' + esc(s.placeholder || "") + '">' + esc(v || "") + "</textarea>";
       case "email": return '<input class="cq__input" id="cqIn" type="email" inputmode="email" autocomplete="email" value="' + esc(v || "") + '" placeholder="tucorreo@email.com">';
       case "tel": return '<input class="cq__input" id="cqIn" type="tel" inputmode="tel" autocomplete="tel" value="' + esc(v || "") + '" placeholder="600 000 000">';
@@ -173,6 +174,7 @@
       if (el) {
         var setv = function () { answers[s.key] = (s.type === "number") ? (el.value === "" ? null : +el.value) : el.value; save(); };
         el.oninput = setv;
+        el.onchange = setv;
         if (s.type !== "longtext") {
           el.onkeydown = function (e) { if (e.key === "Enter") { e.preventDefault(); setv(); submitStep(s); } };
           setTimeout(function () { try { el.focus(); } catch (e) {} }, 40);
@@ -200,7 +202,7 @@
 
   function submitStep(s) {
     if (!validate(s)) { err(s.errMsg || "Responde para continuar."); return; }
-    if (s.id === "plans") return finish();
+    if (s.id === "plans" || s.submit) return finish();
     go(nextOf(s), true);
   }
 
