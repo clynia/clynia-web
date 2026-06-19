@@ -23,7 +23,7 @@ body.cq-body{
 .cq__back:disabled{opacity:.35;cursor:default}
 .cq__progress{flex:1;height:6px;background:var(--soft);border-radius:99px;overflow:hidden}
 .cq__progress i{display:block;height:100%;width:0;background:var(--green);border-radius:99px;transition:width .35s ease}
-.cq__brand{font-weight:700;color:var(--green);font-size:17px;letter-spacing:-.3px}
+.cq__brand{height:20px;width:auto;display:block;flex:none}
 
 /* Escenario */
 .cq__stage{flex:1;width:100%;max-width:var(--maxw);margin:0 auto;padding:10px 20px 16px}

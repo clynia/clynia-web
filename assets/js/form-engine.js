@@ -75,7 +75,7 @@
     var h = '<header class="cq__bar">';
     h += '<button class="cq__back" type="button" aria-label="Atrás"' + (history.length ? "" : " disabled") + ">&#8592;</button>";
     h += '<div class="cq__progress"><i style="width:' + progress() + '%"></i></div>';
-    h += '<span class="cq__brand">Clynia</span></header>';
+    h += '<img class="cq__brand" src="assets/logos/clynia-wordmark.png" alt="Clynia"></header>';
     h += '<main class="cq__stage"><div class="cq__step">';
     h += '<p class="cq__eyebrow">' + esc(s.section || "Tu valoración") + "</p>";
     h += '<h1 class="cq__q">' + interp(s.q) + "</h1>";
@@ -206,7 +206,7 @@
 
   function renderStatement(s) {
     var h = '<header class="cq__bar"><button class="cq__back" type="button"' + (history.length ? "" : " disabled") + ">&#8592;</button>";
-    h += '<div class="cq__progress"><i style="width:' + progress() + '%"></i></div><span class="cq__brand">Clynia</span></header>';
+    h += '<div class="cq__progress"><i style="width:' + progress() + '%"></i></div><img class="cq__brand" src="assets/logos/clynia-wordmark.png" alt="Clynia"></header>';
     h += '<main class="cq__stage"><div class="cq__step"><h1 class="cq__q">' + interp(s.q) + "</h1>";
     if (s.body) h += '<p class="cq__help">' + interp(s.body) + "</p></div></main>";
     h += '<footer class="cq__foot"><div class="in"><button class="cq__next" type="button" id="cqNext">' + esc(s.cta || "Continuar") + "</button>" + (history.length ? '<button class="cq__backlow" type="button" id="cqBackLow">&#8592; Atrás</button>' : "") + "</div></footer>";
