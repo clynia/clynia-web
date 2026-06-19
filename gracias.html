@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Clynia · Gracias, hemos recibido tu solicitud</title>
+  <meta name="description" content="Hemos recibido tu solicitud. Un médico colegiado revisará tu caso y te contactará por email." />
+  <meta name="robots" content="noindex" />
+  <meta name="theme-color" content="#f6f4ef" />
+  <link rel="icon" type="image/png" href="assets/img/favicon.png" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,500&family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="assets/css/styles.css" />
+  <style>
+    .ty{min-height:100dvh;display:flex;flex-direction:column}
+    .ty__main{flex:1;display:grid;place-items:center;padding:48px 20px}
+    .ty__card{max-width:580px;text-align:center}
+    .ty__check{width:74px;height:74px;border-radius:50%;display:grid;place-items:center;margin:0 auto 26px;background:rgba(67,112,102,.12);color:#437066}
+    .ty__check svg{width:36px;height:36px}
+    .ty__title{font-family:'Lora',Georgia,serif;font-size:clamp(28px,6vw,40px);line-height:1.15;color:#1f2a25;margin:0 0 14px;letter-spacing:-.01em}
+    .ty__title em{color:#437066;font-style:italic}
+    .ty__sub{font-size:17px;line-height:1.65;color:#4a5650;margin:0 auto 30px;max-width:46ch}
+    .ty__steps{text-align:left;display:grid;gap:16px;max-width:430px;margin:0 auto 32px}
+    .ty__step{display:flex;gap:13px;align-items:flex-start;font-size:15.5px;line-height:1.5;color:#4a5650}
+    .ty__step b{color:#1f2a25}
+    .ty__num{flex:none;width:27px;height:27px;border-radius:50%;background:#437066;color:#fff;font-size:13px;font-weight:600;display:grid;place-items:center;font-family:'Raleway',sans-serif;margin-top:1px}
+    .ty__note{font-size:13px;color:#8a948e;margin-top:14px}
+    .ty__note a{color:#437066}
+  </style>
+</head>
+<body>
+  <div class="ty">
+    <header class="nav">
+      <a class="nav__brand" href="/" aria-label="Clynia, inicio">
+        <img src="assets/logos/clynia-wordmark.png" alt="Clynia" />
+      </a>
+    </header>
+
+    <main class="ty__main">
+      <div class="ty__card">
+        <span class="ty__check" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+        </span>
+        <h1 class="ty__title">Gracias, hemos recibido <em>tu solicitud</em></h1>
+        <p class="ty__sub">Tu pago se ha completado correctamente. A partir de aquí no tienes que hacer nada más: nos ponemos en marcha.</p>
+
+        <div class="ty__steps">
+          <div class="ty__step"><span class="ty__num">1</span><span>Un <b>médico colegiado</b> revisará tu cuestionario clínico.</span></div>
+          <div class="ty__step"><span class="ty__num">2</span><span>Si valora que el tratamiento es <b>adecuado para ti</b>, te lo indicará junto con su seguimiento. Si no lo fuera, te lo explicaremos y te devolvemos el importe.</span></div>
+          <div class="ty__step"><span class="ty__num">3</span><span>Te <b>escribiremos por email</b> con los siguientes pasos. Revisa también tu carpeta de spam.</span></div>
+        </div>
+
+        <a class="btn btn--primary" href="/">Volver a Clynia</a>
+        <p class="ty__note">¿Alguna duda? Escríbenos a <a href="mailto:clynia@clynia.es">clynia@clynia.es</a></p>
+      </div>
+    </main>
+  </div>
+</body>
+</html>
