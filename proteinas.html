@@ -41,6 +41,9 @@
     .psim__goals button.is-sel .psim__goalname { color: var(--green-900); }
     .psim__goalsub { font-size: 12.5px; font-weight: 600; color: var(--ink-soft); }
     .psim__goals button.is-sel .psim__goalsub { color: var(--green); }
+    .psim__rec { display: inline-block; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; color: #fff; background: var(--green); padding: 2px 8px; border-radius: 8px; margin-bottom: 4px; }
+    .psim__note { margin: 10px 0 0; font-size: 12.5px; line-height: 1.5; color: var(--ink-soft); }
+    .psim__note strong { color: var(--green); font-weight: 700; }
     @media (max-width: 430px) { .psim__goals { grid-template-columns: 1fr; } }
 
     .psim__target { text-align: center; background: var(--green-tint); border: 1px solid var(--green-tint-2); border-radius: 14px; padding: 16px; margin-bottom: 18px; }
@@ -141,10 +144,11 @@
             <span class="psim__steplabel"><span class="psim__num">2</span> ¿Cuál es tu objetivo?</span>
             <div class="psim__goals" id="pRatio" role="group" aria-label="Objetivo de proteína por kilo de peso">
               <button type="button" data-r="1.2"><span class="psim__goalname">Mantener mi peso</span><span class="psim__goalsub">1,2 g por kilo</span></button>
-              <button type="button" data-r="1.5" class="is-sel"><span class="psim__goalname">Perder peso</span><span class="psim__goalsub">1,5 g por kilo</span></button>
-              <button type="button" data-r="1.8"><span class="psim__goalname">Perder peso y cuidar músculo</span><span class="psim__goalsub">1,8 g por kilo</span></button>
+              <button type="button" data-r="1.5"><span class="psim__goalname">Perder peso</span><span class="psim__goalsub">1,5 g por kilo</span></button>
+              <button type="button" data-r="1.8" class="is-sel"><span class="psim__rec">Recomendado con GLP-1</span><span class="psim__goalname">Perder peso y cuidar músculo</span><span class="psim__goalsub">1,8 g por kilo</span></button>
               <button type="button" data-r="2"><span class="psim__goalname">Perder peso y ganar músculo</span><span class="psim__goalsub">2,0 g por kilo</span></button>
             </div>
+            <p class="psim__note">Con un tratamiento <strong>GLP-1</strong>, como la pérdida de peso es más marcada, conviene apuntar <strong>por encima de 1,5 g por kilo</strong> para no perder músculo.</p>
           </div>
         </div>
 
@@ -174,7 +178,7 @@
           <li><strong>1,8 g por kilo</strong> si además haces ejercicio de fuerza.</li>
           <li><strong>2 g por kilo</strong> si entrenas fuerte y quieres ganar músculo.</li>
         </ul>
-        <p>Por ejemplo, una persona de 80 kg que está perdiendo peso necesitaría en torno a <strong>120 g de proteína al día</strong> (80 × 1,5). En personas sanas, pasar de unos 2,2 g por kilo de forma habitual no aporta beneficios. Son cifras orientativas: tu médico o dietista-nutricionista las ajustará a tu caso.</p>
+        <p>Por ejemplo, una persona de 80 kg que está perdiendo peso necesitaría en torno a <strong>120 g de proteína al día</strong> (80 × 1,5). <strong>Si haces un tratamiento con GLP-1</strong>, como la pérdida de peso es más marcada, suele recomendarse apuntar por encima de 1,5 g por kilo (en torno a 1,8 a 2 g) para proteger mejor el músculo. En personas sanas, pasar de unos 2,2 g por kilo de forma habitual no aporta beneficios. Son cifras orientativas: tu médico o dietista-nutricionista las ajustará a tu caso.</p>
 
         <h2 id="por-que">Por qué la proteína es tu aliada con GLP-1</h2>
         <p>Durante un tratamiento para perder peso es normal comer menos y notar menos hambre. El reto es que, al adelgazar, una parte de lo que se pierde puede ser <strong>masa muscular</strong>, y el músculo es importante para tu fuerza, tu metabolismo y tu salud a largo plazo. Dos hábitos sencillos ayudan a protegerlo: <strong>tomar suficiente proteína</strong> repartida a lo largo del día y hacer algo de <strong>ejercicio de fuerza</strong>. Lo contamos con detalle en nuestra guía de <a href="/blog/masa-muscular-y-ejercicio-con-glp1">masa muscular y ejercicio con GLP-1</a> y en <a href="/blog/que-comer-con-glp1">qué comer durante el tratamiento</a>.</p>
@@ -250,7 +254,7 @@
       ];
       FOODS.forEach(function (f) { f.pg = 0; f.locked = false; f.el = null; });
 
-      var weight = 80, ratio = 1.5, TARGET = 0;
+      var weight = 80, ratio = 1.8, TARGET = 0;
       var $ = function (s) { return document.getElementById(s); };
       var foodsBox = $("pFoods"), addBox = $("pAdd"), bar = $("pBar");
 
