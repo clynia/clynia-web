@@ -61,6 +61,11 @@
     .pfood__lock:hover, .pfood__rm:hover { border-color: var(--green-tint-2); color: var(--green); }
     .pfood__lock.is-on { border-color: var(--green); background: var(--green-tint); color: var(--green); }
     .pfood__lock svg, .pfood__rm svg { width: 16px; height: 16px; }
+    .pfood__lock { position: relative; }
+    .pfood__lock::after { content: attr(data-tip); position: absolute; bottom: calc(100% + 9px); right: 0; width: max-content; max-width: 190px; background: var(--green-900); color: #fff; font-size: 12px; font-weight: 600; line-height: 1.35; text-align: center; padding: 7px 10px; border-radius: 9px; opacity: 0; pointer-events: none; transform: translateY(4px); transition: opacity 0.15s var(--ease), transform 0.15s var(--ease); z-index: 6; box-shadow: 0 8px 20px -8px rgba(40, 67, 60, 0.55); }
+    .pfood__lock::before { content: ""; position: absolute; bottom: calc(100% + 3px); right: 11px; border: 6px solid transparent; border-top-color: var(--green-900); opacity: 0; pointer-events: none; transition: opacity 0.15s var(--ease); }
+    .pfood__lock:hover::after, .pfood__lock:focus-visible::after { opacity: 1; transform: translateY(0); }
+    .pfood__lock:hover::before, .pfood__lock:focus-visible::before { opacity: 1; }
     .pfood__range { width: 100%; accent-color: var(--green); margin: 4px 0 8px; cursor: pointer; }
     .pfood.is-locked .pfood__range { opacity: 0.45; }
     .pfood__vals { display: flex; justify-content: space-between; align-items: baseline; font-size: 14px; gap: 12px; }
@@ -223,7 +228,7 @@
             '<div class="pfood__head">' +
               '<span class="pfood__dot" style="background:' + f.color + '"></span>' +
               '<span class="pfood__name">' + f.name + '</span>' +
-              '<button type="button" class="pfood__lock' + (f.locked ? " is-on" : "") + '" aria-label="Fijar ' + f.name + '" aria-pressed="' + f.locked + '">' + LOCK + '</button>' +
+              '<button type="button" class="pfood__lock' + (f.locked ? " is-on" : "") + '" data-tip="' + (f.locked ? "Cantidad bloqueada. Pulsa para soltarla" : "Bloquea esta cantidad para que no cambie al mover los demás") + '" aria-label="Bloquear esta cantidad de ' + f.name + '" aria-pressed="' + f.locked + '">' + LOCK + '</button>' +
               '<button type="button" class="pfood__rm" aria-label="Quitar ' + f.name + '">' + XMARK + '</button>' +
             '</div>' +
             '<input type="range" class="pfood__range" min="0" step="' + f.step + '" />' +
@@ -248,6 +253,7 @@
             row.classList.toggle("is-locked", f.locked);
             f.el.lock.classList.toggle("is-on", f.locked);
             f.el.lock.setAttribute("aria-pressed", f.locked);
+            f.el.lock.setAttribute("data-tip", f.locked ? "Cantidad bloqueada. Pulsa para soltarla" : "Bloquea esta cantidad para que no cambie al mover los demás");
           });
           row.querySelector(".pfood__rm").addEventListener("click", function () {
             f.on = false; f.pg = 0; f.locked = false;
