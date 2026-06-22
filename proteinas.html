@@ -46,6 +46,11 @@
     .psim__target { text-align: center; background: var(--green-tint); border: 1px solid var(--green-tint-2); border-radius: 14px; padding: 16px; margin-bottom: 18px; }
     .psim__target > span { display: block; font-size: 12.5px; color: var(--ink-soft); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
     .psim__target strong { display: block; font-family: "Lora", serif; font-weight: 500; font-size: 40px; color: var(--green-900); line-height: 1.1; margin: 2px 0; }
+    .psim__target em { font-style: normal; display: block; font-size: 14px; font-weight: 600; margin-top: 4px; }
+    .psim__target em.is-ok { color: var(--green); }
+    .psim__target em.is-under { color: #c0492f; }
+    .psim__target em.is-over { color: var(--ink-soft); }
+    .psim__bar.is-under { background: #f4e3dc; }
 
     .psim__bar { display: flex; height: 20px; border-radius: 10px; overflow: hidden; background: var(--green-tint); margin-bottom: 14px; box-shadow: inset 0 0 0 1px var(--green-tint-2); }
     .psim__bar span { height: 100%; transition: width 0.25s var(--ease); }
@@ -144,8 +149,9 @@
         </div>
 
         <div class="psim__target">
-          <span>Tu objetivo diario</span>
+          <span>Proteína que necesitas al día</span>
           <strong id="pTarget">120 g</strong>
+          <em id="pStatus" class="is-ok">Tu reparto cuadra con tu objetivo</em>
         </div>
 
         <div class="psim__bar" id="pBar" aria-hidden="true"></div>
@@ -262,14 +268,16 @@
         var act = active();
         var lock = act.filter(function (f) { return f.locked && f !== changed; })
                       .reduce(function (s, f) { return s + f.pg; }, 0);
-        newPg = Math.max(0, Math.min(newPg, TARGET - lock));
-        changed.pg = newPg;
+        changed.pg = Math.max(0, newPg);
         var others = act.filter(function (f) { return f !== changed && !f.locked; });
-        var rem = TARGET - lock - newPg;
-        var cur = others.reduce(function (s, f) { return s + f.pg; }, 0);
+        var rem = TARGET - lock - changed.pg;
         if (others.length) {
-          if (cur > 0) { others.forEach(function (f) { f.pg = f.pg * rem / cur; }); }
-          else { others.forEach(function (f) { f.pg = rem / others.length; }); }
+          if (rem <= 0) { others.forEach(function (f) { f.pg = 0; }); }
+          else {
+            var cur = others.reduce(function (s, f) { return s + f.pg; }, 0);
+            if (cur > 0) { others.forEach(function (f) { f.pg = f.pg * rem / cur; }); }
+            else { others.forEach(function (f) { f.pg = rem / others.length; }); }
+          }
         }
       }
 
@@ -344,7 +352,9 @@
       function update() {
         $("pTarget").textContent = TARGET + " g";
         $("pTargetInline").textContent = TARGET + " g";
+        var sum = 0;
         active().forEach(function (f) {
+          sum += f.pg;
           if (!f.el) return;
           f.el.range.max = Math.max(f.step, Math.ceil((TARGET / f.per) / f.step) * f.step);
           f.el.range.value = f.pg / f.per;
@@ -352,6 +362,21 @@
           f.el.prot.textContent = Math.round(f.pg) + " g proteína";
           f.el.seg.style.width = (TARGET > 0 ? (f.pg / TARGET * 100) : 0) + "%";
         });
+        var d = Math.round(sum) - TARGET;
+        var st = $("pStatus");
+        if (d < 0) {
+          st.className = "is-under";
+          st.textContent = "Te faltan " + (-d) + " g: con esta combinación te quedas corto de proteína.";
+          bar.className = "psim__bar is-under";
+        } else if (d > 0) {
+          st.className = "is-over";
+          st.textContent = "Vas " + d + " g por encima de tu objetivo. No pasa nada, es un extra.";
+          bar.className = "psim__bar";
+        } else {
+          st.className = "is-ok";
+          st.textContent = "Tu reparto cuadra con tu objetivo.";
+          bar.className = "psim__bar";
+        }
       }
 
       function setWeight(v) {
