@@ -18,23 +18,30 @@
   <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,500&family=Raleway:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/assets/css/blog.css" />
   <style>
-    .calc__opts { display: flex; flex-wrap: wrap; gap: 8px; }
-    .calc__opts button {
-      font: inherit; cursor: pointer; border: 1.5px solid var(--line); background: #fff; color: var(--ink-soft);
-      padding: 10px 16px; border-radius: 12px; font-size: 14.5px; font-weight: 600; line-height: 1.25; text-align: center;
-      transition: border-color 0.18s var(--ease), background-color 0.18s var(--ease), color 0.18s var(--ease);
-    }
-    .calc__opts button:hover { border-color: var(--green-tint-2); }
-    .calc__opts button.is-sel { border-color: var(--green); background: var(--green-tint); color: var(--green); }
-    #pRatio button b { display: block; font-size: 13px; }
+    .protein-hook { font-family: "Lora", serif; font-weight: 500; font-size: clamp(21px, 3.7vw, 28px); line-height: 1.32; color: var(--green-900); text-align: center; max-width: 660px; margin: 10px auto 6px; }
+    .protein-hook strong { color: var(--green); font-weight: 600; }
 
     .psim { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; margin: 22px 0; }
-    .psim__setup { display: flex; flex-wrap: wrap; gap: 18px 26px; margin-bottom: 20px; }
-    .psim__field { flex: 1 1 220px; }
-    .psim__field > label { display: block; font-weight: 700; font-size: 15px; color: var(--ink); margin-bottom: 10px; }
-    .psim__weight { display: flex; align-items: center; gap: 8px; }
-    .psim__weight input { font: inherit; font-size: 18px; font-weight: 600; width: 96px; padding: 10px 12px; border: 1.5px solid var(--line); border-radius: 12px; color: var(--ink); background: #fff; }
-    .psim__weight span { font-weight: 600; color: var(--ink-soft); }
+
+    .psim__setup { display: flex; flex-direction: column; gap: 20px; margin-bottom: 22px; }
+    .psim__steplabel { display: flex; align-items: center; gap: 9px; font-weight: 700; font-size: 15.5px; color: var(--ink); margin-bottom: 12px; }
+    .psim__num { flex: none; display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; background: var(--green); color: #fff; font-size: 13px; font-weight: 700; }
+    .psim__weight { display: inline-flex; align-items: center; border: 1.5px solid var(--line); border-radius: 14px; overflow: hidden; background: #fff; }
+    .psim__wbtn { flex: none; width: 48px; height: 52px; border: none; background: var(--green-tint); color: var(--green-900); font-size: 24px; font-weight: 600; cursor: pointer; line-height: 1; transition: background-color 0.18s var(--ease); }
+    .psim__wbtn:hover { background: var(--green-tint-2); }
+    .psim__weight input { font: inherit; font-size: 24px; font-weight: 700; text-align: center; width: 76px; height: 52px; border: none; color: var(--ink); background: #fff; -moz-appearance: textfield; }
+    .psim__weight input::-webkit-outer-spin-button, .psim__weight input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    .psim__unit { padding: 0 14px; font-weight: 600; font-size: 15px; color: var(--ink-soft); }
+
+    .psim__goals { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .psim__goals button { display: flex; flex-direction: column; align-items: flex-start; gap: 3px; text-align: left; font: inherit; cursor: pointer; border: 1.5px solid var(--line); background: #fff; border-radius: 14px; padding: 12px 14px; transition: border-color 0.18s var(--ease), background-color 0.18s var(--ease); }
+    .psim__goals button:hover { border-color: var(--green-tint-2); }
+    .psim__goals button.is-sel { border-color: var(--green); background: var(--green-tint); }
+    .psim__goalname { font-weight: 700; font-size: 14.5px; color: var(--ink); line-height: 1.25; }
+    .psim__goals button.is-sel .psim__goalname { color: var(--green-900); }
+    .psim__goalsub { font-size: 12.5px; font-weight: 600; color: var(--ink-soft); }
+    .psim__goals button.is-sel .psim__goalsub { color: var(--green); }
+    @media (max-width: 430px) { .psim__goals { grid-template-columns: 1fr; } }
 
     .psim__target { text-align: center; background: var(--green-tint); border: 1px solid var(--green-tint-2); border-radius: 14px; padding: 16px; margin-bottom: 18px; }
     .psim__target > span { display: block; font-size: 12.5px; color: var(--ink-soft); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
@@ -76,28 +83,29 @@
       <nav class="breadcrumb"><a href="/">Clynia</a> &rsaquo; Calculadora de proteína</nav>
       <span class="article__tag">Herramienta</span>
       <h1>Calculadora de proteína para cuidar tu músculo con <span style="white-space:nowrap">GLP-1</span></h1>
-      <p class="article__lead">Cuando pierdes peso, también puedes perder músculo, y la proteína es tu mejor aliada para conservarlo. Pon tu peso, elige tu objetivo y <strong>juega a combinar tus alimentos favoritos</strong>: sube los huevos y mira cómo bajan el pollo o las lentejas, prueba mezclas y queda con la que más te apetezca. El total siempre cuadra con tu objetivo.</p>
 
-      <div class="callout callout--info">
-        <p>Las cifras son <strong>orientativas y divulgativas</strong>. Tu objetivo concreto de proteína depende de tu situación; ajústalo con tu médico o tu dietista-nutricionista.</p>
-      </div>
+      <p class="protein-hook"><strong>Pierde grasa, no músculo.</strong> Tu mejor aliada para conseguirlo es la proteína que comes cada día.</p>
+
+      <p class="article__lead">Pon tu peso, elige tu objetivo y <strong>juega a combinar tus alimentos favoritos</strong>: sube los huevos y mira cómo bajan el pollo o las lentejas, prueba mezclas y queda con la que más te apetezca. El total siempre cuadra con tu objetivo.</p>
 
       <div class="psim" id="psim">
         <div class="psim__setup">
-          <div class="psim__field">
-            <label for="pWeight">Tu peso</label>
+          <div class="psim__step">
+            <label class="psim__steplabel" for="pWeight"><span class="psim__num">1</span> ¿Cuánto pesas?</label>
             <div class="psim__weight">
+              <button type="button" class="psim__wbtn" data-w="-1" aria-label="Bajar un kilo">−</button>
               <input type="number" id="pWeight" min="35" max="250" step="1" value="80" inputmode="numeric" aria-label="Tu peso en kilogramos" />
-              <span>kg</span>
+              <span class="psim__unit">kg</span>
+              <button type="button" class="psim__wbtn" data-w="1" aria-label="Subir un kilo">+</button>
             </div>
           </div>
-          <div class="psim__field">
-            <label>Objetivo de proteína al día</label>
-            <div class="calc__opts" id="pRatio" role="group" aria-label="Objetivo de proteína por kilo de peso">
-              <button type="button" data-r="1.2">Mantener<b>1,2 g/kg</b></button>
-              <button type="button" data-r="1.5" class="is-sel">Pérdida de peso<b>1,5 g/kg</b></button>
-              <button type="button" data-r="1.8">Pérdida + fuerza<b>1,8 g/kg</b></button>
-              <button type="button" data-r="2">Alto<b>2,0 g/kg</b></button>
+          <div class="psim__step">
+            <span class="psim__steplabel"><span class="psim__num">2</span> ¿Cuál es tu objetivo?</span>
+            <div class="psim__goals" id="pRatio" role="group" aria-label="Objetivo de proteína por kilo de peso">
+              <button type="button" data-r="1.2"><span class="psim__goalname">Mantener mi peso</span><span class="psim__goalsub">1,2 g por kilo</span></button>
+              <button type="button" data-r="1.5" class="is-sel"><span class="psim__goalname">Estoy perdiendo peso</span><span class="psim__goalsub">1,5 g por kilo</span></button>
+              <button type="button" data-r="1.8"><span class="psim__goalname">Perder peso y cuidar músculo</span><span class="psim__goalsub">1,8 g por kilo</span></button>
+              <button type="button" data-r="2"><span class="psim__goalname">Objetivo alto</span><span class="psim__goalsub">2,0 g por kilo</span></button>
             </div>
           </div>
         </div>
@@ -112,6 +120,10 @@
 
         <div class="psim__foods" id="pFoods"></div>
         <div class="psim__add" id="pAdd"></div>
+      </div>
+
+      <div class="callout callout--info">
+        <p>Las cifras son <strong>orientativas y divulgativas</strong>. Tu objetivo concreto de proteína depende de tu situación; ajústalo con tu médico o tu dietista-nutricionista.</p>
       </div>
 
       <div class="article__body">
@@ -272,11 +284,22 @@
         });
       }
 
+      function setWeight(v) {
+        weight = Math.max(35, Math.min(250, v));
+        $("pWeight").value = weight;
+        recalc(); normalize(); update();
+      }
+
       $("pWeight").addEventListener("input", function () {
         var v = parseInt(this.value, 10);
         if (isNaN(v)) return;
         weight = Math.max(35, Math.min(250, v));
         recalc(); normalize(); update();
+      });
+      [].forEach.call(document.querySelectorAll(".psim__wbtn"), function (btn) {
+        btn.addEventListener("click", function () {
+          setWeight(weight + parseInt(btn.getAttribute("data-w"), 10));
+        });
       });
       $("pRatio").addEventListener("click", function (e) {
         var b = e.target.closest("button"); if (!b) return;
