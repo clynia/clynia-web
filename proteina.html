@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Calculadora de proteína para cuidar tu músculo con GLP-1 · Clynia</title>
+  <meta name="description" content="Calcula cuánta proteína necesitas al día según tu peso para conservar la masa muscular durante un tratamiento con GLP-1, y reparte ese objetivo entre alimentos (huevos, pollo, pescado, legumbres...) con un simulador interactivo. Información orientativa con fuentes oficiales." />
+  <link rel="canonical" href="https://clynia.es/proteina" />
+  <meta name="robots" content="noindex, follow" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Calculadora de proteína para cuidar tu músculo con GLP-1 · Clynia" />
+  <meta property="og:description" content="Calcula tu proteína diaria según tu peso y repártela entre alimentos con un simulador interactivo. Cuidar el músculo es clave durante un tratamiento con GLP-1." />
+  <meta property="og:locale" content="es_ES" />
+  <meta name="theme-color" content="#f6f4ef" />
+  <link rel="icon" type="image/png" href="/assets/img/favicon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,500&family=Raleway:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/assets/css/blog.css" />
+  <style>
+    .calc__opts { display: flex; flex-wrap: wrap; gap: 8px; }
+    .calc__opts button {
+      font: inherit; cursor: pointer; border: 1.5px solid var(--line); background: #fff; color: var(--ink-soft);
+      padding: 10px 16px; border-radius: 12px; font-size: 14.5px; font-weight: 600; line-height: 1.25; text-align: center;
+      transition: border-color 0.18s var(--ease), background-color 0.18s var(--ease), color 0.18s var(--ease);
+    }
+    .calc__opts button:hover { border-color: var(--green-tint-2); }
+    .calc__opts button.is-sel { border-color: var(--green); background: var(--green-tint); color: var(--green); }
+    #pRatio button b { display: block; font-size: 13px; }
+
+    .psim { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; margin: 22px 0; }
+    .psim__setup { display: flex; flex-wrap: wrap; gap: 18px 26px; margin-bottom: 20px; }
+    .psim__field { flex: 1 1 220px; }
+    .psim__field > label { display: block; font-weight: 700; font-size: 15px; color: var(--ink); margin-bottom: 10px; }
+    .psim__weight { display: flex; align-items: center; gap: 8px; }
+    .psim__weight input { font: inherit; font-size: 18px; font-weight: 600; width: 96px; padding: 10px 12px; border: 1.5px solid var(--line); border-radius: 12px; color: var(--ink); background: #fff; }
+    .psim__weight span { font-weight: 600; color: var(--ink-soft); }
+
+    .psim__target { text-align: center; background: var(--green-tint); border: 1px solid var(--green-tint-2); border-radius: 14px; padding: 16px; margin-bottom: 18px; }
+    .psim__target > span { display: block; font-size: 12.5px; color: var(--ink-soft); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+    .psim__target strong { display: block; font-family: "Lora", serif; font-weight: 500; font-size: 40px; color: var(--green-900); line-height: 1.1; margin: 2px 0 4px; }
+    .psim__target em { font-style: normal; font-size: 14px; color: var(--green); }
+
+    .psim__bar { display: flex; height: 20px; border-radius: 10px; overflow: hidden; background: var(--green-tint); margin-bottom: 14px; box-shadow: inset 0 0 0 1px var(--green-tint-2); }
+    .psim__bar span { height: 100%; transition: width 0.25s var(--ease); }
+    .psim__hint { font-size: 13.5px; color: var(--ink-soft); margin: 0 0 18px; line-height: 1.55; }
+    .psim__hint b { color: var(--green); font-weight: 700; }
+
+    .psim__foods { display: flex; flex-direction: column; gap: 14px; }
+    .pfood { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; }
+    .pfood__head { display: flex; align-items: center; gap: 9px; margin-bottom: 6px; }
+    .pfood__dot { width: 12px; height: 12px; border-radius: 50%; flex: none; }
+    .pfood__name { font-weight: 700; font-size: 15px; color: var(--ink); flex: 1 1 auto; }
+    .pfood__lock, .pfood__rm { flex: none; display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border: 1.5px solid var(--line); background: #fff; border-radius: 9px; cursor: pointer; color: var(--ink-soft); transition: border-color 0.18s var(--ease), background-color 0.18s var(--ease), color 0.18s var(--ease); }
+    .pfood__lock:hover, .pfood__rm:hover { border-color: var(--green-tint-2); color: var(--green); }
+    .pfood__lock.is-on { border-color: var(--green); background: var(--green-tint); color: var(--green); }
+    .pfood__lock svg, .pfood__rm svg { width: 16px; height: 16px; }
+    .pfood__range { width: 100%; accent-color: var(--green); margin: 4px 0 8px; cursor: pointer; }
+    .pfood.is-locked .pfood__range { opacity: 0.45; }
+    .pfood__vals { display: flex; justify-content: space-between; align-items: baseline; font-size: 14px; gap: 12px; }
+    .pfood__amt { font-weight: 700; color: var(--ink); }
+    .pfood__prot { color: var(--green); font-weight: 600; white-space: nowrap; }
+
+    .psim__add { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+    .psim__add button { font: inherit; cursor: pointer; border: 1.5px dashed var(--green-tint-2); background: #fff; color: var(--green); padding: 8px 14px; border-radius: 20px; font-size: 13.5px; font-weight: 600; transition: background-color 0.18s var(--ease), border-color 0.18s var(--ease); }
+    .psim__add button:hover { background: var(--green-tint); border-style: solid; }
+
+    .psim__meals { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 20px; border-top: 1px dashed var(--green-tint-2); padding-top: 16px; }
+    .psim__meals > span { font-weight: 700; font-size: 14px; color: var(--ink); }
+  </style>
+</head>
+<body>
+  <header class="blognav"><div class="blognav__in">
+    <a class="blognav__brand" href="/" aria-label="Clynia, inicio"><img src="/assets/logos/clynia-wordmark.png" alt="Clynia" /></a>
+    <nav class="blognav__links"><a href="/blog">Blog</a><a class="blognav__ghost" href="/">Inicio</a></nav>
+  </div></header>
+
+  <main>
+    <article class="article">
+      <nav class="breadcrumb"><a href="/">Clynia</a> &rsaquo; Calculadora de proteína</nav>
+      <span class="article__tag">Herramienta</span>
+      <h1>Calculadora de proteína para cuidar tu músculo con <span style="white-space:nowrap">GLP-1</span></h1>
+      <p class="article__lead">Cuando pierdes peso, también puedes perder músculo. Cuidar tu aporte de proteína, repartido en el día y junto con algo de ejercicio de fuerza, ayuda a conservarlo. Pon tu peso, elige tu objetivo y reparte esos gramos entre tus alimentos favoritos: el simulador mantiene siempre tu objetivo.</p>
+
+      <div class="callout callout--info">
+        <p>Las cifras son <strong>orientativas y divulgativas</strong>. Tu objetivo concreto de proteína depende de tu situación; ajústalo con tu médico o tu dietista-nutricionista.</p>
+      </div>
+
+      <div class="psim" id="psim">
+        <div class="psim__setup">
+          <div class="psim__field">
+            <label for="pWeight">Tu peso</label>
+            <div class="psim__weight">
+              <input type="number" id="pWeight" min="35" max="250" step="1" value="80" inputmode="numeric" aria-label="Tu peso en kilogramos" />
+              <span>kg</span>
+            </div>
+          </div>
+          <div class="psim__field">
+            <label>Objetivo de proteína al día</label>
+            <div class="calc__opts" id="pRatio" role="group" aria-label="Objetivo de proteína por kilo de peso">
+              <button type="button" data-r="1.2">Mantener<b>1,2 g/kg</b></button>
+              <button type="button" data-r="1.5" class="is-sel">Pérdida de peso<b>1,5 g/kg</b></button>
+              <button type="button" data-r="1.8">Pérdida + fuerza<b>1,8 g/kg</b></button>
+              <button type="button" data-r="2">Alto<b>2,0 g/kg</b></button>
+            </div>
+          </div>
+        </div>
+
+        <div class="psim__target">
+          <span>Tu objetivo diario</span>
+          <strong id="pTarget">120 g</strong>
+          <em id="pPerMeal"></em>
+        </div>
+
+        <div class="psim__bar" id="pBar" aria-hidden="true"></div>
+        <p class="psim__hint">Sube o baja un alimento y el resto se ajusta solo para mantener tus <b id="pTargetInline">120 g</b>. Pulsa el candado para fijar uno que no quieras mover, o añade y quita alimentos a tu gusto.</p>
+
+        <div class="psim__foods" id="pFoods"></div>
+        <div class="psim__add" id="pAdd"></div>
+
+        <div class="psim__meals">
+          <span>Repartir en</span>
+          <div class="calc__opts" id="pMeals" role="group" aria-label="Número de comidas al día">
+            <button type="button" data-m="3">3 comidas</button>
+            <button type="button" data-m="4" class="is-sel">4 comidas</button>
+            <button type="button" data-m="5">5 comidas</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="article__body">
+        <h2 id="por-que">Por qué la proteína es tu aliada con GLP-1</h2>
+        <p>Durante un tratamiento para perder peso es normal comer menos y notar menos hambre. El reto es que, al adelgazar, una parte de lo que se pierde puede ser <strong>masa muscular</strong>, y el músculo es importante para tu fuerza, tu metabolismo y tu salud a largo plazo. Dos hábitos sencillos ayudan a protegerlo: <strong>tomar suficiente proteína</strong> repartida a lo largo del día y hacer algo de <strong>ejercicio de fuerza</strong>. Lo contamos con detalle en nuestra guía de <a href="/blog/masa-muscular-y-ejercicio-con-glp1">masa muscular y ejercicio con GLP-1</a> y en <a href="/blog/que-comer-con-glp1">qué comer durante el tratamiento</a>.</p>
+
+        <h2 id="como-usar">Cómo usar el simulador</h2>
+        <p>Indica tu peso y elige tu objetivo (por ejemplo, 1,5 g de proteína por kilo al día). La herramienta calcula tus gramos diarios y reparte ese total entre los alimentos. Cuando subes uno, los demás bajan en proporción para que el total no cambie, así ves de un vistazo cuántos huevos o cuántos gramos de pollo, pescado o legumbres equivalen a tu objetivo. Si quieres que un alimento no se mueva, púlsale el <strong>candado</strong>; y con los botones de abajo puedes añadir o quitar alimentos.</p>
+
+        <h2 id="reparte">Reparte la proteína en el día</h2>
+        <p>No hace falta concentrar toda la proteína en una sola comida. De hecho, repartirla en <strong>varias tomas</strong> (por ejemplo, algo de proteína en el desayuno, la comida y la cena) suele ser una forma cómoda de llegar a tu objetivo y de sentirte saciado. Por eso el simulador te muestra también cuánta proteína te tocaría, de media, en cada comida.</p>
+
+        <div class="callout callout--caution">
+          <p><strong>Recuerda.</strong> Esta calculadora no sustituye el consejo de un profesional. Si tienes alguna condición de salud (por ejemplo, relacionada con el riñón) o dudas sobre tu alimentación durante el tratamiento, consúltalo con tu médico o tu dietista-nutricionista antes de hacer cambios importantes.</p>
+        </div>
+      </div>
+
+      <section class="sources"><h2>Fuentes</h2>
+        <ol>
+          <li>Agencia Española de Seguridad Alimentaria y Nutrición (AESAN). Base de Datos Española de Composición de Alimentos (BEDCA), para los valores de proteína por 100 g de alimento. <a href="https://www.bedca.net/" target="_blank" rel="noopener">bedca.net</a>.</li>
+          <li>Sociedad Española de Endocrinología y Nutrición (SEEN). Recomendaciones generales sobre proteína y conservación de masa muscular durante la pérdida de peso. <a href="https://www.seen.es/" target="_blank" rel="noopener">seen.es</a>.</li>
+          <li>MedlinePlus (Biblioteca Nacional de Medicina de EE. UU.). Información sobre proteínas en la dieta. <a href="https://medlineplus.gov/spanish/ency/article/002467.htm" target="_blank" rel="noopener">medlineplus.gov</a>.</li>
+        </ol>
+        <p class="sources__note">Los valores de proteína por alimento son aproximados (por 100 g de alimento) y el objetivo por kilo es orientativo. Tu médico o dietista-nutricionista los ajustará a tu caso. Revisado en junio de 2026.</p>
+      </section>
+    </article>
+  </main>
+
+  <footer class="blog-footer"><div class="blog-footer__in">
+    <a class="blog-footer__brand" href="/" aria-label="Clynia, inicio"><img src="/assets/logos/clynia-wordmark.png" alt="Clynia" /></a>
+    <nav class="blog-footer__nav"><a href="/blog">Blog</a><a href="/informacion">Información</a><a href="/privacidad">Privacidad</a><a href="/avisolegal">Aviso legal</a></nav>
+    <p class="blog-footer__legal">Clynia es una plataforma que conecta a pacientes con médicos colegiados independientes en España. Esta herramienta es divulgativa, está elaborada con fuentes oficiales y no constituye consejo médico ni dietético personalizado. Ante cualquier duda sobre tu alimentación o tu tratamiento, consulta con tu profesional sanitario.</p>
+  </div></footer>
+
+  <script>
+    (function () {
+      var FOODS = [
+        { id: "huevo",     name: "Huevos",              color: "#e0a83e", unit: "ud", per: 6.3,  step: 1,  on: true },
+        { id: "pollo",     name: "Pechuga de pollo",    color: "#c98a5e", unit: "g",  per: 0.23, step: 5,  on: true },
+        { id: "yogur",     name: "Yogur griego",        color: "#cfc8b0", unit: "g",  per: 0.09, step: 10, on: true },
+        { id: "lentejas",  name: "Lentejas cocidas",    color: "#8f6f43", unit: "g",  per: 0.09, step: 10, on: true },
+        { id: "ternera",   name: "Ternera magra",       color: "#a8553f", unit: "g",  per: 0.21, step: 5,  on: false },
+        { id: "cerdo",     name: "Lomo de cerdo",       color: "#cf8f86", unit: "g",  per: 0.21, step: 5,  on: false },
+        { id: "pescado",   name: "Pescado blanco",      color: "#7fa9b8", unit: "g",  per: 0.18, step: 5,  on: false },
+        { id: "atun",      name: "Atún",                color: "#557a8c", unit: "g",  per: 0.24, step: 5,  on: false },
+        { id: "requeson",  name: "Requesón",            color: "#ddd6c2", unit: "g",  per: 0.11, step: 10, on: false },
+        { id: "tofu",      name: "Tofu",                color: "#b9c79a", unit: "g",  per: 0.12, step: 10, on: false },
+        { id: "garbanzos", name: "Garbanzos cocidos",   color: "#c7a86a", unit: "g",  per: 0.09, step: 10, on: false }
+      ];
+      FOODS.forEach(function (f) { f.pg = 0; f.locked = false; f.el = null; });
+
+      var weight = 80, ratio = 1.5, meals = 4, TARGET = 0;
+      var $ = function (s) { return document.getElementById(s); };
+      var foodsBox = $("pFoods"), addBox = $("pAdd"), bar = $("pBar");
+
+      function active() { return FOODS.filter(function (f) { return f.on; }); }
+      function recalc() { TARGET = Math.max(0, Math.round(weight * ratio)); }
+
+      function normalize() {
+        var act = active(); if (!act.length) return;
+        var sum = act.reduce(function (s, f) { return s + f.pg; }, 0);
+        if (sum <= 0) { act.forEach(function (f) { f.pg = TARGET / act.length; }); }
+        else { act.forEach(function (f) { f.pg = f.pg * TARGET / sum; }); }
+      }
+
+      function rebalance(changed, newPg) {
+        var act = active();
+        var lock = act.filter(function (f) { return f.locked && f !== changed; })
+                      .reduce(function (s, f) { return s + f.pg; }, 0);
+        newPg = Math.max(0, Math.min(newPg, TARGET - lock));
+        changed.pg = newPg;
+        var others = act.filter(function (f) { return f !== changed && !f.locked; });
+        var rem = TARGET - lock - newPg;
+        var cur = others.reduce(function (s, f) { return s + f.pg; }, 0);
+        if (others.length) {
+          if (cur > 0) { others.forEach(function (f) { f.pg = f.pg * rem / cur; }); }
+          else { others.forEach(function (f) { f.pg = rem / others.length; }); }
+        }
+      }
+
+      function amountText(f) {
+        var a = f.pg / f.per;
+        if (f.unit === "ud") { var n = Math.round(a); return n + " " + (n === 1 ? "huevo" : "huevos"); }
+        return (Math.round(a / 5) * 5) + " g";
+      }
+
+      var LOCK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
+      var XMARK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>';
+
+      function buildFoods() {
+        foodsBox.innerHTML = "";
+        bar.innerHTML = "";
+        active().forEach(function (f) {
+          var row = document.createElement("div");
+          row.className = "pfood" + (f.locked ? " is-locked" : "");
+          row.innerHTML =
+            '<div class="pfood__head">' +
+              '<span class="pfood__dot" style="background:' + f.color + '"></span>' +
+              '<span class="pfood__name">' + f.name + '</span>' +
+              '<button type="button" class="pfood__lock' + (f.locked ? " is-on" : "") + '" aria-label="Fijar ' + f.name + '" aria-pressed="' + f.locked + '">' + LOCK + '</button>' +
+              '<button type="button" class="pfood__rm" aria-label="Quitar ' + f.name + '">' + XMARK + '</button>' +
+            '</div>' +
+            '<input type="range" class="pfood__range" min="0" step="' + f.step + '" />' +
+            '<div class="pfood__vals"><span class="pfood__amt"></span><span class="pfood__prot"></span></div>';
+          var seg = document.createElement("span");
+          seg.style.background = f.color;
+          bar.appendChild(seg);
+          f.el = {
+            row: row,
+            range: row.querySelector(".pfood__range"),
+            amt: row.querySelector(".pfood__amt"),
+            prot: row.querySelector(".pfood__prot"),
+            lock: row.querySelector(".pfood__lock"),
+            seg: seg
+          };
+          f.el.range.addEventListener("input", function () {
+            rebalance(f, parseFloat(this.value) * f.per);
+            update();
+          });
+          f.el.lock.addEventListener("click", function () {
+            f.locked = !f.locked;
+            row.classList.toggle("is-locked", f.locked);
+            f.el.lock.classList.toggle("is-on", f.locked);
+            f.el.lock.setAttribute("aria-pressed", f.locked);
+          });
+          row.querySelector(".pfood__rm").addEventListener("click", function () {
+            f.on = false; f.pg = 0; f.locked = false;
+            normalize(); buildFoods(); buildAdd(); update();
+          });
+          foodsBox.appendChild(row);
+        });
+      }
+
+      function buildAdd() {
+        addBox.innerHTML = "";
+        FOODS.filter(function (f) { return !f.on; }).forEach(function (f) {
+          var b = document.createElement("button");
+          b.type = "button";
+          b.textContent = "+ " + f.name;
+          b.addEventListener("click", function () {
+            f.on = true; f.pg = TARGET / ((active().length) || 1);
+            normalize(); buildFoods(); buildAdd(); update();
+          });
+          addBox.appendChild(b);
+        });
+      }
+
+      function update() {
+        $("pTarget").textContent = TARGET + " g";
+        $("pTargetInline").textContent = TARGET + " g";
+        $("pPerMeal").textContent = "≈ " + Math.round(TARGET / meals) + " g en cada una de tus " + meals + " comidas";
+        active().forEach(function (f) {
+          if (!f.el) return;
+          f.el.range.max = Math.max(f.step, Math.ceil((TARGET / f.per) / f.step) * f.step);
+          f.el.range.value = f.pg / f.per;
+          f.el.amt.textContent = amountText(f);
+          f.el.prot.textContent = Math.round(f.pg) + " g proteína";
+          f.el.seg.style.width = (TARGET > 0 ? (f.pg / TARGET * 100) : 0) + "%";
+        });
+      }
+
+      $("pWeight").addEventListener("input", function () {
+        var v = parseInt(this.value, 10);
+        if (isNaN(v)) return;
+        weight = Math.max(35, Math.min(250, v));
+        recalc(); normalize(); update();
+      });
+      $("pRatio").addEventListener("click", function (e) {
+        var b = e.target.closest("button"); if (!b) return;
+        ratio = parseFloat(b.getAttribute("data-r"));
+        [].forEach.call(this.children, function (c) { c.classList.toggle("is-sel", c === b); });
+        recalc(); normalize(); update();
+      });
+      $("pMeals").addEventListener("click", function (e) {
+        var b = e.target.closest("button"); if (!b) return;
+        meals = parseInt(b.getAttribute("data-m"), 10);
+        [].forEach.call(this.children, function (c) { c.classList.toggle("is-sel", c === b); });
+        update();
+      });
+
+      recalc();
+      active().forEach(function (f) { f.pg = TARGET / active().length; });
+      buildFoods(); buildAdd(); update();
+    })();
+  </script>
+  <script src="/assets/js/cursor-glow.js" defer></script>
+</body>
+</html>
