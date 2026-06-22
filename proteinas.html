@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Calculadora de proteína para cuidar tu músculo con GLP-1 · Clynia</title>
-  <meta name="description" content="Calcula cuánta proteína necesitas al día según tu peso para conservar la masa muscular durante un tratamiento con GLP-1, y juega a combinar alimentos (huevos, pollo, pescado, legumbres...) con un simulador interactivo. Información orientativa con fuentes oficiales." />
+  <title>Calculadora de proteína: cuánta comer al día según tu peso · Clynia</title>
+  <meta name="description" content="Calcula cuánta proteína comer al día según tu peso y tu objetivo (de 1,2 a 2 g por kilo) para no perder músculo, y combina alimentos (huevos, pollo, pescado, legumbres...) con un simulador interactivo. Gratis y con fuentes oficiales." />
   <link rel="canonical" href="https://clynia.es/proteinas" />
   <meta name="robots" content="index, follow" />
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="Calculadora de proteína para cuidar tu músculo con GLP-1 · Clynia" />
-  <meta property="og:description" content="Calcula tu proteína diaria según tu peso y juega a combinar alimentos con un simulador interactivo. Cuidar el músculo es clave durante un tratamiento con GLP-1." />
+  <meta property="og:title" content="Calculadora de proteína: cuánta comer al día según tu peso · Clynia" />
+  <meta property="og:description" content="Calcula cuánta proteína necesitas al día según tu peso para no perder músculo, y combina alimentos con un simulador interactivo. Gratis y con fuentes oficiales." />
   <meta property="og:locale" content="es_ES" />
   <meta name="theme-color" content="#f6f4ef" />
   <link rel="icon" type="image/png" href="/assets/img/favicon.png" />
@@ -76,6 +76,35 @@
     .psim__add button { font: inherit; cursor: pointer; border: 1.5px dashed var(--green-tint-2); background: #fff; color: var(--green); padding: 8px 14px; border-radius: 20px; font-size: 13.5px; font-weight: 600; transition: background-color 0.18s var(--ease), border-color 0.18s var(--ease); }
     .psim__add button:hover { background: var(--green-tint); border-style: solid; }
   </style>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebApplication",
+        "name": "Calculadora de proteína de Clynia",
+        "url": "https://clynia.es/proteinas",
+        "applicationCategory": "HealthApplication",
+        "operatingSystem": "Web",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" },
+        "description": "Calcula cuánta proteína comer al día según tu peso y tu objetivo, y combina alimentos para llegar a esa cantidad."
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          { "@type": "Question", "name": "¿Cuánta proteína debo comer al día?", "acceptedAnswer": { "@type": "Answer", "text": "Depende de tu peso y de tu objetivo. Como referencia, entre 1,2 g por kilo (para mantener el peso) y 2 g por kilo al día (si pierdes peso y entrenas fuerza). Una persona de 70 kg que está adelgazando rondaría los 105 g de proteína al día." } },
+          { "@type": "Question", "name": "¿Cuántos gramos de proteína por kilo de peso?", "acceptedAnswer": { "@type": "Answer", "text": "Para mantener el peso suelen bastar 1,2 g por kilo. Al perder peso se recomienda subir a entre 1,5 y 2 g por kilo para conservar el músculo, sobre todo si haces ejercicio de fuerza. En personas sanas, superar de forma habitual unos 2,2 g por kilo no aporta beneficios adicionales." } },
+          { "@type": "Question", "name": "¿Cuánta proteína para no perder músculo al adelgazar?", "acceptedAnswer": { "@type": "Answer", "text": "Al perder peso conviene un aporte de proteína más alto de lo habitual, entre 1,5 y 2 g por kilo al día, repartido en varias comidas y acompañado de algo de ejercicio de fuerza. Es una de las mejores formas de perder grasa conservando el músculo." } },
+          { "@type": "Question", "name": "¿Qué alimentos tienen más proteína?", "acceptedAnswer": { "@type": "Answer", "text": "Destacan los huevos, la pechuga de pollo o pavo, el pescado y el atún, las carnes magras, los lácteos como el yogur griego o el requesón, y opciones vegetales como las legumbres, el tofu o los garbanzos." } },
+          { "@type": "Question", "name": "¿Cuánta proteína tiene un huevo o 100 g de pollo?", "acceptedAnswer": { "@type": "Answer", "text": "De forma aproximada, un huevo aporta unos 6 g de proteína; 100 g de pechuga de pollo, unos 23 g; 100 g de pescado blanco, unos 18 g; y 100 g de lentejas cocidas, unos 9 g. Son valores orientativos de composición de alimentos." } },
+          { "@type": "Question", "name": "¿Es mejor repartir la proteína en varias comidas?", "acceptedAnswer": { "@type": "Answer", "text": "Sí. Repartir la proteína entre el desayuno, la comida y la cena suele ser más cómodo para llegar al objetivo y ayuda a sentirte saciado durante el día, en lugar de concentrarla en una sola comida." } },
+          { "@type": "Question", "name": "¿Puedo tomar demasiada proteína?", "acceptedAnswer": { "@type": "Answer", "text": "En personas sanas, superar de forma habitual unos 2,2 g por kilo al día no aporta beneficios adicionales. Si tienes alguna condición de salud, por ejemplo relacionada con el riñón, consulta tu cantidad de proteína con tu médico o tu dietista-nutricionista." } },
+          { "@type": "Question", "name": "¿Necesito batidos de proteína?", "acceptedAnswer": { "@type": "Answer", "text": "No son imprescindibles. Con alimentos como huevos, pollo, pescado, lácteos o legumbres puedes alcanzar tu objetivo. Los batidos son solo una opción cómoda si te cuesta llegar con la comida." } }
+        ]
+      }
+    ]
+  }
+  </script>
 </head>
 <body>
   <header class="blognav"><div class="blognav__in">
@@ -131,6 +160,16 @@
       </div>
 
       <div class="article__body">
+        <h2 id="cuanta">¿Cuánta proteína necesitas al día?</h2>
+        <p>La proteína que necesitas se calcula <strong>según tu peso</strong>, en gramos por kilo al día, y sube cuanto más quieras proteger o ganar músculo. Como referencia general:</p>
+        <ul>
+          <li><strong>1,2 g por kilo</strong> si solo quieres mantener tu peso.</li>
+          <li><strong>1,5 g por kilo</strong> si estás perdiendo peso, para conservar el músculo.</li>
+          <li><strong>1,8 g por kilo</strong> si además haces ejercicio de fuerza.</li>
+          <li><strong>2 g por kilo</strong> si entrenas fuerte y quieres ganar músculo.</li>
+        </ul>
+        <p>Por ejemplo, una persona de 80 kg que está perdiendo peso necesitaría en torno a <strong>120 g de proteína al día</strong> (80 × 1,5). En personas sanas, pasar de unos 2,2 g por kilo de forma habitual no aporta beneficios. Son cifras orientativas: tu médico o dietista-nutricionista las ajustará a tu caso.</p>
+
         <h2 id="por-que">Por qué la proteína es tu aliada con GLP-1</h2>
         <p>Durante un tratamiento para perder peso es normal comer menos y notar menos hambre. El reto es que, al adelgazar, una parte de lo que se pierde puede ser <strong>masa muscular</strong>, y el músculo es importante para tu fuerza, tu metabolismo y tu salud a largo plazo. Dos hábitos sencillos ayudan a protegerlo: <strong>tomar suficiente proteína</strong> repartida a lo largo del día y hacer algo de <strong>ejercicio de fuerza</strong>. Lo contamos con detalle en nuestra guía de <a href="/blog/masa-muscular-y-ejercicio-con-glp1">masa muscular y ejercicio con GLP-1</a> y en <a href="/blog/que-comer-con-glp1">qué comer durante el tratamiento</a>.</p>
 
@@ -139,6 +178,32 @@
 
         <h2 id="reparte">Reparte la proteína en el día</h2>
         <p>No hace falta concentrar toda la proteína en una sola comida. De hecho, repartirla en <strong>varias tomas</strong> (por ejemplo, algo de proteína en el desayuno, la comida y la cena) suele ser una forma cómoda de llegar a tu objetivo y de sentirte más saciado a lo largo del día.</p>
+
+        <h2 id="faq">Preguntas frecuentes sobre la proteína</h2>
+
+        <h3>¿Cuánta proteína debo comer al día?</h3>
+        <p>Depende de tu peso y de tu objetivo. Como referencia, entre 1,2 g por kilo (para mantener el peso) y 2 g por kilo al día (si pierdes peso y entrenas fuerza). Una persona de 70 kg que está adelgazando rondaría los 105 g de proteína al día. Calcula la tuya arriba y repártela entre tus alimentos.</p>
+
+        <h3>¿Cuántos gramos de proteína por kilo de peso?</h3>
+        <p>Para mantener el peso suelen bastar 1,2 g por kilo. Al perder peso se recomienda subir a entre 1,5 y 2 g por kilo para conservar el músculo, sobre todo si haces ejercicio de fuerza. En personas sanas, superar de forma habitual unos 2,2 g por kilo no aporta beneficios adicionales.</p>
+
+        <h3>¿Cuánta proteína para no perder músculo al adelgazar?</h3>
+        <p>Al perder peso conviene un aporte de proteína más alto de lo habitual, entre 1,5 y 2 g por kilo al día, repartido en varias comidas y acompañado de algo de ejercicio de fuerza. Es una de las mejores formas de perder grasa conservando el músculo.</p>
+
+        <h3>¿Qué alimentos tienen más proteína?</h3>
+        <p>Destacan los huevos, la pechuga de pollo o pavo, el pescado y el atún, las carnes magras, los lácteos como el yogur griego o el requesón, y opciones vegetales como las legumbres, el tofu o los garbanzos. En el simulador puedes combinarlos para llegar a tu objetivo.</p>
+
+        <h3>¿Cuánta proteína tiene un huevo o 100 g de pollo?</h3>
+        <p>De forma aproximada, un huevo aporta unos 6 g de proteína; 100 g de pechuga de pollo, unos 23 g; 100 g de pescado blanco, unos 18 g; y 100 g de lentejas cocidas, unos 9 g. Son valores orientativos de composición de alimentos.</p>
+
+        <h3>¿Es mejor repartir la proteína en varias comidas?</h3>
+        <p>Sí. Repartir la proteína entre el desayuno, la comida y la cena suele ser más cómodo para llegar al objetivo y ayuda a sentirte saciado durante el día, en lugar de concentrarla en una sola comida.</p>
+
+        <h3>¿Puedo tomar demasiada proteína?</h3>
+        <p>En personas sanas, superar de forma habitual unos 2,2 g por kilo al día no aporta beneficios adicionales. Si tienes alguna condición de salud, por ejemplo relacionada con el riñón, consulta tu cantidad de proteína con tu médico o tu dietista-nutricionista.</p>
+
+        <h3>¿Necesito batidos de proteína?</h3>
+        <p>No son imprescindibles. Con alimentos como huevos, pollo, pescado, lácteos o legumbres puedes alcanzar tu objetivo. Los batidos son solo una opción cómoda si te cuesta llegar con la comida.</p>
 
         <div class="callout callout--caution">
           <p><strong>Recuerda.</strong> Esta calculadora no sustituye el consejo de un profesional. Si tienes alguna condición de salud (por ejemplo, relacionada con el riñón) o dudas sobre tu alimentación durante el tratamiento, consúltalo con tu médico o tu dietista-nutricionista antes de hacer cambios importantes.</p>
