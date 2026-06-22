@@ -70,6 +70,18 @@ a { color: var(--green); text-decoration: none; }
 .blog-hero p { max-width: 56ch; margin: 0 auto; font-size: 18px; color: var(--ink-soft); }
 .blog-hero__note { margin-top: 16px; font-size: 13px; color: var(--ink-faint); }
 
+/* Buscador del blog */
+.blog-search { position: relative; max-width: 520px; margin: 24px auto 0; }
+.blog-search svg { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; color: var(--ink-faint); pointer-events: none; }
+.blog-search input {
+  width: 100%; font: inherit; font-size: 16px; padding: 14px 18px 14px 46px;
+  border: 1.5px solid var(--line); border-radius: 14px; background: var(--surface); color: var(--ink);
+  transition: border-color 0.2s var(--ease), box-shadow 0.2s var(--ease);
+}
+.blog-search input::placeholder { color: var(--ink-faint); }
+.blog-search input:focus { outline: none; border-color: var(--green); box-shadow: 0 0 0 3px var(--green-tint); }
+.blog-noresults { text-align: center; color: var(--ink-soft); font-size: 16px; margin: 34px auto; max-width: 44ch; }
+
 .blog-grid {
   display: grid; grid-template-columns: 1fr; gap: 18px;
   max-width: 980px; margin: 36px auto 0; padding: 0 20px;

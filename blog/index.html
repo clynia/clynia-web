@@ -105,6 +105,43 @@
     <p class="blog-footer__legal">Clynia es una plataforma que conecta a pacientes con médicos colegiados independientes en España. El contenido de este blog es divulgativo, está elaborado con fuentes oficiales y no constituye consejo médico ni publicidad de medicamentos sujetos a prescripción. Cualquier tratamiento debe ser valorado e indicado por un médico colegiado.</p>
   </div></footer>
 
+  <script>
+    (function () {
+      var KEYS = {
+        'que-es-el-glp1': 'glp1 glp-1 semaglutida tirzepatida ozempic mounjaro wegovy hormona incretina insulina saciedad que es como funciona basico introduccion',
+        'que-comer-con-glp1': 'comer comida alimentacion dieta nutricion proteina plato fibra hidratacion agua menu recetas que comer',
+        'alimentos-a-evitar-con-glp1': 'evitar no comer alimentos fritos grasa grasos azucar dulces alcohol gas gaseosas moderar limitar',
+        'como-inyectar-glp1-paso-a-paso': 'inyectar pinchar pincharse inyeccion subcutanea pluma aguja tecnica paso a paso administrar ponerse',
+        'zonas-de-inyeccion-glp1': 'zonas zona sitio inyeccion abdomen barriga muslo brazo rotar rotacion donde pincharse pinchar',
+        'nauseas-y-molestias-glp1': 'nauseas vomitos vomito molestias digestivas estomago efectos secundarios adversos aliviar mareo',
+        'como-conservar-tu-tratamiento-glp1': 'conservar conservacion nevera frigorifico temperatura frio viaje viajar guardar almacenar caducidad',
+        'masa-muscular-y-ejercicio-con-glp1': 'musculo masa muscular ejercicio fuerza pesas proteina entrenar gimnasio actividad fisica perder peso',
+        'glp1-seguridad-y-receta-medica': 'seguridad receta prescripcion comprar online internet falso falsificado ilegal medico supervision prospecto'
+      };
+      var hero = document.querySelector('.blog-hero .wrap');
+      var grid = document.querySelector('.blog-grid');
+      if (!hero || !grid) return;
+      var box = document.createElement('div');
+      box.className = 'blog-search';
+      box.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg><input type="search" id="blogSearch" placeholder="Busca un artículo: comida, pincharse, náuseas..." aria-label="Buscar en el blog" autocomplete="off">';
+      hero.appendChild(box);
+      var noRes = document.createElement('p');
+      noRes.className = 'blog-noresults';
+      noRes.hidden = true;
+      noRes.textContent = 'No encontramos artículos con esa búsqueda. Prueba con otra palabra.';
+      grid.parentNode.insertBefore(noRes, grid.nextSibling);
+      var input = document.getElementById('blogSearch');
+      var cards = [].slice.call(grid.querySelectorAll('.bcard'));
+      function norm(s) { return (s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase(); }
+      cards.forEach(function (c) { var slug = (c.getAttribute('href') || '').split('/').pop(); c._hay = norm(c.textContent + ' ' + (KEYS[slug] || '')); });
+      input.addEventListener('input', function () {
+        var terms = norm(input.value).trim().split(/\s+/).filter(Boolean);
+        var shown = 0;
+        cards.forEach(function (c) { var ok = terms.every(function (t) { return c._hay.indexOf(t) > -1; }); c.style.display = ok ? '' : 'none'; if (ok) shown++; });
+        noRes.hidden = (terms.length === 0 || shown !== 0);
+      });
+    })();
+  </script>
   <script src="/assets/js/cursor-glow.js" defer></script>
 </body>
 </html>
