@@ -4,12 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Calculadora de proteína para cuidar tu músculo con GLP-1 · Clynia</title>
-  <meta name="description" content="Calcula cuánta proteína necesitas al día según tu peso para conservar la masa muscular durante un tratamiento con GLP-1, y reparte ese objetivo entre alimentos (huevos, pollo, pescado, legumbres...) con un simulador interactivo. Información orientativa con fuentes oficiales." />
+  <meta name="description" content="Calcula cuánta proteína necesitas al día según tu peso para conservar la masa muscular durante un tratamiento con GLP-1, y juega a combinar alimentos (huevos, pollo, pescado, legumbres...) con un simulador interactivo. Información orientativa con fuentes oficiales." />
   <link rel="canonical" href="https://clynia.es/proteinas" />
   <meta name="robots" content="index, follow" />
   <meta property="og:type" content="website" />
   <meta property="og:title" content="Calculadora de proteína para cuidar tu músculo con GLP-1 · Clynia" />
-  <meta property="og:description" content="Calcula tu proteína diaria según tu peso y repártela entre alimentos con un simulador interactivo. Cuidar el músculo es clave durante un tratamiento con GLP-1." />
+  <meta property="og:description" content="Calcula tu proteína diaria según tu peso y juega a combinar alimentos con un simulador interactivo. Cuidar el músculo es clave durante un tratamiento con GLP-1." />
   <meta property="og:locale" content="es_ES" />
   <meta name="theme-color" content="#f6f4ef" />
   <link rel="icon" type="image/png" href="/assets/img/favicon.png" />
@@ -38,8 +38,7 @@
 
     .psim__target { text-align: center; background: var(--green-tint); border: 1px solid var(--green-tint-2); border-radius: 14px; padding: 16px; margin-bottom: 18px; }
     .psim__target > span { display: block; font-size: 12.5px; color: var(--ink-soft); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
-    .psim__target strong { display: block; font-family: "Lora", serif; font-weight: 500; font-size: 40px; color: var(--green-900); line-height: 1.1; margin: 2px 0 4px; }
-    .psim__target em { font-style: normal; font-size: 14px; color: var(--green); }
+    .psim__target strong { display: block; font-family: "Lora", serif; font-weight: 500; font-size: 40px; color: var(--green-900); line-height: 1.1; margin: 2px 0; }
 
     .psim__bar { display: flex; height: 20px; border-radius: 10px; overflow: hidden; background: var(--green-tint); margin-bottom: 14px; box-shadow: inset 0 0 0 1px var(--green-tint-2); }
     .psim__bar span { height: 100%; transition: width 0.25s var(--ease); }
@@ -64,9 +63,6 @@
     .psim__add { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
     .psim__add button { font: inherit; cursor: pointer; border: 1.5px dashed var(--green-tint-2); background: #fff; color: var(--green); padding: 8px 14px; border-radius: 20px; font-size: 13.5px; font-weight: 600; transition: background-color 0.18s var(--ease), border-color 0.18s var(--ease); }
     .psim__add button:hover { background: var(--green-tint); border-style: solid; }
-
-    .psim__meals { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 20px; border-top: 1px dashed var(--green-tint-2); padding-top: 16px; }
-    .psim__meals > span { font-weight: 700; font-size: 14px; color: var(--ink); }
   </style>
 </head>
 <body>
@@ -80,7 +76,7 @@
       <nav class="breadcrumb"><a href="/">Clynia</a> &rsaquo; Calculadora de proteína</nav>
       <span class="article__tag">Herramienta</span>
       <h1>Calculadora de proteína para cuidar tu músculo con <span style="white-space:nowrap">GLP-1</span></h1>
-      <p class="article__lead">Cuando pierdes peso, también puedes perder músculo. Cuidar tu aporte de proteína, repartido en el día y junto con algo de ejercicio de fuerza, ayuda a conservarlo. Pon tu peso, elige tu objetivo y reparte esos gramos entre tus alimentos favoritos: el simulador mantiene siempre tu objetivo.</p>
+      <p class="article__lead">Cuando pierdes peso, también puedes perder músculo, y la proteína es tu mejor aliada para conservarlo. Pon tu peso, elige tu objetivo y <strong>juega a combinar tus alimentos favoritos</strong>: sube los huevos y mira cómo bajan el pollo o las lentejas, prueba mezclas y queda con la que más te apetezca. El total siempre cuadra con tu objetivo.</p>
 
       <div class="callout callout--info">
         <p>Las cifras son <strong>orientativas y divulgativas</strong>. Tu objetivo concreto de proteína depende de tu situación; ajústalo con tu médico o tu dietista-nutricionista.</p>
@@ -109,34 +105,24 @@
         <div class="psim__target">
           <span>Tu objetivo diario</span>
           <strong id="pTarget">120 g</strong>
-          <em id="pPerMeal"></em>
         </div>
 
         <div class="psim__bar" id="pBar" aria-hidden="true"></div>
-        <p class="psim__hint">Sube o baja un alimento y el resto se ajusta solo para mantener tus <b id="pTargetInline">120 g</b>. Pulsa el candado para fijar uno que no quieras mover, o añade y quita alimentos a tu gusto.</p>
+        <p class="psim__hint">Juega: sube o baja un alimento y el resto se reajusta solo para cuadrar tus <b id="pTargetInline">120 g</b>. Fija con el candado lo que no quieras mover, añade o quita alimentos y prueba combinaciones hasta dar con tu mezcla favorita.</p>
 
         <div class="psim__foods" id="pFoods"></div>
         <div class="psim__add" id="pAdd"></div>
-
-        <div class="psim__meals">
-          <span>Repartir en</span>
-          <div class="calc__opts" id="pMeals" role="group" aria-label="Número de comidas al día">
-            <button type="button" data-m="3">3 comidas</button>
-            <button type="button" data-m="4" class="is-sel">4 comidas</button>
-            <button type="button" data-m="5">5 comidas</button>
-          </div>
-        </div>
       </div>
 
       <div class="article__body">
         <h2 id="por-que">Por qué la proteína es tu aliada con GLP-1</h2>
         <p>Durante un tratamiento para perder peso es normal comer menos y notar menos hambre. El reto es que, al adelgazar, una parte de lo que se pierde puede ser <strong>masa muscular</strong>, y el músculo es importante para tu fuerza, tu metabolismo y tu salud a largo plazo. Dos hábitos sencillos ayudan a protegerlo: <strong>tomar suficiente proteína</strong> repartida a lo largo del día y hacer algo de <strong>ejercicio de fuerza</strong>. Lo contamos con detalle en nuestra guía de <a href="/blog/masa-muscular-y-ejercicio-con-glp1">masa muscular y ejercicio con GLP-1</a> y en <a href="/blog/que-comer-con-glp1">qué comer durante el tratamiento</a>.</p>
 
-        <h2 id="como-usar">Cómo usar el simulador</h2>
-        <p>Indica tu peso y elige tu objetivo (por ejemplo, 1,5 g de proteína por kilo al día). La herramienta calcula tus gramos diarios y reparte ese total entre los alimentos. Cuando subes uno, los demás bajan en proporción para que el total no cambie, así ves de un vistazo cuántos huevos o cuántos gramos de pollo, pescado o legumbres equivalen a tu objetivo. Si quieres que un alimento no se mueva, púlsale el <strong>candado</strong>; y con los botones de abajo puedes añadir o quitar alimentos.</p>
+        <h2 id="como-usar">Cómo jugar con el simulador</h2>
+        <p>Indica tu peso y elige tu objetivo (por ejemplo, 1,5 g de proteína por kilo al día). La herramienta calcula tus gramos diarios y los reparte entre los alimentos. A partir de ahí, <strong>experimenta</strong>: cuando subes uno, los demás bajan en proporción para que el total no cambie, así ves de un vistazo cuántos huevos o cuántos gramos de pollo, pescado o legumbres equivalen a tu objetivo. ¿Hoy te apetece más pescado y menos carne? Súbelo y mira cómo se recoloca todo. Si quieres que un alimento no se mueva, púlsale el <strong>candado</strong>; y con los botones de abajo puedes añadir o quitar alimentos hasta montar tu combinación ideal.</p>
 
         <h2 id="reparte">Reparte la proteína en el día</h2>
-        <p>No hace falta concentrar toda la proteína en una sola comida. De hecho, repartirla en <strong>varias tomas</strong> (por ejemplo, algo de proteína en el desayuno, la comida y la cena) suele ser una forma cómoda de llegar a tu objetivo y de sentirte saciado. Por eso el simulador te muestra también cuánta proteína te tocaría, de media, en cada comida.</p>
+        <p>No hace falta concentrar toda la proteína en una sola comida. De hecho, repartirla en <strong>varias tomas</strong> (por ejemplo, algo de proteína en el desayuno, la comida y la cena) suele ser una forma cómoda de llegar a tu objetivo y de sentirte más saciado a lo largo del día.</p>
 
         <div class="callout callout--caution">
           <p><strong>Recuerda.</strong> Esta calculadora no sustituye el consejo de un profesional. Si tienes alguna condición de salud (por ejemplo, relacionada con el riñón) o dudas sobre tu alimentación durante el tratamiento, consúltalo con tu médico o tu dietista-nutricionista antes de hacer cambios importantes.</p>
@@ -177,7 +163,7 @@
       ];
       FOODS.forEach(function (f) { f.pg = 0; f.locked = false; f.el = null; });
 
-      var weight = 80, ratio = 1.5, meals = 4, TARGET = 0;
+      var weight = 80, ratio = 1.5, TARGET = 0;
       var $ = function (s) { return document.getElementById(s); };
       var foodsBox = $("pFoods"), addBox = $("pAdd"), bar = $("pBar");
 
@@ -276,7 +262,6 @@
       function update() {
         $("pTarget").textContent = TARGET + " g";
         $("pTargetInline").textContent = TARGET + " g";
-        $("pPerMeal").textContent = "≈ " + Math.round(TARGET / meals) + " g en cada una de tus " + meals + " comidas";
         active().forEach(function (f) {
           if (!f.el) return;
           f.el.range.max = Math.max(f.step, Math.ceil((TARGET / f.per) / f.step) * f.step);
@@ -298,12 +283,6 @@
         ratio = parseFloat(b.getAttribute("data-r"));
         [].forEach.call(this.children, function (c) { c.classList.toggle("is-sel", c === b); });
         recalc(); normalize(); update();
-      });
-      $("pMeals").addEventListener("click", function (e) {
-        var b = e.target.closest("button"); if (!b) return;
-        meals = parseInt(b.getAttribute("data-m"), 10);
-        [].forEach.call(this.children, function (c) { c.classList.toggle("is-sel", c === b); });
-        update();
       });
 
       recalc();
