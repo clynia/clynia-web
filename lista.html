@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Lista de espera · Clynia</title>
+  <meta name="description" content="Déjanos tu email y te avisamos en cuanto abra esta categoría de Clynia. Sin compromiso y sin tarjeta." />
+  <meta name="robots" content="noindex, follow" />
+  <meta name="theme-color" content="#f6f4ef" />
+  <link rel="icon" type="image/png" href="/assets/img/favicon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Hanken+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/assets/css/blog.css" />
+  <style>
+    .lista { max-width: 540px; margin: 6vh auto; padding: 0 20px; }
+    .lista__card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 30px 28px; }
+    .lista__eyebrow { font-size: 12.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--green); margin: 0 0 10px; }
+    .lista h1 { font-family: "Fraunces", serif; font-weight: 500; font-size: clamp(26px, 5vw, 34px); line-height: 1.15; color: var(--green-900); margin: 0 0 12px; }
+    .lista__sub { font-size: 16px; line-height: 1.6; color: var(--ink-soft); margin: 0 0 22px; }
+    .lista__form { display: flex; flex-direction: column; gap: 14px; }
+    .lista__form input[type=email] { font: inherit; font-size: 16px; padding: 13px 15px; border: 1.5px solid var(--line); border-radius: 12px; background: #fff; color: var(--ink); width: 100%; }
+    .lista__form input[type=email]:focus { outline: none; border-color: var(--green); }
+    .lista__consent { display: flex; gap: 9px; align-items: flex-start; font-size: 13px; line-height: 1.5; color: var(--ink-soft); }
+    .lista__consent input { margin-top: 3px; accent-color: var(--green); flex: none; }
+    .lista__consent a { color: var(--green); }
+    .lista__btn { font: inherit; font-size: 16px; font-weight: 600; color: #fff; background: var(--green); border: none; border-radius: 26px; padding: 14px 22px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; transition: background-color 0.18s var(--ease); }
+    .lista__btn:hover { background: var(--green-900); }
+    .lista__btn:disabled { opacity: 0.55; cursor: default; }
+    .lista__btn svg { width: 18px; height: 18px; }
+    .lista__err { font-size: 13px; color: #c0492f; margin: 0; }
+    .lista__done { text-align: center; }
+    .lista__done svg { width: 52px; height: 52px; color: var(--green); margin-bottom: 6px; }
+    .lista__back { display: inline-block; margin-top: 18px; font-size: 14px; color: var(--green); }
+  </style>
+</head>
+<body>
+  <header class="blognav"><div class="blognav__in">
+    <a class="blognav__brand" href="/" aria-label="Clynia, inicio"><img src="/assets/logos/clynia-wordmark.png" alt="Clynia" /></a>
+    <nav class="blognav__links"><a href="/blog">Blog</a><a class="blognav__ghost" href="/">Inicio</a></nav>
+  </div></header>
+
+  <main>
+    <section class="lista">
+      <div class="lista__card" id="listaCard">
+        <p class="lista__eyebrow">Lista de espera</p>
+        <h1 id="listaTitle">Te avisamos de las próximas novedades.</h1>
+        <p class="lista__sub" id="listaSub">Déjanos tu email, sin compromiso y sin tarjeta. Serás de los primeros en saberlo cuando esté disponible, siempre con un médico colegiado al otro lado.</p>
+        <form class="lista__form" id="listaForm" novalidate>
+          <input type="email" id="listaEmail" name="email" placeholder="tu@email.com" autocomplete="email" required />
+          <label class="lista__consent"><input type="checkbox" id="listaConsent" required /> <span>Acepto que Clynia trate mi email para avisarme cuando esta categoría esté disponible, conforme a la <a href="/privacidad" target="_blank" rel="noopener">Política de Privacidad</a>.</span></label>
+          <p class="lista__err" id="listaErr" role="alert"></p>
+          <button type="submit" class="lista__btn" id="listaBtn">Avísame
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
+          </button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="blog-footer"><div class="blog-footer__in">
+    <a class="blog-footer__brand" href="/" aria-label="Clynia, inicio"><img src="/assets/logos/clynia-wordmark.png" alt="Clynia" /></a>
+    <nav class="blog-footer__nav"><a href="/blog">Blog</a><a href="/informacion">Información</a><a href="/privacidad">Privacidad</a><a href="/avisolegal">Aviso legal</a></nav>
+    <p class="blog-footer__legal">Clynia es una plataforma que conecta a pacientes con médicos colegiados independientes en España. Te avisaremos por email únicamente sobre la disponibilidad de la categoría que has solicitado, y podrás darte de baja en cualquier momento.</p>
+  </div></footer>
+
+  <script>
+    (function () {
+      var WEBHOOK = "https://n8n-ixwg.srv1722506.hstgr.cloud/webhook/lista-intake";
+      var LABELS = {
+        "menopausia": "la menopausia",
+        "longevidad": "la longevidad",
+        "salud-sexual": "la salud sexual",
+        "cabello": "la salud capilar",
+        "capilar": "la salud capilar"
+      };
+      var cat = (new URLSearchParams(location.search).get("categoria") || "").toLowerCase();
+      var label = LABELS[cat];
+      if (label) {
+        document.getElementById("listaTitle").textContent = "Te avisamos cuando abra " + label + ".";
+        document.getElementById("listaSub").textContent = "Déjanos tu email, sin compromiso y sin tarjeta. Serás de los primeros en saberlo cuando " + label + " esté disponible, siempre con un médico colegiado al otro lado.";
+      }
+      var form = document.getElementById("listaForm"),
+          email = document.getElementById("listaEmail"),
+          consent = document.getElementById("listaConsent"),
+          err = document.getElementById("listaErr"),
+          btn = document.getElementById("listaBtn"),
+          card = document.getElementById("listaCard");
+
+      function valid(e) { return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(e); }
+
+      form.addEventListener("submit", function (ev) {
+        ev.preventDefault();
+        err.textContent = "";
+        if (!valid(email.value.trim())) { err.textContent = "Escribe un email válido."; email.focus(); return; }
+        if (!consent.checked) { err.textContent = "Marca la casilla para que podamos avisarte."; return; }
+        btn.disabled = true; btn.textContent = "Enviando…";
+        var payload = { categoria: cat || "general", email: email.value.trim(), consent: true, source: "web-lista", ts: new Date().toISOString() };
+        var done = false;
+        function finish() {
+          if (done) return; done = true;
+          card.innerHTML = '<div class="lista__done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg><h1>¡Hecho! Te avisaremos.</h1><p class="lista__sub">Te escribiremos a <strong>' + payload.email.replace(/</g, "&lt;") + '</strong> en cuanto esté disponible. Sin spam, solo el aviso.</p><a class="lista__back" href="/">Volver al inicio</a></div>';
+        }
+        var failsafe = setTimeout(finish, 7000);
+        fetch(WEBHOOK, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) })
+          .then(function () { clearTimeout(failsafe); finish(); })
+          .catch(function () {
+            clearTimeout(failsafe);
+            try { localStorage.setItem("clynia_lista_pending", JSON.stringify(payload)); } catch (e) {}
+            finish();
+          });
+      });
+    })();
+  </script>
+  <script src="/assets/js/cursor-glow.js" defer></script>
+</body>
+</html>
