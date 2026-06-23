@@ -33,7 +33,7 @@
 .legal-wrap { max-width: 760px; margin-inline: auto; padding-inline: var(--pad); }
 
 .legal h1 {
-  font-family: "Lora", Georgia, serif;
+  font-family: "Fraunces", Georgia, serif;
   font-weight: 500;
   font-size: clamp(28px, 7vw, 40px);
   line-height: 1.16;
@@ -44,7 +44,7 @@
 .legal__updated { margin: 0 0 38px; font-size: 14px; color: var(--ink-faint); }
 
 .legal h2 {
-  font-family: "Lora", Georgia, serif;
+  font-family: "Fraunces", Georgia, serif;
   font-weight: 500;
   font-size: clamp(21px, 5vw, 26px);
   line-height: 1.25;

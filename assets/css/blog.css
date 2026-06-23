@@ -29,7 +29,7 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--ink);
-  font-family: "Raleway", system-ui, sans-serif;
+  font-family: "Hanken Grotesk", system-ui, sans-serif;
   font-size: 17px;
   line-height: 1.7;
   -webkit-font-smoothing: antialiased;
@@ -63,7 +63,7 @@ a { color: var(--green); text-decoration: none; }
 /* ---------- Portada del blog ---------- */
 .blog-hero { padding: 56px 0 12px; text-align: center; }
 .blog-hero h1 {
-  font-family: "Lora", Georgia, serif; font-weight: 500;
+  font-family: "Fraunces", Georgia, serif; font-weight: 500;
   font-size: clamp(30px, 6vw, 46px); line-height: 1.12; letter-spacing: -0.015em;
   color: var(--ink); margin: 0 auto 16px; max-width: 16ch;
 }
@@ -101,7 +101,7 @@ a { color: var(--green); text-decoration: none; }
   align-self: flex-start; font-size: 11.5px; font-weight: 700; letter-spacing: 0.04em;
   text-transform: uppercase; color: var(--green); background: var(--green-tint); padding: 4px 10px; border-radius: 999px;
 }
-.bcard__title { font-family: "Lora", Georgia, serif; font-weight: 500; font-size: 20px; line-height: 1.25; color: var(--ink); margin: 0; }
+.bcard__title { font-family: "Fraunces", Georgia, serif; font-weight: 500; font-size: 20px; line-height: 1.25; color: var(--ink); margin: 0; }
 .bcard__excerpt { font-size: 14.5px; line-height: 1.6; color: var(--ink-soft); margin: 0; flex: 1; }
 .bcard__more { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 600; color: var(--green); margin-top: 4px; }
 .bcard__more svg { width: 15px; height: 15px; transition: transform 0.2s var(--ease); }
@@ -115,7 +115,7 @@ a { color: var(--green); text-decoration: none; }
 .toolbanner:hover { transform: translateY(-2px); box-shadow: 0 16px 38px -14px rgba(40, 67, 60, 0.6); }
 .toolbanner__txt { flex: 1 1 280px; }
 .toolbanner__eyebrow { display: block; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--green-tint); margin-bottom: 5px; }
-.toolbanner__title { display: block; font-family: "Lora", serif; font-weight: 500; font-size: 23px; line-height: 1.2; margin-bottom: 6px; color: #fff; }
+.toolbanner__title { display: block; font-family: "Fraunces", serif; font-weight: 500; font-size: 23px; line-height: 1.2; margin-bottom: 6px; color: #fff; }
 .toolbanner__sub { display: block; font-size: 14.5px; line-height: 1.5; color: rgba(255, 255, 255, 0.9); }
 .toolbanner__cta { flex: none; display: inline-flex; align-items: center; gap: 8px; background: #fff; color: var(--green-900); font-weight: 700; font-size: 14.5px; padding: 12px 20px; border-radius: 30px; transition: background-color 0.2s var(--ease); }
 .toolbanner:hover .toolbanner__cta { background: var(--green-tint); }
@@ -132,7 +132,7 @@ a { color: var(--green); text-decoration: none; }
   color: var(--green); background: var(--green-tint); padding: 4px 11px; border-radius: 999px; margin-bottom: 14px;
 }
 .article h1 {
-  font-family: "Lora", Georgia, serif; font-weight: 500;
+  font-family: "Fraunces", Georgia, serif; font-weight: 500;
   font-size: clamp(28px, 5.5vw, 40px); line-height: 1.16; letter-spacing: -0.012em; color: var(--ink); margin: 0 0 14px;
 }
 .article__meta { display: flex; flex-wrap: wrap; gap: 8px 16px; font-size: 13.5px; color: var(--ink-faint); margin-bottom: 6px; }
@@ -141,7 +141,7 @@ a { color: var(--green); text-decoration: none; }
 
 .article__body { margin-top: 8px; }
 .article__body h2 {
-  font-family: "Lora", Georgia, serif; font-weight: 500; font-size: clamp(22px, 4.5vw, 28px);
+  font-family: "Fraunces", Georgia, serif; font-weight: 500; font-size: clamp(22px, 4.5vw, 28px);
   line-height: 1.25; color: var(--ink); margin: 40px 0 12px; scroll-margin-top: 78px;
 }
 .article__body h3 { font-size: 19px; font-weight: 700; color: var(--ink); margin: 28px 0 8px; }
@@ -161,7 +161,7 @@ a { color: var(--green); text-decoration: none; }
 
 /* Índice */
 .toc { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px 20px; margin: 24px 0 8px; }
-.toc h2 { font-family: "Raleway", sans-serif; font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-faint); margin: 0 0 10px; }
+.toc h2 { font-family: "Hanken Grotesk", sans-serif; font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-faint); margin: 0 0 10px; }
 .toc ol { margin: 0; padding-left: 18px; display: grid; gap: 6px; }
 .toc a { font-size: 14.5px; color: var(--ink-soft); }
 .toc a:hover { color: var(--green); }
@@ -186,7 +186,7 @@ a { color: var(--green); text-decoration: none; }
 
 /* Fuentes */
 .sources { margin: 36px 0 8px; padding-top: 22px; border-top: 1px solid var(--line); }
-.sources h2 { font-family: "Lora", serif; font-weight: 500; font-size: 22px; margin: 0 0 12px; color: var(--ink); }
+.sources h2 { font-family: "Fraunces", serif; font-weight: 500; font-size: 22px; margin: 0 0 12px; color: var(--ink); }
 .sources ol { margin: 0; padding-left: 20px; display: grid; gap: 9px; }
 .sources li { font-size: 14px; line-height: 1.55; color: var(--ink-soft); text-align: left; }
 .sources a { color: var(--green); text-decoration: underline; text-underline-offset: 2px; word-break: break-word; }
@@ -194,7 +194,7 @@ a { color: var(--green); text-decoration: none; }
 
 /* Relacionados */
 .related { margin: 40px 0 8px; }
-.related h2 { font-family: "Lora", serif; font-weight: 500; font-size: 24px; margin: 0 0 16px; color: var(--ink); }
+.related h2 { font-family: "Fraunces", serif; font-weight: 500; font-size: 24px; margin: 0 0 16px; color: var(--ink); }
 .related__grid { display: grid; grid-template-columns: 1fr; gap: 14px; }
 @media (min-width: 620px) { .related__grid { grid-template-columns: 1fr 1fr; } }
 .related a {
@@ -202,7 +202,7 @@ a { color: var(--green); text-decoration: none; }
   border-radius: 14px; padding: 16px 18px; transition: transform 0.2s var(--ease), border-color 0.2s var(--ease);
 }
 .related a:hover { transform: translateY(-3px); border-color: var(--green-tint-2); }
-.related__t { font-family: "Lora", serif; font-weight: 500; font-size: 16.5px; line-height: 1.3; color: var(--ink); }
+.related__t { font-family: "Fraunces", serif; font-weight: 500; font-size: 16.5px; line-height: 1.3; color: var(--ink); }
 .related__m { font-size: 13px; color: var(--ink-soft); }
 
 /* ---------- Footer ---------- */

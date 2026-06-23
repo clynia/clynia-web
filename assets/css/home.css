@@ -119,7 +119,7 @@
 }
 .home-hero__title {
   margin: 0 0 18px;
-  font-family: "Lora", Georgia, serif;
+  font-family: "Fraunces", Georgia, serif;
   font-weight: 500;
   font-size: clamp(34px, 9vw, 56px);
   line-height: 1.1;
@@ -179,7 +179,7 @@
 }
 .cat__chip--live { background: var(--green); color: #fff; }
 .cat__body { display: flex; flex-direction: column; gap: 7px; padding: 16px 16px 18px; flex: 1; }
-.cat__title { margin: 0; font-family: "Lora", Georgia, serif; font-weight: 500; font-size: 19px; color: var(--ink); }
+.cat__title { margin: 0; font-family: "Fraunces", Georgia, serif; font-weight: 500; font-size: 19px; color: var(--ink); }
 .cat__desc { margin: 0; font-size: 13px; line-height: 1.5; color: var(--ink-soft); flex: 1; }
 .cat__cta {
   margin-top: 10px;
@@ -230,14 +230,14 @@
   margin-bottom: 14px;
 }
 .why__icon svg { width: 23px; height: 23px; }
-.why__title { margin: 0 0 6px; font-family: "Lora", Georgia, serif; font-weight: 500; font-size: 19px; color: var(--ink); }
+.why__title { margin: 0 0 6px; font-family: "Fraunces", Georgia, serif; font-weight: 500; font-size: 19px; color: var(--ink); }
 .why__text { margin: 0; font-size: 14.5px; line-height: 1.55; color: var(--ink-soft); }
 
 /* ---------- Banda de médicos ---------- */
 .docs { background: var(--green); color: #fff; padding: 56px 0; }
 .docs__head { max-width: 640px; }
 .docs__eyebrow { color: rgba(255, 255, 255, 0.7); font-size: 12px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; margin: 0 0 14px; }
-.docs__title { font-family: "Lora", Georgia, serif; font-weight: 500; font-size: clamp(26px, 6.5vw, 36px); line-height: 1.2; margin: 0 0 14px; color: #fff; }
+.docs__title { font-family: "Fraunces", Georgia, serif; font-weight: 500; font-size: clamp(26px, 6.5vw, 36px); line-height: 1.2; margin: 0 0 14px; color: #fff; }
 .docs__sub { color: rgba(255, 255, 255, 0.85); font-size: 16px; margin: 0 0 28px; }
 .docs__pillars { list-style: none; margin: 0 0 30px; padding: 0; display: grid; gap: 14px; }
 .docs__pillar { display: flex; align-items: flex-start; gap: 12px; font-size: 15.5px; color: rgba(255, 255, 255, 0.95); }
@@ -245,7 +245,7 @@
 
 /* ---------- Cierre lista ---------- */
 .home-close { text-align: center; }
-.home-close__title { font-family: "Lora", Georgia, serif; font-weight: 500; font-size: clamp(27px, 7vw, 40px); line-height: 1.18; color: var(--ink); margin: 0 0 16px; }
+.home-close__title { font-family: "Fraunces", Georgia, serif; font-weight: 500; font-size: clamp(27px, 7vw, 40px); line-height: 1.18; color: var(--ink); margin: 0 0 16px; }
 .home-close__sub { max-width: 50ch; margin: 0 auto 28px; font-size: 16px; color: var(--ink-soft); }
 .home-close__actions { display: flex; flex-direction: column; gap: 12px; align-items: center; }
 
