@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Disallow: /peso
+Disallow: /gracias
+Disallow: /lista
+Disallow: /medicos-alta
+Disallow: /saludsexual
+Disallow: /capilar
+
+Sitemap: https://clynia.es/sitemap.xml
