@@ -46,10 +46,10 @@ a { color: var(--green); text-decoration: none; }
   border-bottom: 1px solid var(--line);
 }
 .blognav__in {
-  max-width: 1080px; margin-inline: auto; padding: 13px 20px;
+  max-width: 1080px; margin-inline: auto; padding: 14px 20px;
   display: flex; align-items: center; justify-content: space-between; gap: 16px;
 }
-.blognav__brand img { height: 26px; width: auto; display: block; }
+.blognav__brand img { height: 32px; width: auto; display: block; }
 .blognav__links { display: flex; align-items: center; gap: 18px; }
 .blognav__links a { font-size: 14.5px; font-weight: 600; color: var(--ink-soft); transition: color 0.2s var(--ease); }
 .blognav__links a:hover { color: var(--green); }
