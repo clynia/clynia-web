@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 $cfg = is_file(__DIR__ . '/config.php') ? (array) require __DIR__ . '/config.php' : [];
 $TO   = $cfg['TO'] ?? 'clynia@clynia.es';
-$FROM = $cfg['FROM'] ?? 'no-reply@clynia.es';
+$FROM = $cfg['FROM'] ?? 'clynia@clynia.es';
 $N8N  = $cfg['N8N_WEBHOOK'] ?? '';
 
 if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
@@ -62,12 +62,17 @@ $cuerpo = "Nuevo mensaje desde el formulario de contacto de clynia.es\n\n"
         . "Motivo:   {$motivo}\n\n"
         . "Mensaje:\n{$mensaje}\n";
 
-$headers  = 'From: Clynia web <' . $FROM . ">\r\n";
+$headers  = 'From: =?UTF-8?B?' . base64_encode('Clynia web') . '?= <' . $FROM . ">\r\n";
 $headers .= 'Reply-To: ' . $email . "\r\n";
+$headers .= "MIME-Version: 1.0\r\n";
 $headers .= "Content-Type: text/plain; charset=UTF-8\r\n";
+$headers .= "Content-Transfer-Encoding: 8bit\r\n";
+$headers .= 'Message-ID: <' . bin2hex(random_bytes(12)) . '@clynia.es>' . "\r\n";
 $asuntoEnc = '=?UTF-8?B?' . base64_encode($asunto) . '?=';
 
-$enviado = @mail($TO, $asuntoEnc, $cuerpo, $headers);
+// El 5o parametro (-f) fija el Return-Path al buzon real del dominio para
+// alinear SPF y reducir que el aviso caiga en spam.
+$enviado = @mail($TO, $asuntoEnc, $cuerpo, $headers, '-f ' . $FROM);
 
 // --- Reenvio opcional a n8n (Airtable "Contactos web") ---
 if ($N8N !== '') {
