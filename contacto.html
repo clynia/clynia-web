@@ -28,11 +28,11 @@
     .f{display:flex;flex-direction:column;gap:14px}
     .f label{display:block;font-weight:600;font-size:14px;color:#3a463f;margin-bottom:6px}
     .f .req{color:#b3261e}
-    .f input,.f select,.f textarea{width:100%;font:inherit;font-size:16px;padding:13px 14px;border:1px solid #e4e1d8;border-radius:13px;background:#fff;color:#2c2c2c;-webkit-appearance:none}
+    .f input:not([type=checkbox]),.f select,.f textarea{width:100%;font:inherit;font-size:16px;padding:13px 14px;border:1px solid #e4e1d8;border-radius:13px;background:#fff;color:#2c2c2c;-webkit-appearance:none}
     .f input:focus,.f select:focus,.f textarea:focus{outline:none;border-color:#437066;box-shadow:0 0 0 4px rgba(67,112,102,.12)}
     .f textarea{min-height:120px;resize:vertical}
     .f__consent{display:flex;gap:11px;align-items:flex-start;font-size:13.5px;line-height:1.5;color:#4a5650}
-    .f__consent input{width:20px;height:20px;flex:none;margin-top:1px;accent-color:#437066}
+    .f__consent input{width:20px;height:20px;flex:none;margin-top:1px;accent-color:#437066;-webkit-appearance:auto;appearance:auto;cursor:pointer}
     .f__consent a{color:#437066}
     .f__hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
     .f__btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;font:inherit;font-weight:600;font-size:16px;padding:15px;border:0;border-radius:14px;background:linear-gradient(180deg,#4a786d,#437066 55%,#365a52);color:#fff;cursor:pointer;transition:.15s}
@@ -102,7 +102,7 @@
             <label for="mensaje">Mensaje <span class="req">*</span></label>
             <textarea id="mensaje" name="mensaje" required placeholder="Cuéntanos en qué podemos ayudarte. Por tu seguridad, no incluyas datos médicos sensibles aquí."></textarea>
           </div>
-          <label class="f__consent" for="consent">
+          <label class="f__consent">
             <input id="consent" name="consent" type="checkbox" value="si" required />
             <span>He leído y acepto la <a href="privacidad.html" target="_blank" rel="noopener">política de privacidad</a> y el tratamiento de mis datos para responder a mi consulta.</span>
           </label>
