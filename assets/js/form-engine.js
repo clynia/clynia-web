@@ -243,11 +243,25 @@
     var payload = { product: F.product, answers: answers, triage: vars, submittedAt: new Date().toISOString() };
     var plan = (F.plans || []).filter(function (p) { return p.id === answers.plan; })[0];
     var redirected = false;
+    // --- Meta Pixel: eventos de conversión. eventID = clave compartida con la CAPI (n8n) para deduplicar. ---
+    var leadFired = false;
+    function mTrack(ev, params, eid) { try { if (window.fbq) fbq("track", ev, params || {}, eid ? { eventID: eid } : undefined); } catch (e) {} }
+    function fireLead(casoId) {
+      if (leadFired) return; leadFired = true;
+      mTrack("Lead", { content_name: F.product, content_category: "weight_loss", value: plan ? plan.precio : undefined, currency: "EUR" }, "lead_" + (casoId || ("anon_" + new Date().getTime())));
+    }
+    function fireCheckout(casoId) {
+      if (!plan) return;
+      mTrack("InitiateCheckout", { content_name: plan.nombre, content_ids: [plan.id], value: plan.precio, currency: "EUR", num_items: 1 }, "ic_" + (casoId || ("anon_" + new Date().getTime())));
+      // Guardamos el ticket para que gracias.html dispare Purchase con valor y el mismo eventID (dedup con la CAPI).
+      try { localStorage.setItem("clynia_pending_purchase", JSON.stringify({ value: plan.precio, currency: "EUR", content_name: plan.nombre, content_ids: [plan.id], eid: "purchase_" + (casoId || ("anon_" + new Date().getTime())) })); } catch (e) {}
+    }
     // Ruta por defecto y fallback: Payment Link estático. casoId -> client_reference_id (emparejamiento del pago).
     function payViaLink(casoId) {
       if (redirected) return; redirected = true;
       localStorage.removeItem(F.storeKey);
       if (plan && plan.pago) {
+        fireCheckout(casoId);
         var url = plan.pago + (plan.pago.indexOf("?") > -1 ? "&" : "?") + "prefilled_email=" + encodeURIComponent(answers.email || "");
         if (casoId) url += "&client_reference_id=" + encodeURIComponent(casoId);
         window.location.href = url;
@@ -255,6 +269,7 @@
     }
     // Ruta preferida si está configurada: Stripe Checkout Session creada en servidor (n8n) con el email BLOQUEADO.
     function proceedToPayment(casoId) {
+      fireLead(casoId);
       if (!F.checkoutEndpoint || !casoId || !plan) { payViaLink(casoId); return; }
       var settled = false;
       var t = setTimeout(function () { if (settled) return; settled = true; payViaLink(casoId); }, 6000);
@@ -262,7 +277,7 @@
         .then(function (r) { return r.json().catch(function () { return {}; }); })
         .then(function (d) {
           if (settled) return; settled = true; clearTimeout(t);
-          if (d && d.url) { if (redirected) return; redirected = true; localStorage.removeItem(F.storeKey); window.location.href = d.url; }
+          if (d && d.url) { if (redirected) return; redirected = true; localStorage.removeItem(F.storeKey); fireCheckout(casoId); window.location.href = d.url; }
           else { payViaLink(casoId); }
         })
         .catch(function () { if (settled) return; settled = true; clearTimeout(t); payViaLink(casoId); });

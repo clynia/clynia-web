@@ -40,7 +40,8 @@
       try { localStorage.setItem(KEY, v); } catch (e) {}
       box.classList.add("ck-hide");
       setTimeout(function () { if (box.parentNode) box.parentNode.removeChild(box); }, 260);
-      // Si en el futuro hay analítica, cárgala aquí solo cuando v === "all".
+      // Meta Pixel: solo enviamos eventos si el usuario acepta todo (RGPD/AEPD). El píxel arranca con consent revocado.
+      try { if (window.fbq) fbq("consent", v === "all" ? "grant" : "revoke"); } catch (e) {}
     }
     box.querySelector(".ck-accept").onclick = function () { choose("all"); };
     box.querySelector(".ck-reject").onclick = function () { choose("essential"); };

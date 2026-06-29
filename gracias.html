@@ -12,6 +12,8 @@
   s.parentNode.insertBefore(t,s)}(window, document,'script',
   'https://connect.facebook.net/en_US/fbevents.js');
   fbq('init', '4585495085018912');
+  fbq('consent', 'revoke');
+  try{ if(localStorage.getItem('clynia_cookie_consent')==='all'){ fbq('consent','grant'); } }catch(e){}
   fbq('track', 'PageView');
   </script>
   <noscript><img height="1" width="1" style="display:none"
@@ -87,5 +89,22 @@
       </div>
     </main>
   </div>
+
+  <!-- Meta Pixel: Purchase. Lee el ticket que dejó el checkout (valor + eventID para deduplicar con la CAPI de n8n). -->
+  <script>
+  (function () {
+    var p;
+    try { p = JSON.parse(localStorage.getItem("clynia_pending_purchase") || "null"); } catch (e) { return; }
+    if (!p || !p.value) return;
+    try { localStorage.removeItem("clynia_pending_purchase"); } catch (e) {}
+    function fire() {
+      try {
+        if (!window.fbq) return;
+        fbq("track", "Purchase", { value: p.value, currency: p.currency || "EUR", content_name: p.content_name, content_ids: p.content_ids || [], content_type: "product", num_items: 1 }, p.eid ? { eventID: p.eid } : undefined);
+      } catch (e) {}
+    }
+    if (window.fbq) fire(); else setTimeout(fire, 1000);
+  })();
+  </script>
 </body>
 </html>
