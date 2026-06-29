@@ -10,3 +10,4 @@ desktop.ini
 # Nada de secretos ni configs locales en este repo (la web es estática y pública)
 .env
 .env.*
+config.php

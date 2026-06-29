@@ -1,0 +1,12 @@
+<?php
+// Copia este archivo a config.php (NO se sube al repo) y ajusta los valores.
+// lead.php funciona sin config.php: enviara el email a clynia@clynia.es.
+return [
+    // Destino de los avisos de contacto.
+    'TO'   => 'clynia@clynia.es',
+    // Remitente del email (mejor un buzon real del dominio para deliverability).
+    'FROM' => 'no-reply@clynia.es',
+    // Opcional: webhook de n8n para registrar el lead en Airtable "Contactos web".
+    // Dejalo vacio para no reenviar a n8n.
+    'N8N_WEBHOOK' => '',
+];
