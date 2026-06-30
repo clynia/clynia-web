@@ -119,6 +119,13 @@
     .mf-card__text { font-family: 'Hanken Grotesk', sans-serif; font-size: 16px; line-height: 1.6;
       color: var(--ink-soft); margin: 12px 0 0; }
 
+    /* ---------- Lista de complicaciones ---------- */
+    .mf-chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; max-width: 740px; margin: clamp(32px, 5vh, 48px) auto 0; }
+    .mf-chip { font-family: 'Hanken Grotesk', sans-serif; font-weight: 600; font-size: 15.5px; color: var(--green-900);
+      background: #fff; border: 1px solid rgba(67,112,102,.18); border-radius: 999px; padding: 11px 20px;
+      display: inline-flex; align-items: center; gap: 9px; }
+    .mf-chip svg { width: 16px; height: 16px; color: var(--green); flex: none; }
+
     /* ---------- Cierre / visión ---------- */
     .mf-vision { background: var(--green-tint); text-align: center; padding: clamp(80px, 13vh, 150px) 0; }
     .mf-vision__text { font-family: 'Hanken Grotesk', sans-serif; font-weight: 800;
@@ -164,32 +171,40 @@
     <section class="mf-hero">
       <span class="mf-hero__glow" aria-hidden="true"></span>
       <div class="mf-hero__inner">
-        <h1 class="mf-hero__title">Cuidarte, por fin sin esperas.</h1>
-        <p class="mf-hero__sub">La tecnología que pone a un médico colegiado a tu lado. De lo demás nos ocupamos nosotros.</p>
+        <h1 class="mf-hero__title">Entre tú y tu médico, solo la atención.</h1>
+        <p class="mf-hero__sub">Clynia es la tecnología que os rodea. De todo lo demás nos ocupamos nosotros.</p>
       </div>
     </section>
 
-    <!-- ===================== EL PORQUÉ ===================== -->
+    <!-- ===================== LAS COMPLICACIONES ===================== -->
     <section class="mf-sec">
       <div class="mf-wrapn">
         <div class="mf-center reveal-up">
-          <h2 class="mf-h2">El problema nunca fue el médico.</h2>
-          <p class="mf-lead">Es todo lo que le hemos puesto encima. Nosotros le devolvemos su tiempo.</p>
+          <h2 class="mf-h2">Las complicaciones, nuestras.</h2>
+          <p class="mf-lead">Todo lo que se interpone entre el médico y tú, lo asumimos nosotros.</p>
+        </div>
+        <div class="mf-chips reveal-up">
+          <span class="mf-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Cuadrar la cita</span>
+          <span class="mf-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Los pagos</span>
+          <span class="mf-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Los cobros</span>
+          <span class="mf-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>El seguimiento</span>
+          <span class="mf-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Hablar con el médico</span>
+          <span class="mf-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>El papeleo</span>
         </div>
       </div>
     </section>
 
-    <!-- ===================== TRES PRUEBAS ===================== -->
+    <!-- ===================== LAS FACILIDADES ===================== -->
     <section class="mf-sec mf-sec--tint">
       <div class="mf-wrapn">
         <div class="mf-center reveal-up">
-          <h2 class="mf-h2">Tecnología que funciona. Médico que decide.</h2>
+          <h2 class="mf-h2">Las facilidades, en el portal Clynia.</h2>
         </div>
         <div class="mf-cards">
           <article class="mf-card mf-card--a reveal-up">
-            <span class="mf-card__ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 1v3M15 1v3M9 20v3M15 20v3M1 9h3M1 15h3M20 9h3M20 15h3"/></svg></span>
-            <h3 class="mf-card__title">Cero papeleo</h3>
-            <p class="mf-card__text">Agenda, seguimiento y administración, en piloto automático.</p>
+            <span class="mf-card__ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span>
+            <h3 class="mf-card__title">Médico y paciente, conectados</h3>
+            <p class="mf-card__text">Un mismo sitio para hablaros, compartir y avanzar.</p>
           </article>
           <article class="mf-card mf-card--b reveal-up">
             <span class="mf-card__ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></span>
@@ -198,8 +213,8 @@
           </article>
           <article class="mf-card mf-card--c reveal-up">
             <span class="mf-card__ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="2" width="10" height="20" rx="2.5"/><path d="M11 18h2"/></svg></span>
-            <h3 class="mf-card__title">Todo desde el móvil</h3>
-            <p class="mf-card__text">Cuentas tu caso y tu médico te atiende cuando lo valora. Sin cita.</p>
+            <h3 class="mf-card__title">Todo en tu móvil</h3>
+            <p class="mf-card__text">Citas, pagos, seguimiento y resultados, al alcance de la mano.</p>
           </article>
         </div>
       </div>
@@ -209,15 +224,15 @@
     <section class="mf-sec">
       <div class="mf-wrapn">
         <div class="mf-center reveal-up">
-          <h2 class="mf-h2">No somos una clínica. Somos lo que la hace posible.</h2>
-          <p class="mf-lead">Tecnología construida alrededor del médico, para que se dedique a cuidar.</p>
+          <h2 class="mf-h2">Tecnología alrededor. Atención en el centro.</h2>
+          <p class="mf-lead">No somos una clínica. Somos la capa que rodea al médico y al paciente, para que entre vosotros solo quede el cuidado.</p>
         </div>
       </div>
     </section>
 
     <!-- ===================== CIERRE ===================== -->
     <section class="mf-vision reveal-up">
-      <p class="mf-vision__text">No digitalizamos la consulta de siempre. Le quitamos todo lo que sobra.</p>
+      <p class="mf-vision__text">Para que cuidar vuelva a ser lo único que importa.</p>
     </section>
   </main>
 
