@@ -24,7 +24,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Misión de Clynia · Tecnología construida alrededor del médico</title>
   <meta name="description" content="Clynia es una compañía de tecnología que libera al médico de la sala de espera, la agenda y el papeleo, para que se dedique a cuidar. Conoce nuestra misión." />
-  <meta name="theme-color" content="#dce9f3" />
+  <meta name="theme-color" content="#cfe7da" />
   <link rel="icon" type="image/png" href="assets/img/favicon.png" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -71,14 +71,15 @@
     /* ---------- HERO con aurora ---------- */
     .mf-hero { position: relative; overflow: hidden; text-align: center;
       padding: clamp(150px, 24vh, 280px) 0 clamp(96px, 14vh, 176px);
-      background: linear-gradient(180deg, #d4e6f3 0%, #e6eeee 46%, var(--bg) 100%); }
-    .mf-hero__glow { position: absolute; left: 50%; top: 44%; width: 130%; height: 64%;
-      transform: translate(-50%, -50%); pointer-events: none; filter: blur(44px); opacity: .92;
+      background: linear-gradient(180deg, #cfe7da 0%, #e2efe9 48%, var(--bg) 100%); }
+    .mf-hero__glow { position: absolute; left: 50%; top: 44%; width: 132%; height: 68%;
+      transform: translate(-50%, -50%); pointer-events: none; filter: blur(44px) saturate(1.14); opacity: .95;
       background:
-        radial-gradient(circle at 26% 52%, rgba(246,194,204,.9), transparent 60%),
-        radial-gradient(circle at 50% 56%, rgba(250,225,193,.92), transparent 60%),
-        radial-gradient(circle at 73% 50%, rgba(176,227,205,.95), transparent 60%);
-      will-change: transform; animation: mf-glow 24s ease-in-out infinite alternate; }
+        radial-gradient(circle at 22% 52%, rgba(116,206,168,.92), transparent 60%),
+        radial-gradient(circle at 50% 58%, rgba(56,138,116,.84), transparent 60%),
+        radial-gradient(circle at 78% 50%, rgba(166,224,194,.95), transparent 60%),
+        radial-gradient(circle at 50% 28%, rgba(92,184,200,.6), transparent 62%);
+      will-change: transform; animation: mf-glow 22s ease-in-out infinite alternate; }
     @keyframes mf-glow { from { transform: translate(-52%, -50%) scale(1); } to { transform: translate(-47%, -50%) scale(1.09); } }
     .mf-hero__inner { position: relative; max-width: 900px; margin: 0 auto; padding: 0 22px; }
     .mf-hero__title { font-family: 'Hanken Grotesk', sans-serif; font-weight: 800;
