@@ -151,26 +151,14 @@
     .mf-tl-card { position: absolute; left: var(--x); top: var(--y); transform: translate(-50%, -50%);
       width: clamp(46px, 6.6vw, 74px); height: clamp(46px, 6.6vw, 74px); }
     .mf-tl-tile { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
-      border-radius: 17px; background: var(--green); color: #fff; opacity: 0;
-      box-shadow: 0 16px 30px -14px rgba(40, 67, 60, .55); }
+      border-radius: 17px; background: var(--green); color: #fff;
+      opacity: 0; transform: translateY(12px) scale(.92);
+      box-shadow: 0 16px 30px -14px rgba(40, 67, 60, .5);
+      transition: opacity .6s var(--ease) var(--din, 0s), transform .4s var(--ease), box-shadow .35s var(--ease); }
+    .mf-tl-tile:hover { transform: translateY(-2px) scale(1.14); box-shadow: 0 30px 54px -16px rgba(40, 67, 60, .6); }
     .mf-tl-tile svg { width: 46%; height: 46%; }
-    .mf-techlayer.is-in .mf-tl-tile {
-      animation-name: mf-tl-in, mf-tl-glow;
-      animation-duration: .65s, 4.2s;
-      animation-timing-function: var(--ease), ease-in-out;
-      animation-delay: var(--din, 0s), var(--pd, 1s);
-      animation-iteration-count: 1, infinite;
-      animation-fill-mode: both, none; }
-    .mf-techlayer.is-in .mf-tl-card:nth-child(6) .mf-tl-tile { --pd: .8s; }
-    .mf-techlayer.is-in .mf-tl-card:nth-child(4) .mf-tl-tile { --pd: 1.4s; }
-    .mf-techlayer.is-in .mf-tl-card:nth-child(2) .mf-tl-tile { --pd: 2s; }
-    .mf-techlayer.is-in .mf-tl-card:nth-child(3) .mf-tl-tile { --pd: 2.6s; }
-    .mf-techlayer.is-in .mf-tl-card:nth-child(5) .mf-tl-tile { --pd: 3.2s; }
-    .mf-techlayer.is-in .mf-tl-card:nth-child(7) .mf-tl-tile { --pd: 3.8s; }
-    @keyframes mf-tl-in { from { opacity: 0; transform: translateY(12px) scale(.82); } to { opacity: 1; transform: translateY(0) scale(1); } }
-    @keyframes mf-tl-glow {
-      0%, 38%, 100% { transform: scale(1); box-shadow: 0 16px 30px -14px rgba(40, 67, 60, .5); }
-      14% { transform: scale(1.12); box-shadow: 0 30px 52px -16px rgba(40, 67, 60, .62); } }
+    .mf-techlayer.is-in .mf-tl-tile { opacity: 1; transform: translateY(0) scale(1); }
+    /* iconos: aparecen al hacer scroll y brillan solo al pasar el raton (sin movimiento perpetuo) */
 
     /* ---------- Lista de complicaciones ---------- */
     .mf-trash { margin: clamp(32px, 5vh, 48px) auto 0; }
@@ -212,7 +200,7 @@
       .mf-hero__title, .mf-hero__sub { opacity: 1; transform: none; filter: none; animation: none; }
       .mf-chip:hover { animation: none; }
       .mf-trash:has(.mf-chip:hover) .mf-bin { transform: none; }
-      .mf-tl-tile { opacity: 1; animation: none; }
+      .mf-tl-tile { opacity: 1; transform: none; transition: none; }
       .acc__item, .acc__text { transition: none; }
     }
   </style>
@@ -273,22 +261,22 @@
           <div class="mf-tl-stage">
             <img class="mf-tl-photo" src="assets/img/capa-tecnologia.jpg" width="1600" height="893" alt="" loading="lazy" decoding="async" />
             <span class="mf-tl-card" style="--x:42%;--y:12%;--din:0s;--fd:6.2s">
-              <span class="mf-tl-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="16.5" rx="2.5"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/></svg></span>
+              <span class="mf-tl-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2.5"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="m9 16 1.8 1.8L15 14"/></svg></span>
             </span>
             <span class="mf-tl-card" style="--x:59%;--y:12%;--din:.06s;--fd:6.6s">
-              <span class="mf-tl-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2.5v14a3.5 3.5 0 0 1-7 0v-14"/><path d="M6 2.5h11M8 13h6"/></svg></span>
+              <span class="mf-tl-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2h6"/><path d="M10 2v6.6L4.7 17.9A2 2 0 0 0 6.4 21h11.2a2 2 0 0 0 1.7-3.1L14 8.6V2"/><path d="M7.5 14h9"/></svg></span>
             </span>
             <span class="mf-tl-card" style="--x:25%;--y:23%;--din:.14s;--fd:5.8s">
-              <span class="mf-tl-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h14v18l-3-1.6-2 1.6-2-1.6L8 21l-3-1.6Z"/><path d="M9 8h6M9 12h6"/></svg></span>
+              <span class="mf-tl-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2v20l2-1.3 2 1.3 2-1.3 2 1.3 2-1.3 2 1.3V2Z"/><path d="M10 7.5h4M10 11h4M10 14.5h2.5"/></svg></span>
             </span>
             <span class="mf-tl-card" style="--x:76%;--y:23%;--din:.18s;--fd:5.6s">
-              <span class="mf-tl-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 11.5a8 8 0 0 1-11.5 7.2L4 20l1.3-4.9A8 8 0 1 1 20.5 11.5Z"/></svg></span>
+              <span class="mf-tl-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 11.6a8 8 0 0 1-11.6 7.1L4 20.5l1.8-4.9A8 8 0 1 1 20.5 11.6Z"/><path d="M9 12h.01M12 12h.01M15 12h.01"/></svg></span>
             </span>
             <span class="mf-tl-card" style="--x:9%;--y:43%;--din:.28s;--fd:6.4s">
-              <span class="mf-tl-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M10.5 20.5 3.5 13.5a4.95 4.95 0 0 1 7-7l7 7a4.95 4.95 0 0 1-7 7Z"/><path d="m8.5 8.5 7 7"/></svg></span>
+              <span class="mf-tl-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="8" rx="4"/><path d="M12 8v8"/></svg></span>
             </span>
             <span class="mf-tl-card" style="--x:91%;--y:43%;--din:.32s;--fd:6s">
-              <span class="mf-tl-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5.5" width="19" height="13" rx="2.5"/><path d="M2.5 10h19M6 14.5h4"/></svg></span>
+              <span class="mf-tl-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2.5"/><path d="M2 10h20"/><path d="M6 15h4"/></svg></span>
             </span>
           </div>
         </div>
