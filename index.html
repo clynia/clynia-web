@@ -236,6 +236,38 @@
 
     <!-- ===================== POR QUÉ CLYNIA ===================== -->
     <section class="section" id="por-que">
+      <style>
+        #por-que{position:relative;overflow:hidden}
+        #por-que .wrap{position:relative;z-index:2}
+        #por-que .section__head{text-shadow:0 1px 12px rgba(255,255,255,.92),0 1px 2px rgba(255,255,255,.9)}
+        #por-que .why{background:rgba(255,255,255,.62);-webkit-backdrop-filter:blur(13px) saturate(125%);backdrop-filter:blur(13px) saturate(125%);border:1px solid rgba(255,255,255,.65);box-shadow:0 12px 34px rgba(40,60,50,.12)}
+        .faces-bg{position:absolute;inset:0;z-index:0;display:flex;flex-direction:column;justify-content:center;gap:16px;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent)}
+        .faces-bg__row{display:flex;gap:16px;width:max-content;will-change:transform;opacity:.92}
+        .faces-bg__row--a{animation:faces-l 52s linear infinite}
+        .faces-bg__row--b{animation:faces-r 64s linear infinite}
+        .faces-bg__row--c{animation:faces-l 46s linear infinite}
+        #por-que:hover .faces-bg__row{animation-play-state:paused}
+        .faces-bg__row img{height:236px;width:auto;aspect-ratio:3/4;object-fit:cover;border-radius:18px;display:block;flex:0 0 auto;background:#eef0ee}
+        .faces-veil{position:absolute;inset:0;z-index:1;background:rgba(247,250,248,.5)}
+        .faces-note{position:absolute;right:16px;bottom:10px;z-index:2;font-size:.72rem;color:#9aa39e;margin:0}
+        @keyframes faces-l{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+        @keyframes faces-r{from{transform:translateX(-50%)}to{transform:translateX(0)}}
+        @media (max-width:640px){.faces-bg{gap:10px}.faces-bg__row{gap:10px}.faces-bg__row img{height:158px;border-radius:14px}}
+        @media (prefers-reduced-motion:reduce){.faces-bg__row{animation:none}}
+      </style>
+      <div class="faces-bg" aria-hidden="true">
+        <div class="faces-bg__row faces-bg__row--a">
+          <img src="assets/img/cara-feliz-1.webp" alt="" loading="lazy" /><img src="assets/img/cara-feliz-2.webp" alt="" loading="lazy" /><img src="assets/img/cara-feliz-3.webp" alt="" loading="lazy" /><img src="assets/img/cara-feliz-4.webp" alt="" loading="lazy" /><img src="assets/img/cara-feliz-5.webp" alt="" loading="lazy" /><img src="assets/img/cara-feliz-6.webp" alt="" loading="lazy" /><img src="assets/img/cara-feliz-7.webp" alt="" loading="lazy" /><img src="assets/img/cara-feliz-8.webp" alt="" loading="lazy" /><img src="assets/img/cara-feliz-1.webp" alt="" loading="lazy" /><img src="assets/img/cara-feliz-2.webp" alt="" loading="lazy" /><img src="assets/img/cara-feliz-3.webp" alt="" loading="lazy" /><img src="assets/img/cara-feliz-4.webp" alt="" loading="lazy" /><img src="assets/img/cara-feliz-5.webp" alt="" loading="lazy" /><img src="assets/img/cara-feliz-6.webp" alt="" loading="lazy" /><img src="assets/img/cara-feliz-7.webp" alt="" loading="lazy" /><img src="assets/img/cara-feliz-8.webp" alt="" loading="lazy" />
+        </div>
+        <div class="faces-bg__row faces-bg__row--b">
+          <img src="assets/img/cara-feliz-8.webp" alt="" loading="lazy" /><img src="assets/img/cara-feliz-7.webp" alt="" loading="lazy" /><img src="assets/img/cara-feliz-6.webp" alt="" loading="lazy" /><img src="assets/img/cara-feliz-5.webp" alt="" loading="lazy" /><img src="assets/img/cara-feliz-4.webp" alt="" loading="lazy" /><img src="assets/img/cara-feliz-3.webp" alt="" loading="lazy" /><img src="assets/img/cara-feliz-2.webp" alt="" loading="lazy" /><img src="assets/img/cara-feliz-1.webp" alt="" loading="lazy" /><img src="assets/img/cara-feliz-8.webp" alt="" loading="lazy" /><img src="assets/img/cara-feliz-7.webp" alt="" loading="lazy" /><img src="assets/img/cara-feliz-6.webp" alt="" loading="lazy" /><img src="assets/img/cara-feliz-5.webp" alt="" loading="lazy" /><img src="assets/img/cara-feliz-4.webp" alt="" loading="lazy" /><img src="assets/img/cara-feliz-3.webp" alt="" loading="lazy" /><img src="assets/img/cara-feliz-2.webp" alt="" loading="lazy" /><img src="assets/img/cara-feliz-1.webp" alt="" loading="lazy" />
+        </div>
+        <div class="faces-bg__row faces-bg__row--c">
+          <img src="assets/img/cara-feliz-3.webp" alt="" loading="lazy" /><img src="assets/img/cara-feliz-6.webp" alt="" loading="lazy" /><img src="assets/img/cara-feliz-1.webp" alt="" loading="lazy" /><img src="assets/img/cara-feliz-8.webp" alt="" loading="lazy" /><img src="assets/img/cara-feliz-5.webp" alt="" loading="lazy" /><img src="assets/img/cara-feliz-2.webp" alt="" loading="lazy" /><img src="assets/img/cara-feliz-7.webp" alt="" loading="lazy" /><img src="assets/img/cara-feliz-4.webp" alt="" loading="lazy" /><img src="assets/img/cara-feliz-3.webp" alt="" loading="lazy" /><img src="assets/img/cara-feliz-6.webp" alt="" loading="lazy" /><img src="assets/img/cara-feliz-1.webp" alt="" loading="lazy" /><img src="assets/img/cara-feliz-8.webp" alt="" loading="lazy" /><img src="assets/img/cara-feliz-5.webp" alt="" loading="lazy" /><img src="assets/img/cara-feliz-2.webp" alt="" loading="lazy" /><img src="assets/img/cara-feliz-7.webp" alt="" loading="lazy" /><img src="assets/img/cara-feliz-4.webp" alt="" loading="lazy" />
+        </div>
+      </div>
+      <div class="faces-veil" aria-hidden="true"></div>
+      <p class="faces-note">Imágenes ilustrativas</p>
       <div class="wrap">
         <header class="section__head reveal-up">
           <h2 class="h2">Cuidarte en serio, sin complicarte.</h2>
@@ -264,61 +296,6 @@
           </div>
         </div>
 
-        <style>
-          .faces{position:relative;margin-top:46px;display:flex;flex-direction:column;gap:16px;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent);mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent)}
-          .faces__row{display:flex;gap:16px;width:max-content;will-change:transform}
-          .faces__row--a{animation:faces-l 46s linear infinite}
-          .faces__row--b{animation:faces-r 58s linear infinite}
-          .faces:hover .faces__row{animation-play-state:paused}
-          .faces__row img{width:auto;aspect-ratio:3/4;object-fit:cover;border-radius:18px;display:block;flex:0 0 auto;background:#eef0ee;height:224px}
-          .faces__row img:nth-child(4n+1){height:288px}
-          .faces__row img:nth-child(4n+2){height:200px}
-          .faces__row img:nth-child(4n+3){height:256px}
-          .faces__note{text-align:center;font-size:.78rem;color:#9aa39e;margin-top:16px}
-          @keyframes faces-l{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-          @keyframes faces-r{from{transform:translateX(-50%)}to{transform:translateX(0)}}
-          @media (max-width:640px){.faces{gap:10px}.faces__row{gap:10px}.faces__row img{height:150px;border-radius:14px}.faces__row img:nth-child(4n+1){height:190px}.faces__row img:nth-child(4n+2){height:134px}.faces__row img:nth-child(4n+3){height:166px}}
-          @media (prefers-reduced-motion:reduce){.faces__row{animation:none}}
-        </style>
-        <div class="faces reveal-up" aria-label="Personas a las que cuidamos en Clynia">
-          <div class="faces__row faces__row--a">
-            <img src="assets/img/cara-feliz-1.webp" alt="" width="300" height="400" loading="lazy" />
-            <img src="assets/img/cara-feliz-2.webp" alt="" width="300" height="400" loading="lazy" />
-            <img src="assets/img/cara-feliz-3.webp" alt="" width="300" height="400" loading="lazy" />
-            <img src="assets/img/cara-feliz-4.webp" alt="" width="300" height="400" loading="lazy" />
-            <img src="assets/img/cara-feliz-5.webp" alt="" width="300" height="400" loading="lazy" />
-            <img src="assets/img/cara-feliz-6.webp" alt="" width="300" height="400" loading="lazy" />
-            <img src="assets/img/cara-feliz-7.webp" alt="" width="300" height="400" loading="lazy" />
-            <img src="assets/img/cara-feliz-8.webp" alt="" width="300" height="400" loading="lazy" />
-            <img src="assets/img/cara-feliz-1.webp" alt="" width="300" height="400" loading="lazy" aria-hidden="true" />
-            <img src="assets/img/cara-feliz-2.webp" alt="" width="300" height="400" loading="lazy" aria-hidden="true" />
-            <img src="assets/img/cara-feliz-3.webp" alt="" width="300" height="400" loading="lazy" aria-hidden="true" />
-            <img src="assets/img/cara-feliz-4.webp" alt="" width="300" height="400" loading="lazy" aria-hidden="true" />
-            <img src="assets/img/cara-feliz-5.webp" alt="" width="300" height="400" loading="lazy" aria-hidden="true" />
-            <img src="assets/img/cara-feliz-6.webp" alt="" width="300" height="400" loading="lazy" aria-hidden="true" />
-            <img src="assets/img/cara-feliz-7.webp" alt="" width="300" height="400" loading="lazy" aria-hidden="true" />
-            <img src="assets/img/cara-feliz-8.webp" alt="" width="300" height="400" loading="lazy" aria-hidden="true" />
-          </div>
-          <div class="faces__row faces__row--b">
-            <img src="assets/img/cara-feliz-8.webp" alt="" width="300" height="400" loading="lazy" />
-            <img src="assets/img/cara-feliz-6.webp" alt="" width="300" height="400" loading="lazy" />
-            <img src="assets/img/cara-feliz-4.webp" alt="" width="300" height="400" loading="lazy" />
-            <img src="assets/img/cara-feliz-2.webp" alt="" width="300" height="400" loading="lazy" />
-            <img src="assets/img/cara-feliz-7.webp" alt="" width="300" height="400" loading="lazy" />
-            <img src="assets/img/cara-feliz-5.webp" alt="" width="300" height="400" loading="lazy" />
-            <img src="assets/img/cara-feliz-3.webp" alt="" width="300" height="400" loading="lazy" />
-            <img src="assets/img/cara-feliz-1.webp" alt="" width="300" height="400" loading="lazy" />
-            <img src="assets/img/cara-feliz-8.webp" alt="" width="300" height="400" loading="lazy" aria-hidden="true" />
-            <img src="assets/img/cara-feliz-6.webp" alt="" width="300" height="400" loading="lazy" aria-hidden="true" />
-            <img src="assets/img/cara-feliz-4.webp" alt="" width="300" height="400" loading="lazy" aria-hidden="true" />
-            <img src="assets/img/cara-feliz-2.webp" alt="" width="300" height="400" loading="lazy" aria-hidden="true" />
-            <img src="assets/img/cara-feliz-7.webp" alt="" width="300" height="400" loading="lazy" aria-hidden="true" />
-            <img src="assets/img/cara-feliz-5.webp" alt="" width="300" height="400" loading="lazy" aria-hidden="true" />
-            <img src="assets/img/cara-feliz-3.webp" alt="" width="300" height="400" loading="lazy" aria-hidden="true" />
-            <img src="assets/img/cara-feliz-1.webp" alt="" width="300" height="400" loading="lazy" aria-hidden="true" />
-          </div>
-        </div>
-        <p class="faces__note">Imágenes ilustrativas.</p>
 
         <div class="reveal-up" style="text-align:center;margin-top:36px">
           <a class="btn btn--primary btn--inline" href="#categorias">
