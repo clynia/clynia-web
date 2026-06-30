@@ -102,6 +102,11 @@
       font-size: clamp(30px, 5vw, 52px); line-height: 1.06; letter-spacing: -.03em; color: var(--ink); margin: 0; }
     .mf-lead { font-family: 'Hanken Grotesk', sans-serif; font-size: clamp(16.5px, 2vw, 19px);
       line-height: 1.65; color: var(--ink-soft); max-width: 52ch; margin: 18px auto 0; }
+    .mf-kicker { font-family: 'Hanken Grotesk', sans-serif; font-weight: 700; font-size: 15px;
+      color: var(--green); margin: 0 0 14px; }
+    .mf-prose { font-family: 'Hanken Grotesk', sans-serif; font-size: clamp(17px, 2.1vw, 20px);
+      line-height: 1.72; color: var(--ink-soft); max-width: 48ch; margin: clamp(26px, 4vh, 40px) auto 0;
+      text-align: justify; text-justify: inter-word; hyphens: auto; }
 
     /* ---------- Tarjetas de prueba ---------- */
     .mf-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
@@ -117,6 +122,26 @@
       letter-spacing: -.01em; color: var(--ink); margin: 0; }
     .mf-card__text { font-family: 'Hanken Grotesk', sans-serif; font-size: 16px; line-height: 1.6;
       color: var(--ink-soft); margin: 12px 0 0; }
+
+    /* ---------- En qué creemos (paneles que se expanden al elegir) ---------- */
+    .acc { display: flex; align-items: stretch; max-width: 980px; margin: clamp(40px, 6vh, 64px) auto 0;
+      border-top: 1px solid rgba(28, 36, 33, .14); }
+    .acc__item { flex: 1 1 0; min-width: 0; outline: none; cursor: pointer; color: var(--ink-faint);
+      padding: clamp(26px, 3.4vw, 40px) clamp(20px, 2.4vw, 32px) clamp(30px, 4.6vw, 48px);
+      border-left: 1px solid rgba(28, 36, 33, .1);
+      transition: flex-grow .55s var(--ease), color .35s var(--ease), background .35s var(--ease); }
+    .acc__item:first-child { border-left: 0; }
+    .acc__title { font-family: 'Hanken Grotesk', sans-serif; font-weight: 800; font-size: clamp(21px, 2.3vw, 30px);
+      line-height: 1.1; letter-spacing: -.02em; color: currentColor; margin: 0; }
+    .acc__text { font-family: 'Hanken Grotesk', sans-serif; font-size: 16.5px; line-height: 1.6;
+      color: var(--ink-soft); max-width: 42ch; margin: 0; opacity: 0; max-height: 0; overflow: hidden;
+      transition: opacity .4s var(--ease), max-height .55s var(--ease), margin .4s var(--ease); }
+    .acc__item:first-child { flex-grow: 2.6; color: var(--ink); background: #fff; }
+    .acc__item:first-child .acc__text { opacity: 1; max-height: 280px; margin-top: 18px; }
+    .acc:is(:hover, :focus-within) .acc__item { flex-grow: 1; color: var(--ink-faint); background: transparent; }
+    .acc:is(:hover, :focus-within) .acc__item .acc__text { opacity: 0; max-height: 0; margin-top: 0; }
+    .acc:is(:hover, :focus-within) .acc__item:is(:hover, :focus-within) { flex-grow: 2.6; color: var(--ink); background: #fff; }
+    .acc:is(:hover, :focus-within) .acc__item:is(:hover, :focus-within) .acc__text { opacity: 1; max-height: 280px; margin-top: 18px; }
 
     /* ---------- Capa de tecnología (manos + iconos en arco) ---------- */
     .mf-techlayer { margin: clamp(34px, 6vh, 64px) auto 0; max-width: 900px; }
@@ -160,6 +185,19 @@
 
     @media (max-width: 820px) {
       .mf-cards { grid-template-columns: 1fr; max-width: 520px; }
+      .acc { flex-direction: column; max-width: 520px; }
+      .acc__item,
+      .acc__item:first-child,
+      .acc:is(:hover, :focus-within) .acc__item,
+      .acc:is(:hover, :focus-within) .acc__item:is(:hover, :focus-within) {
+        flex-grow: 0; color: var(--ink); background: transparent;
+        border-left: 0; border-top: 1px solid rgba(28, 36, 33, .1); }
+      .acc__item:first-child { border-top: 0; }
+      .acc__text,
+      .acc__item:first-child .acc__text,
+      .acc:is(:hover, :focus-within) .acc__item .acc__text,
+      .acc:is(:hover, :focus-within) .acc__item:is(:hover, :focus-within) .acc__text {
+        opacity: 1; max-height: none; margin-top: 14px; }
     }
     @media (prefers-reduced-motion: reduce) {
       .mf-hero__glow { animation: none; }
@@ -167,6 +205,7 @@
       .mf-chip:hover { animation: none; }
       .mf-trash:has(.mf-chip:hover) .mf-bin { transform: none; }
       .mf-tl-tile { opacity: 1; animation: none; }
+      .acc__item, .acc__text { transition: none; }
     }
   </style>
 </head>
@@ -200,27 +239,27 @@
     <section class="mf-hero">
       <span class="mf-hero__glow" aria-hidden="true"></span>
       <div class="mf-hero__inner">
-        <h1 class="mf-hero__title">Entre tú y el médico, sólo la atención.</h1>
+        <h1 class="mf-hero__title">Entre la persona y su médico, sólo la atención.</h1>
         <p class="mf-hero__sub">Clynia nace para eliminar el ruido que rodea a la atención médica y permitir así una atención de calidad, eficiente y directa, llevando la conexión médico-paciente a un nuevo estándar de excelencia.</p>
       </div>
     </section>
 
-    <!-- ===================== LAS COMPLICACIONES ===================== -->
+    <!-- ===================== EL PORQUÉ ===================== -->
     <section class="mf-sec">
       <div class="mf-wrapn">
         <div class="mf-center reveal-up">
-          <h2 class="mf-h2">La sala de espera es un error de diseño.</h2>
-          <p class="mf-lead">Nada de ese ruido cura. Sólo se interpone entre tú y tu médico. Nosotros lo quitamos de en medio.</p>
+          <h2 class="mf-h2">Nadie estudia medicina para pelearse con una agenda.</h2>
         </div>
+        <p class="mf-prose reveal-up">Demasiados médicos pierden media jornada en agenda, cobros, seguimientos y papeleo. Y los pacientes esperan, repiten su historia una y otra vez, sin saber a quién escribir ante una duda. Entre la persona y su médico se ha colado demasiado ruido. Clynia nace para quitarlo de en medio.</p>
       </div>
     </section>
 
-    <!-- ===================== LAS FACILIDADES ===================== -->
+    <!-- ===================== LA MISIÓN ===================== -->
     <section class="mf-sec mf-sec--tint">
       <div class="mf-wrapn">
         <div class="mf-center reveal-up">
-          <h2 class="mf-h2">Una capa de tecnología alrededor del médico.</h2>
-          <p class="mf-lead">Construimos la tecnología que asume todo lo que no es medicina, para que el médico recupere su tiempo y tú, toda su atención.</p>
+          <h2 class="mf-h2">Quitar de en medio todo lo que no es medicina.</h2>
+          <p class="mf-lead">Las citas, los pagos, el seguimiento, el papeleo. Clynia los asume para que entre la persona y su médico quede sólo la atención: directa, eficiente y de calidad para ambos.</p>
         </div>
         <div class="mf-techlayer reveal-up" aria-hidden="true">
           <div class="mf-tl-stage">
@@ -245,32 +284,38 @@
             </span>
           </div>
         </div>
-        <div class="mf-cards">
-          <article class="mf-card mf-card--a reveal-up">
-            <span class="mf-card__ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span>
-            <h3 class="mf-card__title">Médico y paciente, conectados</h3>
-            <p class="mf-card__text">Un mismo sitio para hablaros, compartir y avanzar.</p>
-          </article>
-          <article class="mf-card mf-card--b reveal-up">
-            <span class="mf-card__ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></span>
-            <h3 class="mf-card__title">Siempre un médico</h3>
-            <p class="mf-card__text">La tecnología prepara y resume. Decide un médico colegiado, nunca un algoritmo.</p>
-          </article>
-          <article class="mf-card mf-card--c reveal-up">
-            <span class="mf-card__ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="2" width="10" height="20" rx="2.5"/><path d="M11 18h2"/></svg></span>
-            <h3 class="mf-card__title">Todo en tu móvil</h3>
-            <p class="mf-card__text">Citas, pagos, seguimiento y resultados, al alcance de la mano.</p>
-          </article>
+      </div>
+    </section>
+
+    <!-- ===================== LA VISIÓN ===================== -->
+    <section class="mf-sec">
+      <div class="mf-wrapn">
+        <div class="mf-center reveal-up">
+          <h2 class="mf-h2">Llevar la relación médico-paciente a un nuevo estándar.</h2>
+          <p class="mf-lead">Una conexión directa y continua, sin fricción, donde el médico dedica su tiempo a cuidar y el paciente lleva todo su cuidado en la palma de la mano.</p>
         </div>
       </div>
     </section>
 
-    <!-- ===================== QUÉ SOMOS ===================== -->
-    <section class="mf-sec">
+    <!-- ===================== LOS VALORES ===================== -->
+    <section class="mf-sec mf-sec--tint">
       <div class="mf-wrapn">
         <div class="mf-center reveal-up">
-          <h2 class="mf-h2">La medicina es de las personas que la ejercen.</h2>
-          <p class="mf-lead">Por eso ponemos la mejor tecnología a su servicio, y luego nos apartamos. La decisión es siempre suya.</p>
+          <h2 class="mf-h2">En qué creemos</h2>
+        </div>
+        <div class="acc reveal-up">
+          <article class="acc__item" tabindex="0">
+            <h3 class="acc__title">Siempre decide un médico</h3>
+            <p class="acc__text">La tecnología prepara y resume. La decisión clínica es siempre de un médico colegiado, nunca de un algoritmo.</p>
+          </article>
+          <article class="acc__item" tabindex="0">
+            <h3 class="acc__title">La tecnología, invisible</h3>
+            <p class="acc__text">La mejor tecnología es la que no se nota. Si hace bien su trabajo, el paciente sólo ve a su médico.</p>
+          </article>
+          <article class="acc__item" tabindex="0">
+            <h3 class="acc__title">Todo en un sitio</h3>
+            <p class="acc__text">Las citas, los pagos, el seguimiento y los resultados viven en el portal Clynia, sin repetir la historia a nadie.</p>
+          </article>
         </div>
       </div>
     </section>
