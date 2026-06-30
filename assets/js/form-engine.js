@@ -61,6 +61,32 @@
     window.scrollTo(0, 0);
   }
 
+  // Marca que salimos al pago, para reanudar en ese paso al volver (botón atrás / bfcache).
+  function markReturn() {
+    try { sessionStorage.setItem(F.storeKey + "_return", current && current.id ? current.id : "plans"); } catch (e) {}
+  }
+
+  // Reanuda el formulario. Si volvemos del pago, aterriza en el paso guardado y reconstruye
+  // el historial para que "Atrás" recorra las respuestas; si no, arranca por el principio.
+  function resume() {
+    var target = null;
+    try { target = sessionStorage.getItem(F.storeKey + "_return"); } catch (e) {}
+    if (!target || !byId(target)) { history = []; go(resolveFrom(0), false); return; }
+    vars = F.computeVars ? F.computeVars(answers) : {};
+    history = [];
+    var step = resolveFrom(0), guard = 0;
+    while (step && step.id !== target && guard++ < F.steps.length + 5) {
+      history.push(step.id);
+      var nx = nextOf(step);
+      if (!nx) break;
+      step = nx;
+    }
+    current = (step && step.id === target) ? step : byId(target);
+    vars = F.computeVars ? F.computeVars(answers) : {};
+    render();
+    window.scrollTo(0, 0);
+  }
+
   function progress() {
     var done = idx(current.id), total = F.steps.length;
     return Math.max(6, Math.min(96, Math.round((done / total) * 100)));
@@ -263,6 +289,7 @@
         fireCheckout(casoId);
         var url = plan.pago + (plan.pago.indexOf("?") > -1 ? "&" : "?") + "prefilled_email=" + encodeURIComponent(answers.email || "");
         if (casoId) url += "&client_reference_id=" + encodeURIComponent(casoId);
+        markReturn();
         window.location.href = url;
       } else { go(byId("ending_ok"), false); }
     }
@@ -276,7 +303,7 @@
         .then(function (r) { return r.json().catch(function () { return {}; }); })
         .then(function (d) {
           if (settled) return; settled = true; clearTimeout(t);
-          if (d && d.url) { if (redirected) return; redirected = true; fireCheckout(casoId); window.location.href = d.url; }
+          if (d && d.url) { if (redirected) return; redirected = true; fireCheckout(casoId); markReturn(); window.location.href = d.url; }
           else { payViaLink(casoId); }
         })
         .catch(function () { if (settled) return; settled = true; clearTimeout(t); payViaLink(casoId); });
@@ -299,6 +326,14 @@
     catch (e) { answers._intakeId = Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 10); }
     save();
   }
-  // Reanudar si había progreso, si no empezar por el primer paso
-  go(resolveFrom(0), false);
+  // Reanudar: si volvemos del pago, al paso de planes; si no, al primer paso (respuestas ya guardadas).
+  resume();
+  // Volver atrás desde el pago restaura la página desde la bfcache con el spinner congelado:
+  // repintamos la vista (paso de planes) para que el usuario pueda cambiar de plan o revisar.
+  window.addEventListener("pageshow", function (e) {
+    if (!e.persisted) return;
+    var fromPay = false;
+    try { fromPay = !!sessionStorage.getItem(F.storeKey + "_return"); } catch (ex) {}
+    if (fromPay) resume();
+  });
 })();
