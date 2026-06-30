@@ -240,7 +240,7 @@
   function finish() {
     vars = F.computeVars ? F.computeVars(answers) : {};
     root.innerHTML = '<div class="cq__center"><div class="cq__loading"><span class="cq__spin"></span> Enviando tu información de forma segura...</div></div>';
-    var payload = { product: F.product, answers: answers, triage: vars, submittedAt: new Date().toISOString() };
+    var payload = { product: F.product, intakeId: answers._intakeId, answers: answers, triage: vars, submittedAt: new Date().toISOString() };
     var plan = (F.plans || []).filter(function (p) { return p.id === answers.plan; })[0];
     var redirected = false;
     // --- Meta Pixel: eventos de conversión. eventID = clave compartida con la CAPI (n8n) para deduplicar. ---
@@ -254,12 +254,11 @@
       if (!plan) return;
       mTrack("InitiateCheckout", { content_name: plan.nombre, content_ids: [plan.id], value: plan.precio, currency: "EUR", num_items: 1 }, "ic_" + (casoId || ("anon_" + new Date().getTime())));
       // Guardamos el ticket para que gracias.html dispare Purchase con valor y el mismo eventID (dedup con la CAPI).
-      try { localStorage.setItem("clynia_pending_purchase", JSON.stringify({ value: plan.precio, currency: "EUR", content_name: plan.nombre, content_ids: [plan.id], eid: "purchase_" + (casoId || ("anon_" + new Date().getTime())) })); } catch (e) {}
+      try { localStorage.setItem("clynia_pending_purchase", JSON.stringify({ value: plan.precio, currency: "EUR", content_name: plan.nombre, content_ids: [plan.id], store: F.storeKey, eid: "purchase_" + (casoId || ("anon_" + new Date().getTime())) })); } catch (e) {}
     }
     // Ruta por defecto y fallback: Payment Link estático. casoId -> client_reference_id (emparejamiento del pago).
     function payViaLink(casoId) {
       if (redirected) return; redirected = true;
-      localStorage.removeItem(F.storeKey);
       if (plan && plan.pago) {
         fireCheckout(casoId);
         var url = plan.pago + (plan.pago.indexOf("?") > -1 ? "&" : "?") + "prefilled_email=" + encodeURIComponent(answers.email || "");
@@ -277,21 +276,29 @@
         .then(function (r) { return r.json().catch(function () { return {}; }); })
         .then(function (d) {
           if (settled) return; settled = true; clearTimeout(t);
-          if (d && d.url) { if (redirected) return; redirected = true; localStorage.removeItem(F.storeKey); fireCheckout(casoId); window.location.href = d.url; }
+          if (d && d.url) { if (redirected) return; redirected = true; fireCheckout(casoId); window.location.href = d.url; }
           else { payViaLink(casoId); }
         })
         .catch(function () { if (settled) return; settled = true; clearTimeout(t); payViaLink(casoId); });
     }
     if (!F.webhook) { proceedToPayment(null); return; }
+    // Si ya creamos el caso en este intake, no lo recreamos: evita duplicados al volver atrás y reintentar.
+    if (answers._caso) { proceedToPayment(answers._caso); return; }
     // Si el intake tarda demasiado, no bloqueamos al paciente: seguimos al pago igualmente.
     var failsafe = setTimeout(function () { proceedToPayment(null); }, 9000);
     fetch(F.webhook, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) })
       .then(function (r) { return r.json().catch(function () { return {}; }); })
-      .then(function (data) { clearTimeout(failsafe); proceedToPayment(data && data.casoId ? data.casoId : null); })
+      .then(function (data) { clearTimeout(failsafe); var cid = data && data.casoId ? data.casoId : null; if (cid) { answers._caso = cid; save(); } proceedToPayment(cid); })
       .catch(function () { clearTimeout(failsafe); try { localStorage.setItem(F.storeKey + "_pending", JSON.stringify(payload)); } catch (e) {} proceedToPayment(null); });
   }
 
   document.body.classList.add("cq-body");
+  // Identificador estable de este intake: permite volver atrás y reintentar sin duplicar el caso.
+  if (!answers._intakeId) {
+    try { answers._intakeId = (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : (Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 10)); }
+    catch (e) { answers._intakeId = Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 10); }
+    save();
+  }
   // Reanudar si había progreso, si no empezar por el primer paso
   go(resolveFrom(0), false);
 })();

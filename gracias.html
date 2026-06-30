@@ -97,6 +97,7 @@
     try { p = JSON.parse(localStorage.getItem("clynia_pending_purchase") || "null"); } catch (e) { return; }
     if (!p || !p.value) return;
     try { localStorage.removeItem("clynia_pending_purchase"); } catch (e) {}
+    try { if (p.store) localStorage.removeItem(p.store); } catch (e) {}
     function fire() {
       try {
         if (!window.fbq) return;
