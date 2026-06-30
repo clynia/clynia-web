@@ -76,12 +76,9 @@
       pointer-events: none; will-change: transform; animation: mf-drift 26s ease-in-out infinite alternate; }
     @keyframes mf-drift { from { transform: translate3d(-3%, -2%, 0) scale(1); } to { transform: translate3d(4%, 3%, 0) scale(1.09); } }
     .mf-hero__inner { position: relative; max-width: 980px; }
-    .mf-eyebrow { font-family: 'Hanken Grotesk', sans-serif; text-transform: uppercase;
-      letter-spacing: .2em; font-size: 12.5px; font-weight: 600; }
-    .mf-hero .mf-eyebrow { color: rgba(255,255,255,.72); }
     .mf-hero__title { font-family: 'Fraunces', serif; font-weight: 500;
       font-size: clamp(34px, 6.4vw, 70px); line-height: 1.05; letter-spacing: -.018em;
-      margin: 20px 0 0; max-width: 17ch; }
+      margin: 0; max-width: 17ch; }
     .mf-hero__sub { font-size: clamp(17px, 2.1vw, 21px); line-height: 1.62;
       color: rgba(255,255,255,.88); max-width: 60ch; margin: 28px 0 0;
       text-align: justify; hyphens: auto; }
@@ -89,15 +86,9 @@
     .mf-body { padding: clamp(72px, 11vh, 132px) 0 clamp(8px, 2vh, 24px); }
     .mf-sec { max-width: 720px; margin: 0 auto; padding: 0 22px; }
     .mf-sec + .mf-sec { margin-top: clamp(60px, 9.5vh, 112px); }
-    .mf-sec__eyebrow { color: var(--green); font-family: 'Hanken Grotesk', sans-serif;
-      text-transform: uppercase; letter-spacing: .2em; font-size: 12.5px; font-weight: 600;
-      display: flex; align-items: center; gap: 13px; }
-    .mf-sec__eyebrow::before { content: ""; width: 28px; height: 2px; background: var(--green);
-      transform: scaleX(0); transform-origin: left; transition: transform .85s var(--ease) .12s; }
-    .reveal-up.is-in .mf-sec__eyebrow::before { transform: scaleX(1); }
     .mf-sec__title { font-family: 'Fraunces', serif; font-weight: 500;
       font-size: clamp(24px, 3.7vw, 37px); line-height: 1.16; letter-spacing: -.012em;
-      color: var(--ink); margin: 17px 0 0; }
+      color: var(--ink); margin: 0; }
     .mf-sec__text { font-size: clamp(16.5px, 1.85vw, 18.5px); line-height: 1.76;
       color: var(--ink-soft); margin: 18px 0 0; text-align: justify; hyphens: auto; }
     .mf-sec__text + .mf-sec__text { margin-top: 16px; }
@@ -106,7 +97,7 @@
     .mf-quote { max-width: 860px; margin: clamp(60px, 9.5vh, 112px) auto 0; padding: 0 22px; }
     .mf-quote__text { font-family: 'Fraunces', serif; font-weight: 500; font-style: italic;
       font-size: clamp(25px, 4vw, 41px); line-height: 1.22; letter-spacing: -.014em;
-      color: var(--green-900); margin: 14px 0 0; }
+      color: var(--green-900); margin: 0; }
 
     .mf-vision { background: var(--green-tint); margin-top: clamp(72px, 11vh, 132px);
       padding: clamp(72px, 11vh, 132px) 0; }
@@ -118,7 +109,6 @@
 
     @media (prefers-reduced-motion: reduce) {
       .mf-hero__glow { animation: none; }
-      .mf-sec__eyebrow::before { transition: none; transform: none; }
     }
   </style>
 </head>
@@ -153,7 +143,6 @@
       <span class="mf-hero__glow" aria-hidden="true"></span>
       <div class="wrap">
         <div class="mf-hero__inner">
-          <p class="mf-eyebrow reveal-up">La misión de Clynia</p>
           <h1 class="mf-hero__title reveal-up">La medicina no está rota. Lo que la rodea, sí.</h1>
           <p class="mf-hero__sub reveal-up">Clynia es una compañía de tecnología construida alrededor del médico. Quitamos de en medio la sala de espera, la agenda y el papeleo para que el profesional haga lo único que ninguna máquina sabe hacer: cuidar de una persona.</p>
         </div>
@@ -163,14 +152,12 @@
     <!-- ===================== MANIFIESTO ===================== -->
     <div class="mf-body">
       <section class="mf-sec reveal-up">
-        <p class="mf-sec__eyebrow">El porqué</p>
         <h2 class="mf-sec__title">Todos sabemos lo que es esto</h2>
         <p class="mf-sec__text">Pedir cita y esperar semanas. Pedir el día libre en el trabajo. El parking. La sala de espera con la televisión puesta. Y la consulta, que casi siempre va con retraso. No porque al médico no le importes. Va con retraso porque le importan demasiados a la vez.</p>
         <p class="mf-sec__text">Hemos normalizado que cuidarse sea incómodo. Que la parte más humana de la sanidad, el rato en que un profesional se sienta a escucharte, sea justo la que menos tiempo recibe, ahogada entre formularios, esperas y burocracia.</p>
       </section>
 
       <div class="mf-quote reveal-up">
-        <p class="mf-sec__eyebrow">La idea</p>
         <p class="mf-quote__text">El problema nunca fue el médico. Es todo lo que le hemos ido poniendo encima.</p>
       </div>
 
@@ -179,13 +166,11 @@
       </section>
 
       <section class="mf-sec reveal-up">
-        <p class="mf-sec__eyebrow">Qué somos</p>
         <h2 class="mf-sec__title">Una compañía de tecnología, construida alrededor del profesional</h2>
         <p class="mf-sec__text">No somos una clínica. Somos la tecnología que hay debajo. Conectamos a cada persona con un médico colegiado e independiente en España, y le damos a ese médico las herramientas para valorar, decidir y acompañar sin fricción. El criterio clínico es suyo, siempre. Nosotros ponemos lo que lo rodea.</p>
       </section>
 
       <section class="mf-sec reveal-up">
-        <p class="mf-sec__eyebrow">Cómo lo hacemos</p>
         <h2 class="mf-sec__title">Mientras el médico cuida, la tecnología hace el resto</h2>
         <p class="mf-sec__text">El paciente llega ya escuchado: cuenta su caso con calma, desde el móvil, antes de hablar con nadie. El médico lo recibe ordenado, con lo importante por delante. La agenda, el seguimiento y la administración funcionan solas. La inteligencia artificial prepara, resume y avisa. Pero nunca decide. <strong>Decidir es del médico.</strong></p>
       </section>
@@ -194,7 +179,6 @@
     <!-- ===================== VISIÓN ===================== -->
     <section class="mf-vision">
       <div class="mf-sec reveal-up">
-        <p class="mf-sec__eyebrow">Hacia dónde vamos</p>
         <h2 class="mf-sec__title">Hacia una sanidad sin salas de espera</h2>
         <p class="mf-sec__text">Imagina cuidarte sin pedir el día libre. Médicos que llegan descansados a cada caso porque no han gastado la mañana en papeleo. Una relación entre profesional y paciente que vuelve a ser lo que siempre debió ser: cercana, a tiempo y humana.</p>
         <p class="mf-vision__close">No estamos digitalizando la consulta de siempre. Le estamos quitando todo lo que sobra.</p>
