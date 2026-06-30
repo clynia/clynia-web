@@ -102,6 +102,11 @@
       font-size: clamp(30px, 5vw, 52px); line-height: 1.06; letter-spacing: -.03em; color: var(--ink); margin: 0; }
     .mf-lead { font-family: 'Hanken Grotesk', sans-serif; font-size: clamp(16.5px, 2vw, 19px);
       line-height: 1.65; color: var(--ink-soft); max-width: 52ch; margin: 18px auto 0; }
+    .mf-kicker { font-family: 'Hanken Grotesk', sans-serif; font-weight: 700; font-size: 15px;
+      color: var(--green); margin: 0 0 14px; }
+    .mf-prose { font-family: 'Hanken Grotesk', sans-serif; font-size: clamp(17px, 2.1vw, 20px);
+      line-height: 1.72; color: var(--ink-soft); max-width: 48ch; margin: clamp(26px, 4vh, 40px) auto 0;
+      text-align: justify; text-justify: inter-word; hyphens: auto; }
 
     /* ---------- Tarjetas de prueba ---------- */
     .mf-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
@@ -205,22 +210,24 @@
       </div>
     </section>
 
-    <!-- ===================== LAS COMPLICACIONES ===================== -->
+    <!-- ===================== EL PORQUÉ ===================== -->
     <section class="mf-sec">
       <div class="mf-wrapn">
         <div class="mf-center reveal-up">
-          <h2 class="mf-h2">La sala de espera es un error de diseño.</h2>
-          <p class="mf-lead">Nada de ese ruido cura. Sólo se interpone entre tú y tu médico. Nosotros lo quitamos de en medio.</p>
+          <p class="mf-kicker">El porqué</p>
+          <h2 class="mf-h2">Nadie estudia medicina para pelearse con una agenda.</h2>
         </div>
+        <p class="mf-prose reveal-up">Vimos a buenos médicos perder media jornada en agenda, cobros, seguimientos y papeleo. Y a pacientes esperando, repitiendo su historia una y otra vez, sin saber a quién escribir cuando surgía una duda. Entre la persona y su médico se había colado demasiado ruido. Clynia nace para quitarlo de en medio.</p>
       </div>
     </section>
 
-    <!-- ===================== LAS FACILIDADES ===================== -->
+    <!-- ===================== LA MISIÓN ===================== -->
     <section class="mf-sec mf-sec--tint">
       <div class="mf-wrapn">
         <div class="mf-center reveal-up">
-          <h2 class="mf-h2">Una capa de tecnología alrededor del médico.</h2>
-          <p class="mf-lead">Construimos la tecnología que asume todo lo que no es medicina, para que el médico recupere su tiempo y tú, toda su atención.</p>
+          <p class="mf-kicker">La misión</p>
+          <h2 class="mf-h2">Quitar de en medio todo lo que no es medicina.</h2>
+          <p class="mf-lead">Las citas, los pagos, el seguimiento, el papeleo. Lo asumimos nosotros para que entre tú y tu médico quede sólo la atención: directa, eficiente y de calidad para ambos.</p>
         </div>
         <div class="mf-techlayer reveal-up" aria-hidden="true">
           <div class="mf-tl-stage">
@@ -245,32 +252,43 @@
             </span>
           </div>
         </div>
-        <div class="mf-cards">
-          <article class="mf-card mf-card--a reveal-up">
-            <span class="mf-card__ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span>
-            <h3 class="mf-card__title">Médico y paciente, conectados</h3>
-            <p class="mf-card__text">Un mismo sitio para hablaros, compartir y avanzar.</p>
-          </article>
-          <article class="mf-card mf-card--b reveal-up">
-            <span class="mf-card__ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></span>
-            <h3 class="mf-card__title">Siempre un médico</h3>
-            <p class="mf-card__text">La tecnología prepara y resume. Decide un médico colegiado, nunca un algoritmo.</p>
-          </article>
-          <article class="mf-card mf-card--c reveal-up">
-            <span class="mf-card__ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="2" width="10" height="20" rx="2.5"/><path d="M11 18h2"/></svg></span>
-            <h3 class="mf-card__title">Todo en tu móvil</h3>
-            <p class="mf-card__text">Citas, pagos, seguimiento y resultados, al alcance de la mano.</p>
-          </article>
+      </div>
+    </section>
+
+    <!-- ===================== LA VISIÓN ===================== -->
+    <section class="mf-sec">
+      <div class="mf-wrapn">
+        <div class="mf-center reveal-up">
+          <p class="mf-kicker">La visión</p>
+          <h2 class="mf-h2">Llevar la relación médico-paciente a un nuevo estándar.</h2>
+          <p class="mf-lead">Una conexión directa y continua, sin fricción, donde el médico dedica su tiempo a cuidar y tú llevas todo tu cuidado en la palma de la mano.</p>
         </div>
       </div>
     </section>
 
-    <!-- ===================== QUÉ SOMOS ===================== -->
-    <section class="mf-sec">
+    <!-- ===================== LOS VALORES ===================== -->
+    <section class="mf-sec mf-sec--tint">
       <div class="mf-wrapn">
         <div class="mf-center reveal-up">
-          <h2 class="mf-h2">La medicina es de las personas que la ejercen.</h2>
-          <p class="mf-lead">Por eso ponemos la mejor tecnología a su servicio, y luego nos apartamos. La decisión es siempre suya.</p>
+          <p class="mf-kicker">En qué creemos</p>
+          <h2 class="mf-h2">Lo que no negociamos.</h2>
+        </div>
+        <div class="mf-cards">
+          <article class="mf-card mf-card--a reveal-up">
+            <span class="mf-card__ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></span>
+            <h3 class="mf-card__title">Siempre decide un médico</h3>
+            <p class="mf-card__text">La tecnología prepara y resume. La decisión clínica es siempre de un médico colegiado, nunca de un algoritmo.</p>
+          </article>
+          <article class="mf-card mf-card--b reveal-up">
+            <span class="mf-card__ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.6 5.4L19 10l-5.4 1.6L12 17l-1.6-5.4L5 10l5.4-1.6L12 3z"/></svg></span>
+            <h3 class="mf-card__title">La tecnología, invisible</h3>
+            <p class="mf-card__text">La mejor tecnología es la que no se nota. Si hace bien su trabajo, sólo ves a tu médico.</p>
+          </article>
+          <article class="mf-card mf-card--c reveal-up">
+            <span class="mf-card__ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="2" width="10" height="20" rx="2.5"/><path d="M11 18h2"/></svg></span>
+            <h3 class="mf-card__title">Tu cuidado, en tu mano</h3>
+            <p class="mf-card__text">Citas, pagos, seguimiento y resultados en el portal Clynia, sin repetir tu historia a nadie.</p>
+          </article>
         </div>
       </div>
     </section>
