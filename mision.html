@@ -69,19 +69,38 @@
     .mf-topnav { background: var(--bg); box-shadow: 0 1px 0 rgba(28,36,33,.06); }
 
     .mf-hero { position: relative; overflow: hidden; color: #fff;
-      background: linear-gradient(158deg, var(--green-900) 0%, var(--green) 78%, var(--green-600) 100%);
-      padding: clamp(108px, 17vh, 196px) 0 clamp(76px, 13vh, 148px); }
-    .mf-hero__glow { position: absolute; inset: -35% -12% auto -12%; height: 130%;
-      background: radial-gradient(58% 58% at 28% 18%, rgba(255,255,255,.20), transparent 70%);
-      pointer-events: none; will-change: transform; animation: mf-drift 26s ease-in-out infinite alternate; }
-    @keyframes mf-drift { from { transform: translate3d(-3%, -2%, 0) scale(1); } to { transform: translate3d(4%, 3%, 0) scale(1.09); } }
+      background: linear-gradient(158deg, var(--green-900) 0%, var(--green) 72%, var(--green-600) 100%);
+      padding: clamp(120px, 19vh, 220px) 0 clamp(84px, 14vh, 160px); }
+    .mf-hero__bg { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+    .mf-hero__aurora { position: absolute; border-radius: 50%; filter: blur(46px); will-change: transform; }
+    .mf-hero__aurora--1 { width: 62vw; height: 62vw; left: -14vw; top: -22vw;
+      background: radial-gradient(circle, rgba(146,214,184,.5), transparent 62%);
+      animation: mf-a1 30s ease-in-out infinite alternate; }
+    .mf-hero__aurora--2 { width: 58vw; height: 58vw; right: -18vw; bottom: -26vw;
+      background: radial-gradient(circle, rgba(28,67,60,.6), transparent 62%);
+      animation: mf-a2 34s ease-in-out infinite alternate; }
+    .mf-hero__grid { position: absolute; inset: -2px;
+      background-image: radial-gradient(rgba(255,255,255,.13) 1px, transparent 1.4px);
+      background-size: 28px 28px; opacity: .7;
+      -webkit-mask-image: radial-gradient(115% 90% at 28% 8%, #000 38%, transparent 76%);
+      mask-image: radial-gradient(115% 90% at 28% 8%, #000 38%, transparent 76%);
+      animation: mf-grid 22s linear infinite; }
+    @keyframes mf-a1 { from { transform: translate(0, 0) scale(1); } to { transform: translate(9%, 7%) scale(1.12); } }
+    @keyframes mf-a2 { from { transform: translate(0, 0) scale(1); } to { transform: translate(-7%, -9%) scale(1.16); } }
+    @keyframes mf-grid { from { transform: translateY(0); } to { transform: translateY(28px); } }
     .mf-hero__inner { position: relative; max-width: 980px; }
     .mf-hero__title { font-family: 'Fraunces', serif; font-weight: 500;
-      font-size: clamp(34px, 6.4vw, 70px); line-height: 1.05; letter-spacing: -.018em;
-      margin: 0; max-width: 17ch; }
+      font-size: clamp(36px, 7vw, 76px); line-height: 1.04; letter-spacing: -.02em;
+      margin: 0; max-width: 16ch;
+      opacity: 0; transform: translateY(22px); filter: blur(8px);
+      animation: mf-heroin 1.1s var(--ease) .1s forwards; }
+    @keyframes mf-heroin { to { opacity: 1; transform: none; filter: blur(0); } }
     .mf-hero__sub { font-size: clamp(17px, 2.1vw, 21px); line-height: 1.62;
-      color: rgba(255,255,255,.88); max-width: 60ch; margin: 28px 0 0;
-      text-align: justify; hyphens: auto; }
+      color: rgba(255,255,255,.9); max-width: 56ch; margin: 30px 0 0;
+      text-align: justify; hyphens: auto;
+      opacity: 0; transform: translateY(18px);
+      animation: mf-riseup .95s var(--ease) .5s forwards; }
+    @keyframes mf-riseup { to { opacity: 1; transform: none; } }
 
     .mf-body { padding: clamp(72px, 11vh, 132px) 0 clamp(8px, 2vh, 24px); }
     .mf-sec { max-width: 720px; margin: 0 auto; padding: 0 22px; }
@@ -108,7 +127,8 @@
       margin: 24px 0 0; max-width: 30ch; }
 
     @media (prefers-reduced-motion: reduce) {
-      .mf-hero__glow { animation: none; }
+      .mf-hero__aurora, .mf-hero__grid { animation: none; }
+      .mf-hero__title, .mf-hero__sub { opacity: 1; transform: none; filter: none; animation: none; }
     }
   </style>
 </head>
@@ -128,9 +148,9 @@
         <a href="/contacto">Contacto</a>
       </nav>
       <div class="topnav__actions">
-        <a class="topnav__login" href="https://portal.clynia.es" aria-label="Acceso al portal de Clynia">
+        <a class="topnav__login" href="https://portal.clynia.es" aria-label="Acceso a tu portal de Clynia">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" x2="3" y1="12" y2="12"/></svg>
-          <span class="topnav__login-full">Acceso al portal</span>
+          <span class="topnav__login-full">Acceso a tu portal</span>
           <span class="topnav__login-short">Portal</span>
         </a>
       </div>
@@ -140,11 +160,15 @@
   <main>
     <!-- ===================== HERO ===================== -->
     <section class="mf-hero">
-      <span class="mf-hero__glow" aria-hidden="true"></span>
+      <span class="mf-hero__bg" aria-hidden="true">
+        <span class="mf-hero__aurora mf-hero__aurora--1"></span>
+        <span class="mf-hero__aurora mf-hero__aurora--2"></span>
+        <span class="mf-hero__grid"></span>
+      </span>
       <div class="wrap">
         <div class="mf-hero__inner">
-          <h1 class="mf-hero__title reveal-up">La medicina no está rota. Lo que la rodea, sí.</h1>
-          <p class="mf-hero__sub reveal-up">Clynia es una compañía de tecnología construida alrededor del médico. Quitamos de en medio la sala de espera, la agenda y el papeleo para que el profesional haga lo único que ninguna máquina sabe hacer: cuidar de una persona.</p>
+          <h1 class="mf-hero__title">Cuidarte, sin esperas ni papeleo.</h1>
+          <p class="mf-hero__sub">Clynia es la compañía de tecnología que pone a un médico colegiado a tu lado y se ocupa de todo lo demás. Sin citas imposibles, sin colas, sin burocracia. Tú solo tienes que cuidarte.</p>
         </div>
       </div>
     </section>
