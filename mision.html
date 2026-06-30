@@ -155,14 +155,22 @@
       box-shadow: 0 16px 30px -14px rgba(40, 67, 60, .55); }
     .mf-tl-tile svg { width: 46%; height: 46%; }
     .mf-techlayer.is-in .mf-tl-tile {
-      animation-name: mf-tl-in, mf-tl-float;
-      animation-duration: .65s, calc(var(--fd, 6s) * .6);
+      animation-name: mf-tl-in, mf-tl-glow;
+      animation-duration: .65s, 4.2s;
       animation-timing-function: var(--ease), ease-in-out;
-      animation-delay: var(--din, 0s), calc(var(--din, 0s) + .65s);
+      animation-delay: var(--din, 0s), var(--pd, 1s);
       animation-iteration-count: 1, infinite;
       animation-fill-mode: both, none; }
+    .mf-techlayer.is-in .mf-tl-card:nth-child(6) .mf-tl-tile { --pd: .8s; }
+    .mf-techlayer.is-in .mf-tl-card:nth-child(4) .mf-tl-tile { --pd: 1.4s; }
+    .mf-techlayer.is-in .mf-tl-card:nth-child(2) .mf-tl-tile { --pd: 2s; }
+    .mf-techlayer.is-in .mf-tl-card:nth-child(3) .mf-tl-tile { --pd: 2.6s; }
+    .mf-techlayer.is-in .mf-tl-card:nth-child(5) .mf-tl-tile { --pd: 3.2s; }
+    .mf-techlayer.is-in .mf-tl-card:nth-child(7) .mf-tl-tile { --pd: 3.8s; }
     @keyframes mf-tl-in { from { opacity: 0; transform: translateY(12px) scale(.82); } to { opacity: 1; transform: translateY(0) scale(1); } }
-    @keyframes mf-tl-float { 0% { transform: translateY(0) rotate(0deg); } 30% { transform: translateY(-14px) rotate(-4deg); } 55% { transform: translateY(-22px) rotate(3deg); } 80% { transform: translateY(-9px) rotate(-2deg); } 100% { transform: translateY(0) rotate(0deg); } }
+    @keyframes mf-tl-glow {
+      0%, 38%, 100% { transform: scale(1); box-shadow: 0 16px 30px -14px rgba(40, 67, 60, .5); }
+      14% { transform: scale(1.12); box-shadow: 0 30px 52px -16px rgba(40, 67, 60, .62); } }
 
     /* ---------- Lista de complicaciones ---------- */
     .mf-trash { margin: clamp(32px, 5vh, 48px) auto 0; }
