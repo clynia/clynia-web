@@ -49,6 +49,36 @@
   <meta name="twitter:title" content="Pérdida de peso con seguimiento médico online · Clynia" />
   <meta name="twitter:description" content="Te conectamos con médicos colegiados en España que valoran tu caso y, si lo consideran adecuado, te ofrecen seguimiento médico. Empieza con un cuestionario clínico online gratuito." />
   <meta name="twitter:image" content="https://clynia.es/assets/img/og-default.png" />
+  <style>
+    /* "Qué puedes esperar": el timeline se dibuja como un journey (solo esta landing) */
+    .journey .timeline__item { padding-bottom: 32px; }
+    .journey .timeline__item::after {
+      background: linear-gradient(var(--green), var(--green-600));
+      transform: scaleY(0); transform-origin: top center;
+      transition: transform 1s var(--ease) .15s;
+    }
+    .journey .timeline__item.is-in::after { transform: scaleY(1); }
+    .journey .timeline__dot {
+      transform: scale(.4); opacity: .4;
+      transition: transform .55s var(--ease), opacity .55s var(--ease);
+    }
+    .journey .timeline__item.is-in .timeline__dot { transform: scale(1); opacity: 1; }
+    .journey .timeline__dot::after {
+      content: ""; position: absolute; inset: -5px; border-radius: 50%;
+      border: 2px solid var(--green); opacity: 0; pointer-events: none;
+    }
+    .journey .timeline__item.is-in .timeline__dot::after { animation: jr-ring 1.7s var(--ease) .25s 1; }
+    @keyframes jr-ring {
+      0%   { transform: scale(.55); opacity: .5; }
+      70%  { opacity: 0; }
+      100% { transform: scale(1.5); opacity: 0; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .journey .timeline__item::after { transition: none; transform: none; }
+      .journey .timeline__dot { transition: none; transform: none; opacity: 1; }
+      .journey .timeline__dot::after { animation: none; }
+    }
+  </style>
 </head>
 <body>
 
@@ -335,7 +365,7 @@
           <p class="lead">Sin promesas mágicas. Un proceso médico, ordenado y a tu ritmo.</p>
         </header>
 
-        <ol class="timeline">
+        <ol class="timeline journey">
           <li class="timeline__item reveal-up">
             <span class="timeline__dot"></span>
             <h3 class="timeline__title">Primer día</h3>
