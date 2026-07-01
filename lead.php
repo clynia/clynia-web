@@ -62,8 +62,11 @@ $cuerpo = "Nuevo mensaje desde el formulario de contacto de clynia.es\n\n"
         . "Motivo:   {$motivo}\n\n"
         . "Mensaje:\n{$mensaje}\n";
 
+// Defensa en profundidad frente a inyeccion de cabeceras: aunque FILTER_VALIDATE_EMAIL
+// ya rechaza CR/LF, eliminamos cualquier salto de linea antes de interpolar el email.
+$replyTo = str_replace(["\r", "\n", "\0"], '', $email);
 $headers  = 'From: =?UTF-8?B?' . base64_encode('Clynia web') . '?= <' . $FROM . ">\r\n";
-$headers .= 'Reply-To: ' . $email . "\r\n";
+$headers .= 'Reply-To: ' . $replyTo . "\r\n";
 $headers .= "MIME-Version: 1.0\r\n";
 $headers .= "Content-Type: text/plain; charset=UTF-8\r\n";
 $headers .= "Content-Transfer-Encoding: 8bit\r\n";

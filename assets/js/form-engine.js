@@ -17,11 +17,28 @@
   var started = false;
   function px(ev, params) { try { if (window.fbq) fbq("trackCustom", ev, params || {}); } catch (e) {} }
 
+  // Los datos de salud del intake NO deben quedar indefinidamente en localStorage
+  // (equipos compartidos/públicos). Se purgan pasadas 24h desde la última edición.
+  var TTL_MS = 24 * 60 * 60 * 1000;
+  function clearStore() {
+    try {
+      localStorage.removeItem(F.storeKey);
+      localStorage.removeItem(F.storeKey + "_ts");
+      localStorage.removeItem(F.storeKey + "_pending");
+    } catch (e) {}
+  }
   function load() {
-    try { return JSON.parse(localStorage.getItem(F.storeKey)) || {}; } catch (e) { return {}; }
+    try {
+      var ts = parseInt(localStorage.getItem(F.storeKey + "_ts") || "0", 10);
+      if (ts && (Date.now() - ts) > TTL_MS) { clearStore(); return {}; }
+      return JSON.parse(localStorage.getItem(F.storeKey)) || {};
+    } catch (e) { return {}; }
   }
   function save() {
-    try { localStorage.setItem(F.storeKey, JSON.stringify(answers)); } catch (e) {}
+    try {
+      localStorage.setItem(F.storeKey, JSON.stringify(answers));
+      localStorage.setItem(F.storeKey + "_ts", String(Date.now()));
+    } catch (e) {}
   }
   function byId(id) { for (var i = 0; i < F.steps.length; i++) if (F.steps[i].id === id) return F.steps[i]; return null; }
   function idx(id) { for (var i = 0; i < F.steps.length; i++) if (F.steps[i].id === id) return i; return -1; }

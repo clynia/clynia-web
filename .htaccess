@@ -17,3 +17,22 @@ RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{DOCUMENT_ROOT}/$1.html -f
 RewriteRule ^(.+?)/?$ $1.html [L]
+
+# ── Cabeceras de seguridad ──────────────────────────────────────────────
+# Blindaje del sitio estático: fuerza HTTPS (HSTS), impide el clickjacking,
+# evita el sniffing de tipo MIME, limita el referrer y aplica una CSP a medida
+# con los únicos orígenes que usa la web (Google Fonts, píxel de Meta y los
+# webhooks de n8n del formulario). Se mantiene 'unsafe-inline' porque el píxel
+# y algunos estilos van en línea.
+<IfModule mod_headers.c>
+  Header always set Strict-Transport-Security "max-age=31536000"
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "geolocation=(), camera=(), microphone=(), interest-cohort=()"
+  Header always set X-Permitted-Cross-Domain-Policies "none"
+  Header always set Content-Security-Policy "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; script-src 'self' 'unsafe-inline' https://connect.facebook.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://www.facebook.com; connect-src 'self' https://n8n-ixwg.srv1722506.hstgr.cloud https://www.facebook.com; frame-src https://www.facebook.com; upgrade-insecure-requests"
+  # Reduce la huella informativa que añade el hosting (best-effort).
+  Header always unset X-Powered-By
+  Header unset X-Powered-By
+</IfModule>
