@@ -154,17 +154,18 @@
     (function () {
       var WEBHOOK = "https://n8n-ixwg.srv1722506.hstgr.cloud/webhook/lista-intake";
       var LABELS = {
-        "menopausia": "la menopausia",
-        "longevidad": "la longevidad",
-        "salud-sexual": "la salud sexual",
-        "cabello": "la salud capilar",
-        "capilar": "la salud capilar"
+        "menopausia": "menopausia",
+        "longevidad": "longevidad",
+        "salud-sexual": "salud sexual",
+        "salud-capilar": "salud capilar",
+        "cabello": "salud capilar",
+        "capilar": "salud capilar"
       };
       var cat = (new URLSearchParams(location.search).get("categoria") || "").toLowerCase();
       var label = LABELS[cat];
       if (label) {
-        document.getElementById("listaTitle").textContent = "Te avisamos cuando abra " + label + ".";
-        document.getElementById("listaSub").textContent = "Déjanos tu email, sin compromiso y sin tarjeta. Serás de los primeros en saberlo cuando " + label + " esté disponible, siempre con un médico colegiado al otro lado.";
+        document.getElementById("listaTitle").textContent = "Te avisamos cuando abra el programa de " + label + ".";
+        document.getElementById("listaSub").textContent = "Déjanos tu email, sin compromiso y sin tarjeta. Serás de los primeros en saberlo cuando el programa de " + label + " esté disponible, siempre con un médico colegiado al otro lado.";
       }
       var form = document.getElementById("listaForm"),
           email = document.getElementById("listaEmail"),
@@ -173,6 +174,10 @@
           btn = document.getElementById("listaBtn"),
           card = document.getElementById("listaCard");
 
+      // Meta Pixel: FormStart al primer input (una vez). El consentimiento lo gestiona fbq consent.
+      var pxStarted = false;
+      form.addEventListener("input", function () { if (pxStarted) return; pxStarted = true; try { if (window.fbq) fbq("trackCustom", "FormStart", { form_id: "lista", content_category: cat || "general" }); } catch (e) {} }, true);
+
       function valid(e) { return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(e); }
 
       form.addEventListener("submit", function (ev) {
@@ -180,6 +185,7 @@
         err.textContent = "";
         if (!valid(email.value.trim())) { err.textContent = "Escribe un email válido."; email.focus(); return; }
         if (!consent.checked) { err.textContent = "Marca la casilla para que podamos avisarte."; return; }
+        try { if (window.fbq) fbq("track", "Lead", { content_name: "lista-" + (cat || "general"), content_category: "waitlist" }); } catch (e) {}
         btn.disabled = true; btn.textContent = "Enviando…";
         var payload = { categoria: cat || "general", email: email.value.trim(), consent: true, source: "web-lista", ts: new Date().toISOString() };
         var done = false;

@@ -12,6 +12,10 @@
   var vars = {};
   var history = [];
   var current = null;
+  // --- Meta Pixel: evento de INICIO del cuestionario (se dispara una sola vez, al primer
+  // avance). Sirve para etiquetar a quien empieza y no termina (retargeting) y medir el embudo. ---
+  var started = false;
+  function px(ev, params) { try { if (window.fbq) fbq("trackCustom", ev, params || {}); } catch (e) {} }
 
   function load() {
     try { return JSON.parse(localStorage.getItem(F.storeKey)) || {}; } catch (e) { return {}; }
@@ -47,6 +51,7 @@
   function go(step, push) {
     if (!step) return;
     if (push && current) history.push(current.id);
+    if (push && !started) { started = true; px("StartQuestionnaire", { content_name: F.product, content_category: F.category || F.product }); }
     current = step;
     vars = F.computeVars ? F.computeVars(answers) : {};
     render();
@@ -274,7 +279,7 @@
     function mTrack(ev, params, eid) { try { if (window.fbq) fbq("track", ev, params || {}, eid ? { eventID: eid } : undefined); } catch (e) {} }
     function fireLead(casoId) {
       if (leadFired) return; leadFired = true;
-      mTrack("Lead", { content_name: F.product, content_category: "weight_loss", value: plan ? plan.precio : undefined, currency: "EUR" }, "lead_" + (casoId || ("anon_" + new Date().getTime())));
+      mTrack("Lead", { content_name: F.product, content_category: F.category || F.product, value: plan ? plan.precio : undefined, currency: "EUR" }, "lead_" + (casoId || ("anon_" + new Date().getTime())));
     }
     function fireCheckout(casoId) {
       if (!plan) return;

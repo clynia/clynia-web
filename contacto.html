@@ -144,6 +144,16 @@
           <div class="f__hp" aria-hidden="true"><label for="website">No rellenar</label><input id="website" name="website" type="text" tabindex="-1" autocomplete="off" /></div>
           <button class="f__btn" type="submit">Enviar mensaje</button>
         </form>
+        <script>
+          (function () {
+            var f = document.querySelector("form.f");
+            if (!f) return;
+            // Meta Pixel: FormStart al primer input, Contact al enviar. Consentimiento gestionado por fbq consent.
+            var started = false;
+            f.addEventListener("input", function () { if (started) return; started = true; try { if (window.fbq) fbq("trackCustom", "FormStart", { form_id: "contacto" }); } catch (e) {} }, true);
+            f.addEventListener("submit", function () { try { if (window.fbq) fbq("track", "Contact", { content_name: "contacto" }); } catch (e) {} });
+          })();
+        </script>
       </section>
 
       <!-- Otras vías -->
