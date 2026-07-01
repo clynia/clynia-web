@@ -33,10 +33,27 @@
   <link rel="canonical" href="https://clynia.es/terminos" />
 </head>
 <body>
-<header class="legal-header"><div class="legal-header__inner">
-<a href="/" aria-label="Clynia, inicio"><img src="assets/logos/clynia-wordmark.png" alt="Clynia"></a>
-<a class="legal-back" href="/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>Volver al inicio</a>
-</div></header>
+  <header class="topnav" id="topnav">
+    <div class="topnav__inner">
+      <a class="topnav__brand" href="/" aria-label="Clynia, inicio">
+        <img src="/assets/logos/clynia-wordmark.png" alt="Clynia" />
+      </a>
+      <nav class="topnav__links" aria-label="Navegación">
+        <a href="/#categorias">Tratamientos</a>
+        <a href="/blog">Blog</a>
+        <a href="/medicos">Profesionales</a>
+        <a href="/mision">Misión</a>
+        <a href="/contacto">Contacto</a>
+      </nav>
+      <div class="topnav__actions">
+        <a class="topnav__login" href="https://portal.clynia.es" aria-label="Acceso a tu portal de Clynia">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" x2="3" y1="12" y2="12"/></svg>
+          <span class="topnav__login-full">Acceso a tu portal</span>
+          <span class="topnav__login-short">Portal</span>
+        </a>
+      </div>
+    </div>
+  </header>
 <main class="legal"><div class="legal-wrap">
 <h1>Términos y condiciones de uso</h1>
 <p class="legal__updated">Última actualización: 26 de junio de 2026</p>
@@ -83,12 +100,61 @@
 <h2>17. Legislación aplicable y jurisdicción</h2>
 <p>Estos términos se rigen por la legislación española. Para la resolución de cualquier controversia, las partes se someten a los Juzgados y Tribunales del domicilio del consumidor, conforme a la normativa de protección de consumidores y usuarios. En el caso de usuarios que no tengan la condición de consumidor, ambas partes se someten a los Juzgados y Tribunales de Madrid capital, con renuncia expresa a cualquier otro fuero. El usuario tiene a su disposición la plataforma europea de resolución de litigios en línea: <a href="https://ec.europa.eu/consumers/odr." target="_blank" rel="noopener">https://ec.europa.eu/consumers/odr.</a></p>
 </div></main>
-<footer class="legal-footer"><div class="legal-footer__inner">
-<nav class="legal-footer__links" aria-label="Legal">
-<a href="/">Inicio</a><a href="avisolegal">Aviso legal</a><a href="privacidad">Privacidad</a><a href="cookies">Cookies</a><a href="terminos">Términos</a><a href="informacion">Información</a>
-</nav>
-<p class="legal-footer__copy">&copy; Clynia &middot; Clynia Inversiones, S.L.</p>
-</div></footer>
+  <footer class="site-footer">
+    <div class="wrap">
+      <div class="site-footer__top">
+        <a class="site-footer__home" href="/" aria-label="Clynia, inicio">
+          <img src="/assets/logos/clynia-wordmark.png" alt="Clynia" />
+        </a>
+        <a class="site-footer__docs" href="/medicos">
+          ¿Eres médico? Únete a Clynia
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
+        </a>
+      </div>
+      <div class="site-footer__cols">
+        <div>
+          <h4>Tratamientos</h4>
+          <ul>
+            <li><a href="/perdida-de-peso">Pérdida de peso</a></li>
+            <li><a href="/#categorias">Menopausia</a></li>
+            <li><a href="/#categorias">Salud sexual</a></li>
+            <li><a href="/#categorias">Cabello</a></li>
+            <li><a href="/#categorias">Longevidad</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Clynia</h4>
+          <ul>
+            <li><a href="/mision">Misión</a></li>
+            <li><a href="/#como-funciona">Cómo funciona</a></li>
+            <li><a href="/#categorias">Tratamientos</a></li>
+            <li><a href="/blog">Blog</a></li>
+            <li><a href="/informacion">Información</a></li>
+            <li><a href="/contacto">Contacto</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Legal</h4>
+          <ul>
+            <li><a href="/avisolegal">Aviso legal</a></li>
+            <li><a href="/privacidad">Privacidad (RGPD)</a></li>
+            <li><a href="/cookies">Cookies</a></li>
+            <li><a href="/terminos">Términos</a></li>
+          </ul>
+        </div>
+      </div>
+      <p class="site-footer__legal">
+        Clynia es una plataforma que conecta pacientes con médicos colegiados independientes en
+        España. No es un centro sanitario ni una clínica. Cada decisión clínica corresponde al
+        médico colegiado responsable, que actúa con su propio criterio e independencia. La
+        información de esta web tiene carácter general y no sustituye una consulta médica ni
+        constituye consejo médico. Los tratamientos sólo se facilitan cuando un médico colegiado
+        los considera adecuados tras valorar cada caso de forma individual. Tratamos tus datos
+        conforme al RGPD y a la normativa española de protección de datos.
+      </p>
+      <p class="site-footer__copy">© Clynia. Todos los derechos reservados.</p>
+    </div>
+  </footer>
 <script src="assets/js/cursor-glow.js" defer></script>
   <script src="assets/js/cookies.js" defer></script>
 </body>

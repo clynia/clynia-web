@@ -50,10 +50,27 @@
   </script>
 </head>
 <body>
-  <header class="blognav"><div class="blognav__in">
-    <a class="blognav__brand" href="/" aria-label="Clynia, inicio"><img src="/assets/logos/clynia-wordmark.png" alt="Clynia" /></a>
-    <nav class="blognav__links"><a href="/#categorias">Tratamientos</a></nav>
-  </div></header>
+  <header class="topnav" id="topnav">
+    <div class="topnav__inner">
+      <a class="topnav__brand" href="/" aria-label="Clynia, inicio">
+        <img src="/assets/logos/clynia-wordmark.png" alt="Clynia" />
+      </a>
+      <nav class="topnav__links" aria-label="Navegación">
+        <a href="/#categorias">Tratamientos</a>
+        <a href="/blog">Blog</a>
+        <a href="/medicos">Profesionales</a>
+        <a href="/mision">Misión</a>
+        <a href="/contacto">Contacto</a>
+      </nav>
+      <div class="topnav__actions">
+        <a class="topnav__login" href="https://portal.clynia.es" aria-label="Acceso a tu portal de Clynia">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" x2="3" y1="12" y2="12"/></svg>
+          <span class="topnav__login-full">Acceso a tu portal</span>
+          <span class="topnav__login-short">Portal</span>
+        </a>
+      </div>
+    </div>
+  </header>
   <main>
     <article class="article">
       <nav class="breadcrumb"><a href="/">Clynia</a> &rsaquo; <a href="/blog">Blog</a> &rsaquo; Qué comer con GLP-1</nav>
@@ -143,11 +160,61 @@
       </div></section>
     </article>
   </main>
-  <footer class="blog-footer"><div class="blog-footer__in">
-    <a class="blog-footer__brand" href="/" aria-label="Clynia, inicio"><img src="/assets/logos/clynia-wordmark.png" alt="Clynia" /></a>
-    <nav class="blog-footer__nav"><a href="/blog">Blog</a><a href="/informacion">Información</a><a href="/privacidad">Privacidad</a><a href="/avisolegal">Aviso legal</a></nav>
-    <p class="blog-footer__legal">Clynia es una plataforma que conecta a pacientes con médicos colegiados independientes en España. El contenido de este blog es divulgativo, está elaborado con fuentes oficiales y no constituye consejo médico ni publicidad de medicamentos sujetos a prescripción. Cualquier tratamiento debe ser valorado e indicado por un médico colegiado.</p>
-  </div></footer>
+  <footer class="site-footer">
+    <div class="wrap">
+      <div class="site-footer__top">
+        <a class="site-footer__home" href="/" aria-label="Clynia, inicio">
+          <img src="/assets/logos/clynia-wordmark.png" alt="Clynia" />
+        </a>
+        <a class="site-footer__docs" href="/medicos">
+          ¿Eres médico? Únete a Clynia
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
+        </a>
+      </div>
+      <div class="site-footer__cols">
+        <div>
+          <h4>Tratamientos</h4>
+          <ul>
+            <li><a href="/perdida-de-peso">Pérdida de peso</a></li>
+            <li><a href="/#categorias">Menopausia</a></li>
+            <li><a href="/#categorias">Salud sexual</a></li>
+            <li><a href="/#categorias">Cabello</a></li>
+            <li><a href="/#categorias">Longevidad</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Clynia</h4>
+          <ul>
+            <li><a href="/mision">Misión</a></li>
+            <li><a href="/#como-funciona">Cómo funciona</a></li>
+            <li><a href="/#categorias">Tratamientos</a></li>
+            <li><a href="/blog">Blog</a></li>
+            <li><a href="/informacion">Información</a></li>
+            <li><a href="/contacto">Contacto</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Legal</h4>
+          <ul>
+            <li><a href="/avisolegal">Aviso legal</a></li>
+            <li><a href="/privacidad">Privacidad (RGPD)</a></li>
+            <li><a href="/cookies">Cookies</a></li>
+            <li><a href="/terminos">Términos</a></li>
+          </ul>
+        </div>
+      </div>
+      <p class="site-footer__legal">
+        Clynia es una plataforma que conecta pacientes con médicos colegiados independientes en
+        España. No es un centro sanitario ni una clínica. Cada decisión clínica corresponde al
+        médico colegiado responsable, que actúa con su propio criterio e independencia. La
+        información de esta web tiene carácter general y no sustituye una consulta médica ni
+        constituye consejo médico. Los tratamientos sólo se facilitan cuando un médico colegiado
+        los considera adecuados tras valorar cada caso de forma individual. Tratamos tus datos
+        conforme al RGPD y a la normativa española de protección de datos.
+      </p>
+      <p class="site-footer__copy">© Clynia. Todos los derechos reservados.</p>
+    </div>
+  </footer>
   <script src="/assets/js/cursor-glow.js" defer></script>
 </body>
 </html>
