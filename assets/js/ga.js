@@ -11,7 +11,13 @@
   var loaded = false;
   var q = [];
   function consentOK() {
-    try { return localStorage.getItem("clynia_cookie_consent") === "all"; } catch (e) { return false; }
+    // Igual que cookies.js: el consentimiento caduca a los 180 dias (asi no arrancamos con un "all" viejo
+    // en la misma pagina en la que el banner va a volver a preguntar).
+    try {
+      if (localStorage.getItem("clynia_cookie_consent") !== "all") return false;
+      var ts = parseInt(localStorage.getItem("clynia_cookie_consent_ts") || "0", 10);
+      return ts > 0 && (Date.now() - ts) < 180 * 24 * 60 * 60 * 1000;
+    } catch (e) { return false; }
   }
   function boot() {
     if (loaded) return;
@@ -34,6 +40,10 @@
       else q.push([name, params || {}]);
     } catch (e) {}
   };
-  window.clyniaGAConsent = function (v) { if (v === "all") boot(); };
+  window.clyniaGAConsent = function (v) {
+    if (v === "all") { boot(); return; }
+    q = [];
+    if (loaded) { try { window.gtag("consent", "update", { analytics_storage: "denied", ad_storage: "denied", ad_user_data: "denied", ad_personalization: "denied" }); } catch (e) {} }
+  };
   if (consentOK()) boot();
 })();

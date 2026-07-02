@@ -13,7 +13,7 @@
   'https://connect.facebook.net/en_US/fbevents.js');
   fbq('init', '4585495085018912');
   fbq('consent', 'revoke');
-  try{ if(localStorage.getItem('clynia_cookie_consent')==='all'){ fbq('consent','grant'); } }catch(e){}
+  try{ if(localStorage.getItem('clynia_cookie_consent')==='all' && (Date.now()-parseInt(localStorage.getItem('clynia_cookie_consent_ts')||'0',10))<15552000000){ fbq('consent','grant'); } }catch(e){}
   fbq('track', 'PageView');
   </script>
   <noscript><img height="1" width="1" style="display:none"
@@ -51,7 +51,8 @@
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"¿Por qué aparecen las náuseas con GLP-1?","acceptedAnswer":{"@type":"Answer","text":"Los agonistas del receptor GLP-1 ralentizan el vaciamiento gástrico, así que la comida pasa más despacio del estómago al intestino; eso contribuye a la saciedad del tratamiento, pero también hace que el estómago se note más lleno o revuelto, sobre todo después de comer. Según la ficha técnica de la semaglutida (AEMPS), las reacciones más frecuentes en los ensayos fueron gastrointestinales: náuseas, diarrea y vómitos. Es la consecuencia esperable de cómo actúa el medicamento, no una señal de que algo vaya mal."}},{"@type":"Question","name":"¿Son normales las náuseas y cuánto suelen durar?","acceptedAnswer":{"@type":"Answer","text":"Sí: son frecuentes y, en la mayoría de casos, leves o moderadas y transitorias. Suelen aparecer durante las primeras semanas o meses y disminuir al cabo de unos días o semanas, sobre todo en la fase de escalado de dosis. Por eso el tratamiento se sube de forma gradual, según indique tu médico, para que el cuerpo se acostumbre y se tolere mejor."}},{"@type":"Question","name":"¿Cómo puedo llevar mejor las náuseas con GLP-1?","acceptedAnswer":{"@type":"Answer","text":"Ayuda comer despacio y en porciones pequeñas, repartidas en varias tomas; parar cuando notes saciedad; elegir platos ligeros y bajos en grasa y moderar fritos, rebozados y picantes; hidratarte a sorbos pequeños; no tumbarte justo después de comer; y buscar aire fresco y movimiento suave. Son pautas alineadas con las recomendaciones de la SEEN para pacientes."}},{"@type":"Question","name":"¿Cuándo debo consultar al médico por las molestias del GLP-1?","acceptedAnswer":{"@type":"Answer","text":"Consulta sin demora ante signos de deshidratación (mucha sed, orina oscura o escasa, mareo o debilidad importante) o ante un dolor abdominal intenso y persistente, que puede irradiarse a la espalda, por la posibilidad poco frecuente de pancreatitis. Nunca cambies la dosis ni suspendas el tratamiento por tu cuenta: informa a tu médico o acude a urgencias, y consulta siempre el prospecto."}}]}
   </script>
-  <script src="../assets/js/ga.js?v=20260702"></script>
+  <script src="../assets/js/ga.js?v=20260702b"></script>
+  <script src="../assets/js/cookies.js?v=20260702" defer></script>
 </head>
 <body>
   <header class="topnav" id="topnav">

@@ -13,7 +13,7 @@
   'https://connect.facebook.net/en_US/fbevents.js');
   fbq('init', '4585495085018912');
   fbq('consent', 'revoke');
-  try{ if(localStorage.getItem('clynia_cookie_consent')==='all'){ fbq('consent','grant'); } }catch(e){}
+  try{ if(localStorage.getItem('clynia_cookie_consent')==='all' && (Date.now()-parseInt(localStorage.getItem('clynia_cookie_consent_ts')||'0',10))<15552000000){ fbq('consent','grant'); } }catch(e){}
   fbq('track', 'PageView');
   </script>
   <noscript><img height="1" width="1" style="display:none"
@@ -51,7 +51,8 @@
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"¿Por qué al perder peso se pierde también músculo?","acceptedAnswer":{"@type":"Answer","text":"Al adelgazar se pierden varios tejidos a la vez: sobre todo grasa, pero también algo de masa magra, que incluye el músculo. Ocurre en cualquier proceso de pérdida de peso, con o sin medicación. Cuando el apetito baja y la alimentación se queda corta en proteína y apenas hay movimiento, el cuerpo tiene menos motivos para conservar el músculo; cuidando la proteína y el ejercicio le das razones para mantenerlo mientras pierdes grasa."}},{"@type":"Question","name":"¿Cuánta proteína conviene tomar para no perder músculo al adelgazar?","acceptedAnswer":{"@type":"Answer","text":"MedlinePlus sitúa la proteína recomendada para adultos sanos entre el 10 % y el 35 % de las calorías diarias (unos 100 g al día en una dieta de 2.000 calorías). Conviene repartirla a lo largo del día, en el desayuno, la comida y la cena, y priorizarla cuando el apetito es escaso, empezando los platos por la parte proteica. Tu médico o un dietista-nutricionista puede ajustar la cantidad a tu caso."}},{"@type":"Question","name":"¿Qué ejercicio ayuda a conservar el músculo al perder peso?","acceptedAnswer":{"@type":"Answer","text":"La pieza clave es el ejercicio de fuerza: la OMS y el ACSM aconsejan trabajar los grandes grupos musculares dos o más días por semana, y puedes empezar en casa con el peso del cuerpo o bandas elásticas. Súmale actividad aeróbica moderada (la OMS recomienda al menos 150 minutos semanales, unos 30 minutos cinco días a la semana). La constancia importa más que la intensidad."}}]}
   </script>
-  <script src="../assets/js/ga.js?v=20260702"></script>
+  <script src="../assets/js/ga.js?v=20260702b"></script>
+  <script src="../assets/js/cookies.js?v=20260702" defer></script>
 </head>
 <body>
   <header class="topnav" id="topnav">
