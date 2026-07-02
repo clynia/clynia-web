@@ -24,8 +24,14 @@
   function pxStep(step) {
     if (!step || !step.id || seenSteps[step.id]) return;
     seenSteps[step.id] = true;
-    px("QStep", { step: step.id, step_index: idx(step.id) + 1, content_name: F.product, content_category: F.category || F.product });
-    ga("question_step", { step: step.id, step_index: idx(step.id) + 1, product: F.product });
+    // PRIVACIDAD: los pasos condicionales (showIf) y los finales solo aparecen segun respuestas
+    // previas de salud; enviar su id identificaria la respuesta (RGPD art. 9 / terminos de Meta).
+    // A Meta/GA solo se manda la identidad de los pasos que ve todo el mundo; el resto, etiqueta generica.
+    var safe = !step.showIf && step.type !== "ending";
+    var sid = safe ? step.id : (step.type === "ending" ? "final" : "detalle_condicional");
+    var sidx = safe ? idx(step.id) + 1 : 0;
+    px("QStep", { step: sid, step_index: sidx, content_name: F.product, content_category: F.category || F.product });
+    ga("question_step", { step: sid, step_index: sidx, product: F.product });
   }
 
   // Los datos de salud del intake NO deben quedar indefinidamente en localStorage
