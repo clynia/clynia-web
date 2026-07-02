@@ -16,6 +16,14 @@
   // avance). Sirve para etiquetar a quien empieza y no termina (retargeting) y medir el embudo. ---
   var started = false;
   function px(ev, params) { try { if (window.fbq) fbq("trackCustom", ev, params || {}); } catch (e) {} }
+  // --- Meta Pixel: un evento por paso ALCANZADO (solo avance, una vez por paso y sesión).
+  // Permite ver en qué pregunta abandona la gente. Envía el id del paso, nunca respuestas. ---
+  var seenSteps = {};
+  function pxStep(step) {
+    if (!step || !step.id || seenSteps[step.id]) return;
+    seenSteps[step.id] = true;
+    px("QStep", { step: step.id, step_index: idx(step.id) + 1, content_name: F.product, content_category: F.category || F.product });
+  }
 
   // Los datos de salud del intake NO deben quedar indefinidamente en localStorage
   // (equipos compartidos/públicos). Se purgan pasadas 24h desde la última edición.
@@ -69,6 +77,7 @@
     if (!step) return;
     if (push && current) history.push(current.id);
     if (push && !started) { started = true; px("StartQuestionnaire", { content_name: F.product, content_category: F.category || F.product }); }
+    if (push) pxStep(step);
     current = step;
     vars = F.computeVars ? F.computeVars(answers) : {};
     render();
