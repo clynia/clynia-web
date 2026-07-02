@@ -67,6 +67,7 @@
     .ct__err{background:#fbeae8;border:1px solid #e7c4c0;color:#8a2f29;border-radius:14px;padding:14px 16px;font-size:15px;margin-top:18px}
     [hidden]{display:none}
   </style>
+  <script src="assets/js/ga.js?v=20260702"></script>
 </head>
 <body>
   <header class="topnav" id="topnav">
@@ -150,8 +151,8 @@
             if (!f) return;
             // Meta Pixel: FormStart al primer input, Contact al enviar. Consentimiento gestionado por fbq consent.
             var started = false;
-            f.addEventListener("input", function () { if (started) return; started = true; try { if (window.fbq) fbq("trackCustom", "FormStart", { form_id: "contacto" }); } catch (e) {} }, true);
-            f.addEventListener("submit", function () { try { if (window.fbq) fbq("track", "Contact", { content_name: "contacto" }); } catch (e) {} });
+            f.addEventListener("input", function () { if (started) return; started = true; try { if (window.fbq) fbq("trackCustom", "FormStart", { form_id: "contacto" }); } catch (e) {} try { if (window.clyniaGA) clyniaGA("contact_form_start", { form_id: "contacto" }); } catch (e) {} }, true);
+            f.addEventListener("submit", function () { try { if (window.fbq) fbq("track", "Contact", { content_name: "contacto" }); } catch (e) {} try { if (window.clyniaGA) clyniaGA("contact_submit", { form_id: "contacto" }); } catch (e) {} });
           })();
         </script>
       </section>

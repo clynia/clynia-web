@@ -52,6 +52,7 @@
     .lista__done svg { width: 52px; height: 52px; color: var(--green); margin-bottom: 6px; }
     .lista__back { display: inline-block; margin-top: 18px; font-size: 14px; color: var(--green); }
   </style>
+  <script src="assets/js/ga.js?v=20260702"></script>
 </head>
 <body>
   <header class="topnav" id="topnav">
@@ -176,7 +177,7 @@
 
       // Meta Pixel: FormStart al primer input (una vez). El consentimiento lo gestiona fbq consent.
       var pxStarted = false;
-      form.addEventListener("input", function () { if (pxStarted) return; pxStarted = true; try { if (window.fbq) fbq("trackCustom", "FormStart", { form_id: "lista", content_category: cat || "general" }); } catch (e) {} }, true);
+      form.addEventListener("input", function () { if (pxStarted) return; pxStarted = true; try { if (window.fbq) fbq("trackCustom", "FormStart", { form_id: "lista", content_category: cat || "general" }); } catch (e) {} try { if (window.clyniaGA) clyniaGA("waitlist_form_start", { form_id: "lista", category: cat || "general" }); } catch (e) {} }, true);
 
       function valid(e) { return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(e); }
 
@@ -186,6 +187,7 @@
         if (!valid(email.value.trim())) { err.textContent = "Escribe un email válido."; email.focus(); return; }
         if (!consent.checked) { err.textContent = "Marca la casilla para que podamos avisarte."; return; }
         try { if (window.fbq) fbq("track", "Lead", { content_name: "lista-" + (cat || "general"), content_category: "waitlist" }); } catch (e) {}
+        try { if (window.clyniaGA) clyniaGA("generate_lead", { product: "lista-" + (cat || "general"), category: "waitlist" }); } catch (e) {}
         btn.disabled = true; btn.textContent = "Enviando…";
         var payload = { categoria: cat || "general", email: email.value.trim(), consent: true, source: "web-lista", ts: new Date().toISOString() };
         var done = false;

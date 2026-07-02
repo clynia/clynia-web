@@ -54,6 +54,7 @@
     .ty__call p{margin:0;font-size:14.5px;line-height:1.55;color:#3a463f}
     .ty__call b{color:#1f2a25}
   </style>
+  <script src="assets/js/ga.js?v=20260702"></script>
 </head>
 <body>
   <div class="ty">
@@ -121,6 +122,8 @@
       } catch (e) {}
     }
     if (window.fbq) fire(); else setTimeout(fire, 1000);
+    // GA4: espejo del Purchase (ga.js gestiona consentimiento y cola).
+    try { if (window.clyniaGA) clyniaGA("purchase", { transaction_id: p.eid || undefined, value: p.value, currency: p.currency || "EUR", items: [{ item_id: (p.content_ids && p.content_ids[0]) || "plan", item_name: p.content_name || "Plan Clynia" }] }); } catch (e) {}
   })();
   </script>
   <footer class="site-footer">

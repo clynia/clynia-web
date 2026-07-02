@@ -19,10 +19,13 @@
   // --- Meta Pixel: un evento por paso ALCANZADO (solo avance, una vez por paso y sesión).
   // Permite ver en qué pregunta abandona la gente. Envía el id del paso, nunca respuestas. ---
   var seenSteps = {};
+  // GA4: espejo de los eventos del embudo (assets/js/ga.js gestiona consentimiento y cola).
+  function ga(ev, params) { try { if (window.clyniaGA) window.clyniaGA(ev, params || {}); } catch (e) {} }
   function pxStep(step) {
     if (!step || !step.id || seenSteps[step.id]) return;
     seenSteps[step.id] = true;
     px("QStep", { step: step.id, step_index: idx(step.id) + 1, content_name: F.product, content_category: F.category || F.product });
+    ga("question_step", { step: step.id, step_index: idx(step.id) + 1, product: F.product });
   }
 
   // Los datos de salud del intake NO deben quedar indefinidamente en localStorage
@@ -76,7 +79,7 @@
   function go(step, push) {
     if (!step) return;
     if (push && current) history.push(current.id);
-    if (push && !started) { started = true; px("StartQuestionnaire", { content_name: F.product, content_category: F.category || F.product }); }
+    if (push && !started) { started = true; px("StartQuestionnaire", { content_name: F.product, content_category: F.category || F.product }); ga("start_questionnaire", { product: F.product, category: F.category || F.product }); }
     if (push) pxStep(step);
     current = step;
     vars = F.computeVars ? F.computeVars(answers) : {};
@@ -337,10 +340,12 @@
     function fireLead(casoId) {
       if (leadFired) return; leadFired = true;
       mTrack("Lead", { content_name: F.product, content_category: F.category || F.product, value: plan ? plan.precio : undefined, currency: "EUR" }, "lead_" + (casoId || ("anon_" + new Date().getTime())));
+      ga("generate_lead", { currency: "EUR", value: plan ? plan.precio : 0, product: F.product });
     }
     function fireCheckout(casoId) {
       if (!plan) return;
       mTrack("InitiateCheckout", { content_name: plan.nombre, content_ids: [plan.id], value: plan.precio, currency: "EUR", num_items: 1 }, "ic_" + (casoId || ("anon_" + new Date().getTime())));
+      ga("begin_checkout", { currency: "EUR", value: plan.precio, items: [{ item_id: plan.id, item_name: plan.nombre }] });
       // Guardamos el ticket para que gracias.html dispare Purchase con valor y el mismo eventID (dedup con la CAPI).
       try { localStorage.setItem("clynia_pending_purchase", JSON.stringify({ value: plan.precio, currency: "EUR", content_name: plan.nombre, content_ids: [plan.id], store: F.storeKey, eid: "purchase_" + (casoId || ("anon_" + new Date().getTime())) })); } catch (e) {}
     }

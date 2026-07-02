@@ -42,6 +42,8 @@
       setTimeout(function () { if (box.parentNode) box.parentNode.removeChild(box); }, 260);
       // Meta Pixel: solo enviamos eventos si el usuario acepta todo (RGPD/AEPD). El píxel arranca con consent revocado.
       try { if (window.fbq) fbq("consent", v === "all" ? "grant" : "revoke"); } catch (e) {}
+      // GA4: solo arranca (y vacía su cola de eventos) si el usuario acepta todo. Ver assets/js/ga.js.
+      try { if (window.clyniaGAConsent) clyniaGAConsent(v); } catch (e) {}
     }
     box.querySelector(".ck-accept").onclick = function () { choose("all"); };
     box.querySelector(".ck-reject").onclick = function () { choose("essential"); };
