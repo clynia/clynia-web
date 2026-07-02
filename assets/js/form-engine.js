@@ -294,9 +294,40 @@
     var eb = document.getElementById("cqEndBack"); if (eb) eb.onclick = back;
   }
 
+  // ── Cloudflare Turnstile: token anti-bot que luego verifica n8n ──
+  // La Site Key es pública (va en el HTML). El secreto vive en n8n, nunca aquí.
+  var TS_SITEKEY = "0x4AAAAAADujDjAOr7tezclm";
+  (function loadTurnstile() {
+    try {
+      if (!TS_SITEKEY || document.querySelector('script[data-cf-turnstile]')) return;
+      var s = document.createElement("script");
+      s.src = "https://challenges.cloudflare.com/turnstile/v0/api.js";
+      s.async = true; s.defer = true; s.setAttribute("data-cf-turnstile", "1");
+      document.head.appendChild(s);
+    } catch (e) {}
+  })();
+  // Renderiza el widget en #cq-ts y devuelve el token por callback. Fail-open en el
+  // cliente: si Turnstile no carga, envía token vacío y la decisión la toma n8n.
+  function turnstileToken(cb) {
+    var done = false;
+    function fin(tok) { if (done) return; done = true; cb(tok || ""); }
+    try {
+      if (!TS_SITEKEY || !window.turnstile) { fin(""); return; }
+      var c = document.getElementById("cq-ts");
+      if (!c) { fin(""); return; }
+      window.turnstile.render(c, {
+        sitekey: TS_SITEKEY,
+        callback: function (tok) { fin(tok); },
+        "error-callback": function () { fin(""); },
+        "timeout-callback": function () { fin(""); }
+      });
+      setTimeout(function () { fin(""); }, 12000);
+    } catch (e) { fin(""); }
+  }
+
   function finish() {
     vars = F.computeVars ? F.computeVars(answers) : {};
-    root.innerHTML = '<div class="cq__center"><div class="cq__loading"><span class="cq__spin"></span> Enviando tu información de forma segura...</div></div>';
+    root.innerHTML = '<div class="cq__center"><div class="cq__loading"><span class="cq__spin"></span> Enviando tu información de forma segura...</div><div id="cq-ts" style="margin-top:18px;min-height:1px;display:flex;justify-content:center"></div></div>';
     var payload = { product: F.product, intakeId: answers._intakeId, answers: answers, triage: vars, submittedAt: new Date().toISOString() };
     var plan = (F.plans || []).filter(function (p) { return p.id === answers.plan; })[0];
     var redirected = false;
@@ -343,11 +374,14 @@
     // Si ya creamos el caso en este intake, no lo recreamos: evita duplicados al volver atrás y reintentar.
     if (answers._caso) { proceedToPayment(answers._caso); return; }
     // Si el intake tarda demasiado, no bloqueamos al paciente: seguimos al pago igualmente.
-    var failsafe = setTimeout(function () { proceedToPayment(null); }, 9000);
-    fetch(F.webhook, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) })
-      .then(function (r) { return r.json().catch(function () { return {}; }); })
-      .then(function (data) { clearTimeout(failsafe); var cid = data && data.casoId ? data.casoId : null; if (cid) { answers._caso = cid; save(); } proceedToPayment(cid); })
-      .catch(function () { clearTimeout(failsafe); try { localStorage.setItem(F.storeKey + "_pending", JSON.stringify(payload)); } catch (e) {} proceedToPayment(null); });
+    var failsafe = setTimeout(function () { proceedToPayment(null); }, 14000);
+    turnstileToken(function (cfToken) {
+      payload.cf_token = cfToken;
+      fetch(F.webhook, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) })
+        .then(function (r) { return r.json().catch(function () { return {}; }); })
+        .then(function (data) { clearTimeout(failsafe); var cid = data && data.casoId ? data.casoId : null; if (cid) { answers._caso = cid; save(); } proceedToPayment(cid); })
+        .catch(function () { clearTimeout(failsafe); try { localStorage.setItem(F.storeKey + "_pending", JSON.stringify(payload)); } catch (e) {} proceedToPayment(null); });
+    });
   }
 
   document.body.classList.add("cq-body");
