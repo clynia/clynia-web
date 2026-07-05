@@ -162,6 +162,29 @@ window.CLYNIA_FORM = {
     { id: "ending_rojo", type: "ending", variant: "stop", q: "Por tu seguridad, esto debe valorarlo un médico en persona", body: "Según lo que nos has contado, el tratamiento online no es lo más adecuado para ti ahora mismo. Te recomendamos acudir a tu médico de cabecera o a un centro de forma presencial para una valoración. Hemos guardado tus respuestas: si quieres que te orientemos, escríbenos a clynia@clynia.es.", cta: "Volver a Clynia", href: "perdida-de-peso" }
   ],
 
+  // Valida el número de documento contra el tipo elegido. Suave: solo bloquea lo claramente
+  // inválido. Devuelve { ok: bool }. NUNCA aplica el dígito de control del DNI/NIE a un
+  // pasaporte ni a tipos desconocidos: los documentos extranjeros no tienen ese control.
+  validarDocumento: function (tipo, num) {
+    // Si aún no hay tipo, no bloqueamos (el paso de tipo va antes; por si acaso).
+    if (!tipo) return { ok: true };
+    var n = String(num == null ? "" : num).toUpperCase().replace(/[\s-]/g, "").trim();
+    if (n === "") return { ok: true }; // el "requerido" ya lo cubre la validación base
+    var CONTROL = "TRWAGMYFPDXBNJZSQVHLCKE";
+    if (tipo === "DNI") {
+      if (!/^[0-9]{8}[A-Z]$/.test(n)) return { ok: false };
+      return { ok: n.charAt(8) === CONTROL.charAt(parseInt(n.substring(0, 8), 10) % 23) };
+    }
+    if (tipo === "NIE") {
+      if (!/^[XYZ][0-9]{7}[A-Z]$/.test(n)) return { ok: false };
+      var pre = { X: "0", Y: "1", Z: "2" }[n.charAt(0)];
+      var num8 = parseInt(pre + n.substring(1, 8), 10);
+      return { ok: n.charAt(8) === CONTROL.charAt(num8 % 23) };
+    }
+    // Pasaporte y cualquier otro tipo desconocido: solo plausibilidad, sin dígito de control.
+    return { ok: /^[A-Z0-9]{5,20}$/.test(n) };
+  },
+
   computeVars: function (a) {
     var steps = window.CLYNIA_FORM.steps, score = 0, flag = 0;
     steps.forEach(function (s) {

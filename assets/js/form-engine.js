@@ -268,6 +268,11 @@
 
   function submitStep(s) {
     if (!validate(s)) { err(s.errMsg || "Responde para continuar."); return; }
+    // Validación suave del número de documento contra el tipo elegido (DNI/NIE/Pasaporte).
+    if (s.key === "num_documento" && F.validarDocumento && !F.validarDocumento(answers.tipo_documento, answers.num_documento).ok) {
+      err("Revisa el número: no parece un " + (answers.tipo_documento || "documento") + " válido.");
+      return;
+    }
     if (s.id === "plans" || s.submit) return finish();
     go(nextOf(s), true);
   }
