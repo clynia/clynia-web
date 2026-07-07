@@ -9,7 +9,7 @@ RewriteEngine On
 #    Para reactivar staging, apunta el deploy de dev.clynia.es a una rama de
 #    pruebas y comenta estas dos lineas en esa rama.
 RewriteCond %{HTTP_HOST} ^dev\.clynia\.es$ [NC]
-RewriteRule ^(.*)$ https://clynia.es/$1 [R=301,L]
+RewriteRule ^(.*)$ https://clynia.es/$1 [R=302,L]
 
 # 1) Redirige la versión con extensión /pagina.html -> /pagina (301, canónica para SEO)
 RewriteCond %{THE_REQUEST} \s/+([^?\s]+?)\.html[\s?] [NC]
