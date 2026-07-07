@@ -36,3 +36,12 @@ RewriteRule ^(.+?)/?$ $1.html [L]
   Header always unset X-Powered-By
   Header unset X-Powered-By
 </IfModule>
+
+# ── Staging: no indexar el subdominio de pruebas ───────────────────────
+# Cabecera noindex SOLO cuando el host es dev.clynia.es. En produccion
+# (clynia.es) el host no coincide y la regla no aplica, por lo que es
+# inofensiva y segura de fusionar a main.
+<IfModule mod_headers.c>
+  SetEnvIf Host "^dev\.clynia\.es$" IS_STAGING
+  Header always set X-Robots-Tag "noindex, nofollow" env=IS_STAGING
+</IfModule>
