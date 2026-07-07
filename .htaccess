@@ -4,6 +4,13 @@
 Options -MultiViews
 RewriteEngine On
 
+# 0) Staging en reposo: dev.clynia.es redirige a produccion (clynia.es).
+#    Solo actua si el host es el subdominio de pruebas; en clynia.es no aplica.
+#    Para reactivar staging, apunta el deploy de dev.clynia.es a una rama de
+#    pruebas y comenta estas dos lineas en esa rama.
+RewriteCond %{HTTP_HOST} ^dev\.clynia\.es$ [NC]
+RewriteRule ^(.*)$ https://clynia.es/$1 [R=301,L]
+
 # 1) Redirige la versión con extensión /pagina.html -> /pagina (301, canónica para SEO)
 RewriteCond %{THE_REQUEST} \s/+([^?\s]+?)\.html[\s?] [NC]
 RewriteRule ^ /%1 [R=301,L]
@@ -35,13 +42,4 @@ RewriteRule ^(.+?)/?$ $1.html [L]
   # Reduce la huella informativa que añade el hosting (best-effort).
   Header always unset X-Powered-By
   Header unset X-Powered-By
-</IfModule>
-
-# ── Staging: no indexar el subdominio de pruebas ───────────────────────
-# Cabecera noindex SOLO cuando el host es dev.clynia.es. En produccion
-# (clynia.es) el host no coincide y la regla no aplica, por lo que es
-# inofensiva y segura de fusionar a main.
-<IfModule mod_headers.c>
-  SetEnvIf Host "^dev\.clynia\.es$" IS_STAGING
-  Header always set X-Robots-Tag "noindex, nofollow" env=IS_STAGING
 </IfModule>
