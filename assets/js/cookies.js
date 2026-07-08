@@ -59,6 +59,14 @@
       try { if (window.fbq) fbq("consent", v === "all" ? "grant" : "revoke"); } catch (e) {}
       // GA4: solo arranca (y vacia su cola de eventos) si el usuario acepta todo. Ver assets/js/ga.js.
       try { if (window.clyniaGAConsent) clyniaGAConsent(v); } catch (e) {}
+      // Contador anonimo de la decision (aceptar/rechazar): sin datos personales ni cookies, solo la
+      // eleccion y la pagina, para medir la tasa de rechazo (webhook n8n -> Airtable "Consentimiento cookies").
+      try {
+        var ckUrl = "https://n8n-ixwg.srv1722506.hstgr.cloud/webhook/cookie-consent";
+        var ckBody = JSON.stringify({ choice: v === "all" ? "accept" : "reject", path: location.pathname, ts: new Date().toISOString() });
+        if (navigator.sendBeacon) navigator.sendBeacon(ckUrl, new Blob([ckBody], { type: "text/plain;charset=UTF-8" }));
+        else fetch(ckUrl, { method: "POST", headers: { "Content-Type": "text/plain" }, body: ckBody, keepalive: true, mode: "no-cors" });
+      } catch (e) {}
     }
     card.querySelector(".ck-accept").onclick = function () { choose("all"); };
     card.querySelector(".ck-reject").onclick = function () { choose("essential"); };

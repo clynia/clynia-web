@@ -10,6 +10,11 @@ window.CLYNIA_FORM = {
   // Activar poniendo: "https://n8n-ixwg.srv1722506.hstgr.cloud/webhook/crear-checkout" cuando la credencial Stripe esté en n8n.
   checkoutEndpoint: "https://n8n-ixwg.srv1722506.hstgr.cloud/webhook/crear-checkout",
 
+  // Captura temprana de contacto: en cuanto tenemos email + consentimiento, guardamos un lead
+  // parcial (webhook n8n -> Airtable "Leads parciales (peso)") para no perder a quien empieza y
+  // no termina. No bloquea ni sustituye el intake final. Ver assets/js/form-engine.js (sendPartial).
+  leadWebhook: "https://n8n-ixwg.srv1722506.hstgr.cloud/webhook/peso-lead-parcial",
+
   // pago = URL del Payment Link de Stripe (https://buy.stripe.com/...). Pegar los 3 enlaces aquí.
   plans: [
     { id: "valoracion", nombre: "Valoración médica", precio: 99, meta: "Pago único", pago: "https://buy.stripe.com/fZueVf0Jb18m2u459XfEk02", desc: "Una valoración puntual con un médico colegiado. No incluye seguimiento." },
@@ -23,6 +28,14 @@ window.CLYNIA_FORM = {
     // ---------- BLOQUE PACIENTE (fijo + REMPE) ----------
     { id: "mayor_edad", section: "Sobre ti", type: "yesno", key: "mayor_edad", q: "Antes de empezar: ¿tienes 18 años o más?", next: function (a) { return a.mayor_edad === false ? "ending_menor" : null; } },
     { id: "nombre", section: "Sobre ti", type: "text", key: "nombre", q: "¿Cómo te llamas?", help: "Solo el nombre.", autocomplete: "given-name", placeholder: "Tu nombre" },
+    // Email + consentimiento PRONTO: así, aunque no termines, podemos guardar tu solicitud y
+    // retomarla contigo (lead parcial). El consentimiento va antes de pedirte datos de salud.
+    { id: "email", section: "Sobre ti", type: "email", key: "email", q: "¿Cuál es tu correo electrónico?", help: "Aquí te enviamos la confirmación y guardamos tu solicitud, para que puedas retomarla si no la terminas ahora." },
+    { id: "consent", section: "Sobre ti", type: "consent", key: "consent", q: "Antes de seguir: tus datos, protegidos", help: "Con tu permiso guardamos tu solicitud para que un médico colegiado pueda valorarla, y podrás retomarla cuando quieras.", cta: "Acepto y continúo", items: [
+      { key: "acepta_privacidad", required: true, label: 'He leído y acepto la <a href="privacidad" target="_blank">Política de Privacidad</a> de Clynia.' },
+      { key: "acepta_datos_salud", required: true, label: "Doy mi consentimiento explícito al tratamiento de mis datos de salud con fines asistenciales." },
+      { key: "acepta_comercial", required: false, label: "Quiero recibir comunicaciones de Clynia sobre mi solicitud y novedades." }
+    ] },
     { id: "primer_apellido", section: "Sobre ti", type: "text", key: "primer_apellido", q: "¿Cuál es tu primer apellido?", autocomplete: "family-name", placeholder: "Tu primer apellido", errMsg: "Necesitamos tu primer apellido." },
     { id: "segundo_apellido", section: "Sobre ti", type: "text", key: "segundo_apellido", q: "¿Y tu segundo apellido?", help: "Si solo tienes un apellido, deja este campo en blanco y continúa.", autocomplete: "off", placeholder: "Tu segundo apellido (opcional)", required: false },
     { id: "fecha_nacimiento", section: "Sobre ti", type: "date", key: "fecha_nacimiento", q: "¿Cuál es tu fecha de nacimiento?", next: function (a) { if (!a.fecha_nacimiento) return null; var d = new Date(a.fecha_nacimiento), t = new Date(), age = t.getFullYear() - d.getFullYear(), m = t.getMonth() - d.getMonth(); if (m < 0 || (m === 0 && t.getDate() < d.getDate())) age--; return age < 18 ? "ending_menor" : null; } },
@@ -30,7 +43,7 @@ window.CLYNIA_FORM = {
     { id: "tipo_documento", section: "Sobre ti", type: "single", key: "tipo_documento", q: "¿Qué documento de identidad usarás?", help: "Pedimos estos datos para que un médico colegiado pueda emitir tu receta, solo si valora que el tratamiento es adecuado para ti.", options: [{ label: "DNI", value: "DNI" }, { label: "NIE", value: "NIE" }, { label: "Pasaporte", value: "Pasaporte" }] },
     { id: "num_documento", section: "Sobre ti", type: "text", key: "num_documento", q: "Número de tu documento", autocomplete: "off", placeholder: "Número de DNI/NIE/Pasaporte" },
     { id: "nacionalidad", section: "Sobre ti", type: "text", key: "nacionalidad", q: "¿Cuál es tu nacionalidad?", placeholder: "Tu nacionalidad" },
-    { id: "email", section: "Sobre ti", type: "email", key: "email", q: "¿Cuál es tu correo electrónico?", help: "Te enviaremos aquí la confirmación y las indicaciones." },
+    // (El correo y el consentimiento se piden antes, junto al nombre, para poder guardar tu solicitud.)
     { id: "telefono", section: "Sobre ti", type: "tel", key: "telefono", q: "¿Y tu número de teléfono?", help: "El médico te llamará por aquí si necesita ampliar algún dato." },
     { id: "direccion", section: "Sobre ti", type: "text", key: "direccion", q: "¿Cuál es tu dirección postal?", help: "La necesitamos para poder emitir la receta médica, si el médico lo considera oportuno.", autocomplete: "address-line1", placeholder: "Tu calle y número" },
     { id: "codigo_postal", section: "Sobre ti", type: "text", key: "codigo_postal", q: "Código postal", autocomplete: "postal-code", placeholder: "Tu código postal" },
@@ -146,11 +159,7 @@ window.CLYNIA_FORM = {
     { id: "algo_mas", section: "Casi listo", type: "yesno", key: "algo_mas", q: "¿Hay algo más que quieras decirle al equipo médico?" },
     { id: "mensaje_equipo", section: "Casi listo", type: "longtext", key: "mensaje_equipo", q: "Cuéntanoslo", showIf: function (a) { return a.algo_mas === true; } },
 
-    { id: "consent", section: "Casi listo", type: "consent", key: "consent", q: "Tus datos, protegidos", cta: "Acepto y continúo", items: [
-      { key: "acepta_privacidad", required: true, label: 'He leído y acepto la <a href="privacidad" target="_blank">Política de Privacidad</a> de Clynia.' },
-      { key: "acepta_datos_salud", required: true, label: "Doy mi consentimiento explícito al tratamiento de mis datos de salud con fines asistenciales." },
-      { key: "acepta_comercial", required: false, label: "Quiero recibir comunicaciones de Clynia sobre mi tratamiento y novedades." }
-    ] },
+    // (El consentimiento se pide al principio, junto al email, en el bloque "Sobre ti".)
 
     // ---------- CRIBADO + PLANES ----------
     { id: "gate_triage", type: "gate", route: function (a, v) { return v.flag_rojo >= 1 ? "ending_rojo" : "plans"; } },

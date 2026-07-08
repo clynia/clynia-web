@@ -57,6 +57,35 @@
       localStorage.setItem(F.storeKey + "_ts", String(Date.now()));
     } catch (e) {}
   }
+  // Guarda un "lead parcial" en cuanto tenemos email + los consentimientos obligatorios, aunque la
+  // persona no termine el cuestionario. Es un envío de la propia persona (con su consentimiento
+  // explícito), independiente de las cookies. Una sola vez por intake. Solo actúa si el esquema
+  // define F.leadWebhook (hoy: solo el de peso); en los demás formularios es un no-op.
+  var partialSent = false;
+  function sendPartial() {
+    try {
+      if (partialSent || answers._partialSent || !F.leadWebhook) return;
+      var email = answers.email;
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return;
+      if (answers.acepta_privacidad !== true || answers.acepta_datos_salud !== true) return;
+      var body = JSON.stringify({
+        email: email,
+        nombre: [answers.nombre, answers.primer_apellido].filter(Boolean).join(" "),
+        telefono: answers.telefono || "",
+        consent: true,
+        intakeId: answers._intakeId || "",
+        origen: "web-peso-form",
+        ts: new Date().toISOString()
+      });
+      var sent = false;
+      if (navigator.sendBeacon) { try { sent = navigator.sendBeacon(F.leadWebhook, new Blob([body], { type: "text/plain;charset=UTF-8" })); } catch (e) {} }
+      if (!sent) { try { fetch(F.leadWebhook, { method: "POST", headers: { "Content-Type": "text/plain" }, body: body, keepalive: true, mode: "no-cors" }); } catch (e) {} }
+      partialSent = true; answers._partialSent = true; save();
+      // Señal a Meta (solo si hay consentimiento de cookies): captación de contacto, distinta del Lead final.
+      px("LeadPartial", { content_name: F.product, content_category: F.category || F.product });
+    } catch (e) {}
+  }
+
   function byId(id) { for (var i = 0; i < F.steps.length; i++) if (F.steps[i].id === id) return F.steps[i]; return null; }
   function idx(id) { for (var i = 0; i < F.steps.length; i++) if (F.steps[i].id === id) return i; return -1; }
   function visible(s) { return !s.showIf || s.showIf(answers, vars) !== false; }
@@ -233,7 +262,7 @@
       inp.onchange = function () { var f = inp.files[0]; if (f) { answers[s.key] = { name: f.name, size: f.size }; save(); document.getElementById("cqFileName").textContent = f.name; } };
     } else if (s.type === "consent") {
       field.querySelectorAll("input[data-ck]").forEach(function (c) {
-        c.onchange = function () { answers[c.getAttribute("data-ck")] = c.checked; save(); };
+        c.onchange = function () { answers[c.getAttribute("data-ck")] = c.checked; save(); sendPartial(); };
       });
     } else {
       var el = document.getElementById("cqIn");
@@ -273,6 +302,7 @@
       err("Revisa el número: no parece un " + (answers.tipo_documento || "documento") + " válido.");
       return;
     }
+    sendPartial();
     if (s.id === "plans" || s.submit) return finish();
     go(nextOf(s), true);
   }
@@ -417,4 +447,7 @@
     try { fromPay = !!sessionStorage.getItem(F.storeKey + "_return"); } catch (ex) {}
     if (fromPay) resume();
   });
+  // Red de seguridad: si la persona abandona la pestaña tras dejar email + consentimiento,
+  // intentamos guardar el lead parcial antes de que se vaya (una sola vez, gated por leadWebhook).
+  window.addEventListener("pagehide", function () { try { sendPartial(); } catch (e) {} });
 })();
