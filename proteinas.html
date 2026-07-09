@@ -191,11 +191,10 @@
             <span class="psim__steplabel"><span class="psim__num">2</span> ¿Cuál es tu objetivo?</span>
             <div class="psim__goals" id="pRatio" role="group" aria-label="Objetivo de proteína por kilo de peso">
               <button type="button" data-r="1.2"><span class="psim__goalname">Mantener mi peso</span><span class="psim__goalsub">1,2 g por kilo</span></button>
-              <button type="button" data-r="1.5"><span class="psim__goalname">Perder peso</span><span class="psim__goalsub">1,5 g por kilo</span></button>
-              <button type="button" data-r="1.8" class="is-sel"><span class="psim__rec">Recomendado con GLP-1</span><span class="psim__goalname">Perder peso y cuidar músculo</span><span class="psim__goalsub">1,8 g por kilo</span></button>
+              <button type="button" data-r="1.5" class="is-sel"><span class="psim__rec">Recomendado con GLP-1</span><span class="psim__goalname">Perder peso y cuidar músculo</span><span class="psim__goalsub">1,5 g por kilo</span></button>
               <button type="button" data-r="2"><span class="psim__goalname">Perder peso y ganar músculo</span><span class="psim__goalsub">2,0 g por kilo</span></button>
             </div>
-            <p class="psim__note">Con un tratamiento <strong>GLP-1</strong>, como la pérdida de peso es más marcada, conviene apuntar <strong>por encima de 1,5 g por kilo</strong> para no perder músculo.</p>
+            <p class="psim__note">Con un tratamiento <strong>GLP-1</strong>, como la pérdida de peso es más marcada, conviene apuntar <strong>en torno a 1,5 g por kilo</strong> para no perder músculo.</p>
           </div>
         </div>
 
@@ -351,7 +350,7 @@
       ];
       FOODS.forEach(function (f) { f.pg = 0; f.locked = false; f.el = null; });
 
-      var weight = 80, ratio = 1.8, TARGET = 0;
+      var weight = 80, ratio = 1.5, TARGET = 0;
       var $ = function (s) { return document.getElementById(s); };
       var foodsBox = $("pFoods"), addBox = $("pAdd"), bar = $("pBar");
 
