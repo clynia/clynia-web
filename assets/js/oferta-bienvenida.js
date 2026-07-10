@@ -31,12 +31,21 @@
 
   // ── Estilos ──────────────────────────────────────────────────────────────
   var css = ''
-    // Barra superior (flujo normal: se ve al cargar; la nav sticky del sitio queda encima al scrollear)
-    + '.ob-bar{position:relative;z-index:60;background:linear-gradient(100deg,#437066,#365a52);'
+    // Barra superior PEGAJOSA: se queda arriba al scrollear, como el header. La cabecera del
+    // sitio (.topnav, sticky) se ancla justo debajo via la variable --ob-bar-h que fija el JS.
+    + '.ob-bar{position:sticky;top:0;z-index:1000;overflow:hidden;'
+    + 'background:linear-gradient(100deg,#437066,#3d655c 55%,#365a52);'
     + "color:#fff;font-family:'Hanken Grotesk',system-ui,-apple-system,'Segoe UI',Arial,sans-serif;"
-    + 'font-size:15px;line-height:1.35;box-shadow:0 2px 16px rgba(23,32,28,.18);'
-    + 'animation:obdown .45s cubic-bezier(.2,.7,.2,1) both}'
+    + 'font-size:15px;line-height:1.35;box-shadow:0 6px 22px rgba(23,32,28,.28);'
+    + 'animation:obdown .5s cubic-bezier(.2,.7,.2,1) both}'
     + '@keyframes obdown{from{transform:translateY(-100%)}to{transform:none}}'
+    // Reflejo que barre la barra cada pocos segundos para atraer la mirada (sutil, premium)
+    + '.ob-bar::before{content:"";position:absolute;top:0;bottom:0;left:0;width:45%;pointer-events:none;'
+    + 'background:linear-gradient(100deg,transparent,rgba(255,255,255,.20),transparent);'
+    + 'transform:translateX(-160%) skewX(-18deg);animation:obshine 5.5s ease-in-out 1.2s infinite}'
+    + '@keyframes obshine{0%{transform:translateX(-160%) skewX(-18deg)}22%,100%{transform:translateX(340%) skewX(-18deg)}}'
+    // El header pegajoso del sitio baja justo debajo de la barra (altura real via JS)
+    + '.topnav{top:var(--ob-bar-h,0)}'
     + '.ob-bar__in{max-width:1120px;margin:0 auto;display:flex;align-items:center;gap:14px 18px;'
     + 'flex-wrap:wrap;justify-content:center;padding:9px 46px 9px 16px;text-align:center}'
     + '.ob-bar__msg{font-weight:500}'
@@ -45,10 +54,14 @@
     + '.ob-cd__u{background:rgba(255,255,255,.16);border-radius:8px;padding:3px 7px;font-weight:700;'
     + 'font-size:14px;min-width:26px;text-align:center}'
     + '.ob-cd__s{opacity:.7;font-size:11px;font-weight:600;margin-left:1px}'
-    + '.ob-bar__cta{background:#fff;color:#2c5249;border:0;border-radius:999px;font:inherit;'
-    + 'font-weight:700;font-size:14px;cursor:pointer;padding:8px 18px;white-space:nowrap;'
-    + 'box-shadow:0 4px 14px rgba(0,0,0,.12);transition:transform .15s ease,box-shadow .15s ease}'
-    + '.ob-bar__cta:hover{transform:translateY(-1px);box-shadow:0 7px 18px rgba(0,0,0,.18)}'
+    // Botón con el look de Clynia: rectangular (radio de marca), NO píldora. Late para pedir el clic.
+    + '.ob-bar__cta{position:relative;background:#fff;color:#365b52;border:0;border-radius:14px;font:inherit;'
+    + 'font-weight:700;font-size:14px;cursor:pointer;padding:9px 18px;white-space:nowrap;'
+    + 'box-shadow:0 6px 16px rgba(0,0,0,.16);transition:transform .15s ease,box-shadow .15s ease;'
+    + 'animation:obpulse 2.6s ease-in-out infinite}'
+    + '@keyframes obpulse{0%,100%{box-shadow:0 6px 16px rgba(0,0,0,.16),0 0 0 0 rgba(255,255,255,.55)}'
+    + '55%{box-shadow:0 6px 16px rgba(0,0,0,.16),0 0 0 7px rgba(255,255,255,0)}}'
+    + '.ob-bar__cta:hover{transform:translateY(-1px);box-shadow:0 9px 20px rgba(0,0,0,.22);animation-play-state:paused}'
     + '.ob-bar__x{position:absolute;top:50%;right:12px;transform:translateY(-50%);background:transparent;'
     + 'border:0;color:rgba(255,255,255,.85);font-size:22px;line-height:1;cursor:pointer;padding:4px 6px;'
     + 'border-radius:8px}'
@@ -100,13 +113,20 @@
     + '.ob-go{display:inline-block;margin-top:16px;background:#437066;color:#fff;text-decoration:none;'
     + 'border-radius:12px;font-weight:700;font-size:16px;padding:14px 26px;transition:background .15s}'
     + '.ob-go:hover{background:#365a52}'
-    + '@media(prefers-reduced-motion:reduce){.ob-bar,.ob-ov,.ob-card{animation:none}}';
+    + '@media(prefers-reduced-motion:reduce){.ob-bar,.ob-ov,.ob-card,.ob-bar::before,.ob-bar__cta{animation:none}}';
 
   // ── Utilidades ───────────────────────────────────────────────────────────
   function el(tag, cls, html) { var e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; }
   function pad(n) { return n < 10 ? "0" + n : "" + n; }
 
-  var bar, ov, cdTimer, lastFocus;
+  var bar, ov, cdTimer, lastFocus, roBar, onWinResize;
+
+  // Publica la altura real de la barra en --ob-bar-h para que el header sticky se ancle debajo.
+  // La barra envuelve (mas alta) en movil, asi que la medimos, no la asumimos.
+  function syncBarH() {
+    var h = (bar && bar.offsetHeight) || 0;
+    try { document.documentElement.style.setProperty("--ob-bar-h", h + "px"); } catch (e) {}
+  }
 
   // ── Cuenta atras ─────────────────────────────────────────────────────────
   function cdHTML() {
@@ -142,12 +162,22 @@
     inner.querySelector(".ob-bar__cta").onclick = openModal;
     x.onclick = function () { closeBar(false); };
     cdTimer = setInterval(tick, 1000);
+    // Anclar el header debajo: medir ahora y re-medir cuando cambie el tamaño (fuentes, rotación, resize)
+    syncBarH();
+    onWinResize = function () { syncBarH(); };
+    window.addEventListener("resize", onWinResize);
+    window.addEventListener("load", syncBarH);
+    try { if (window.ResizeObserver) { roBar = new ResizeObserver(syncBarH); roBar.observe(bar); } } catch (e) {}
     px("OfertaView", {}); ga("oferta_view", {});
   }
   function closeBar(expired) {
     if (cdTimer) { clearInterval(cdTimer); cdTimer = null; }
+    if (roBar) { try { roBar.disconnect(); } catch (e) {} roBar = null; }
+    if (onWinResize) { window.removeEventListener("resize", onWinResize); onWinResize = null; }
     if (bar && bar.parentNode) bar.parentNode.removeChild(bar);
     bar = null;
+    // Sin barra, el header vuelve a lo más alto.
+    try { document.documentElement.style.setProperty("--ob-bar-h", "0px"); } catch (e) {}
     if (!expired) { try { localStorage.setItem(KEY_DISMISS, "1"); } catch (e) {} }
   }
 
