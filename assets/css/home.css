@@ -27,7 +27,8 @@
   justify-content: space-between;
   gap: 16px;
 }
-.topnav__brand img { height: 40px; width: auto; display: block; }
+.topnav__brand { flex: none; }
+.topnav__brand img { height: 40px; width: auto; max-width: none; display: block; }
 .topnav__links { display: none; }
 .topnav__cta {
   display: inline-flex;
@@ -78,6 +79,8 @@
 /* Móvil: etiquetas compactas (médicos corto, acceso corto) */
 .topnav__docs-full { display: none; }
 .topnav__login-full { display: none; }
+.topnav__join-full { display: none; }
+.topnav__join-short { display: inline; }
 
 /* ---------- Hero de marca ---------- */
 .home-hero {
@@ -309,6 +312,8 @@
   .topnav__docs-short { display: none; }
   .topnav__login-full { display: inline; }
   .topnav__login-short { display: none; }
+  .topnav__join-full { display: inline; }
+  .topnav__join-short { display: none; }
 
   .home-hero { padding: 88px 0 60px; }
   .home-hero::before { width: 760px; height: 560px; top: -160px; }
