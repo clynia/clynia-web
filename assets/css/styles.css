@@ -797,6 +797,16 @@ a { color: inherit; text-decoration: none; }
   transition: background-color 0.2s var(--ease), color 0.2s var(--ease);
 }
 .topnav__join:hover { background: var(--green-tint); }
+/* Logo del menu: conserva su proporcion, nunca se aplasta ni encoge (fix movil) */
+.topnav__brand { flex: none; }
+.topnav__brand img { max-width: none; }
+/* Etiqueta compacta del boton de colaborar en movil (mismo patron que el login) */
+.topnav__join-full { display: none; }
+.topnav__join-short { display: inline; }
+@media (min-width: 880px) {
+  .topnav__join-full { display: inline; }
+  .topnav__join-short { display: none; }
+}
 .topnav__login {
   display: inline-flex;
   align-items: center;
