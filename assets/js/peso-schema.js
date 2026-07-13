@@ -6,8 +6,8 @@ window.CLYNIA_FORM = {
   product: "Pérdida de peso",
   storeKey: "clynia_peso_v1",
   webhook: "https://n8n-ixwg.srv1722506.hstgr.cloud/webhook/peso-intake",
-  // Pago con email BLOQUEADO (Stripe Checkout Session creada en n8n). Vacío = se usa el Payment Link estático.
-  // Activar poniendo: "https://n8n-ixwg.srv1722506.hstgr.cloud/webhook/crear-checkout" cuando la credencial Stripe esté en n8n.
+  // Checkout ACTIVO: n8n crea la Stripe Checkout Session en este webhook y devuelve la URL de pago.
+  // Si se dejara vacío, el formulario recurriría al Payment Link estático de cada plan (campo "pago").
   checkoutEndpoint: "https://n8n-ixwg.srv1722506.hstgr.cloud/webhook/crear-checkout",
 
   // Captura temprana de contacto: en cuanto tenemos email + consentimiento, guardamos un lead
@@ -166,7 +166,7 @@ window.CLYNIA_FORM = {
     { id: "plans", section: "Elige tu plan", type: "plans", key: "plan", q: "Elige el plan que mejor se adapte a ti", help: "No pagas el medicamento aquí. Si tras la valoración el médico considera que el tratamiento no es adecuado, te devolvemos el importe.", cta: "Continuar al pago" },
 
     // ---------- FINALES ----------
-    { id: "ending_ok", type: "ending", variant: "ok", q: "¡Gracias! Hemos recibido tu solicitud", body: "El siguiente paso es el pago de tu plan; lo habilitaremos en cuanto conectemos la pasarela. Después, un médico colegiado revisará tu caso y te contactará. No tienes que hacer nada más por ahora." },
+    { id: "ending_ok", type: "ending", variant: "ok", q: "¡Gracias! Hemos recibido tu solicitud", body: "En un momento podrás completar el pago de tu plan de forma segura. Después, un médico colegiado revisará tu caso y te contactará. No tienes que hacer nada más por ahora." },
     { id: "ending_menor", type: "ending", variant: "stop", q: "Este servicio es solo para mayores de 18 años", body: "Por ahora solo podemos atender a personas mayores de edad. Si te has equivocado con la fecha, vuelve atrás y corrígela.", href: "perdida-de-peso" },
     { id: "ending_rojo", type: "ending", variant: "stop", q: "Por tu seguridad, esto debe valorarlo un médico en persona", body: "Según lo que nos has contado, el tratamiento online no es lo más adecuado para ti ahora mismo. Te recomendamos acudir a tu médico de cabecera o a un centro de forma presencial para una valoración. Hemos guardado tus respuestas: si quieres que te orientemos, escríbenos a clynia@clynia.es.", cta: "Volver a Clynia", href: "perdida-de-peso" }
   ],
