@@ -23,7 +23,7 @@ window.CLYNIA_FORM = {
   ],
 
   steps: [
-    { id: "welcome", type: "statement", q: "Cuéntanos tu caso", body: "Te haremos unas preguntas para que un médico colegiado valore si un tratamiento médico es adecuado para ti. Tardarás unos minutos. Es gratis y no pagas nada hasta elegir un plan.", cta: "Empezar" },
+    { id: "welcome", type: "statement", q: "Cuéntanos tu caso", body: "Te haremos unas preguntas para que un médico colegiado valore si un tratamiento médico es adecuado para ti. Tardarás unos minutos. Es gratis y no pagas nada hasta elegir un plan. La valoración médica cuesta 99€ (incluida si eliges seguimiento), y te la devolvemos si el médico considera que no procede.", cta: "Empezar" },
 
     // ---------- BLOQUE PACIENTE (fijo + REMPE) ----------
     { id: "mayor_edad", section: "Sobre ti", type: "yesno", key: "mayor_edad", q: "Antes de empezar: ¿tienes 18 años o más?", next: function (a) { return a.mayor_edad === false ? "ending_menor" : null; } },
@@ -163,7 +163,7 @@ window.CLYNIA_FORM = {
 
     // ---------- CRIBADO + PLANES ----------
     { id: "gate_triage", type: "gate", route: function (a, v) { return v.flag_rojo >= 1 ? "ending_rojo" : "plans"; } },
-    { id: "plans", section: "Elige tu plan", type: "plans", key: "plan", q: "Elige el plan que mejor se adapte a ti", help: "No pagas el medicamento aquí. Si tras la valoración el médico considera que el tratamiento no es adecuado, te devolvemos el importe.", cta: "Continuar al pago" },
+    { id: "plans", section: "Elige tu plan", type: "plans", key: "plan", q: "Elige el plan que mejor se adapte a ti", help: "<span style=\"display:block;background:#eef5f2;border:1px solid #cfe3db;border-radius:12px;padding:12px 14px;margin:6px 0 12px;color:#2f4f45;text-align:left;line-height:1.4\"><strong style=\"color:#437066\">Si no procede, te devolvemos el importe.</strong><br>Un médico colegiado revisa tu caso. Si tras la valoración considera que el tratamiento no es adecuado para ti, te devolvemos lo que has pagado.</span><span style=\"display:block;color:var(--muted);font-size:.9em;text-align:left;line-height:1.4\">No pagas el medicamento aquí; si el médico te lo receta, lo compras en tu farmacia con tu receta.<br>Médicos colegiados en España · Pago seguro con Stripe · Datos cifrados.</span>", cta: "Continuar al pago" },
 
     // ---------- FINALES ----------
     { id: "ending_ok", type: "ending", variant: "ok", q: "¡Gracias! Hemos recibido tu solicitud", body: "En un momento podrás completar el pago de tu plan de forma segura. Después, un médico colegiado revisará tu caso y te contactará. No tienes que hacer nada más por ahora." },
