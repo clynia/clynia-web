@@ -12,6 +12,33 @@
   var vars = {};
   var history = [];
   var current = null;
+  // ── Modo PARTE 2 (flujo en 2 partes): tras el pago, el cuestionario continúa aquí. ──
+  // Se entra desde gracias.html o desde el enlace del email (?p2=<intakeId>). Si el intakeId
+  // del enlace no coincide con el guardado (otro dispositivo), la parte 2 arranca en blanco y
+  // n8n funde las respuestas con las de la parte 1 (merge server-side por intakeId). Solo
+  // aplica si el esquema define p2StartId (hoy: solo peso); en el resto es un no-op.
+  var P2 = false;
+  (function () {
+    if (!F.p2StartId) return;
+    var qp = null;
+    try { qp = new URLSearchParams(window.location.search).get("p2"); } catch (e) {}
+    var paid = false;
+    try { paid = localStorage.getItem(F.storeKey + "_paid") === "1"; } catch (e) {}
+    if (qp && /^[a-zA-Z0-9-]{8,80}$/.test(qp)) {
+      if (answers._intakeId && answers._intakeId !== qp) { answers = {}; }
+      answers._intakeId = qp;
+      P2 = true;
+    } else if (paid && answers._intakeId) {
+      // Pagó en este dispositivo y vuelve a peso.html: continúa en la parte 2 (nunca en
+      // el paso de planes, que relanzaría un pago ya hecho).
+      P2 = true;
+    }
+    if (P2) {
+      try { localStorage.setItem(F.storeKey + "_paid", "1"); } catch (e) {}
+      try { sessionStorage.removeItem(F.storeKey + "_return"); } catch (e) {}
+      save();
+    }
+  })();
   // --- Meta Pixel: evento de INICIO del cuestionario (se dispara una sola vez, al primer
   // avance). Sirve para etiquetar a quien empieza y no termina (retargeting) y medir el embudo. ---
   var started = false;
@@ -42,6 +69,7 @@
       localStorage.removeItem(F.storeKey);
       localStorage.removeItem(F.storeKey + "_ts");
       localStorage.removeItem(F.storeKey + "_pending");
+      localStorage.removeItem(F.storeKey + "_paid");
     } catch (e) {}
   }
   function load() {
@@ -94,6 +122,7 @@
   var discardSent = false;
   function sendDiscard(motivo) {
     try {
+      if (P2) return; // en la parte 2 ya ha pagado: no se toca su lead
       if (discardSent || answers._discardSent || !F.discardWebhook) return;
       var email = answers.email;
       if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return;
@@ -164,6 +193,8 @@
   // Reanuda el formulario. Si volvemos del pago, aterriza en el paso guardado y reconstruye
   // el historial para que "Atrás" recorra las respuestas; si no, arranca por el principio.
   function resume() {
+    // Parte 2: siempre arranca en su primer paso (nunca en los de la parte 1 ni en planes).
+    if (P2) { history = []; go(byId(F.p2StartId), false); return; }
     var target = null;
     try { target = sessionStorage.getItem(F.storeKey + "_return"); } catch (e) {}
     if (!target || !byId(target)) { history = []; go(resolveFrom(0), false); return; }
@@ -183,8 +214,9 @@
   }
 
   function progress() {
-    var done = idx(current.id), total = F.steps.length;
-    return Math.max(6, Math.min(96, Math.round((done / total) * 100)));
+    var done = idx(current.id), total = F.steps.length, start = 0;
+    if (P2 && F.p2StartId) { start = idx(F.p2StartId); }
+    return Math.max(6, Math.min(96, Math.round(((done - start) / (total - start)) * 100)));
   }
 
   function render() {
@@ -341,7 +373,8 @@
     h += '<footer class="cq__foot"><div class="in"><button class="cq__next" type="button" id="cqNext">' + esc(s.cta || "Continuar") + "</button>" + (history.length ? '<button class="cq__backlow" type="button" id="cqBackLow">&#8592; Atrás</button>' : "") + "</div></footer>";
     root.innerHTML = h;
     var b = root.querySelector(".cq__back"); if (b) b.onclick = back;
-    document.getElementById("cqNext").onclick = function () { go(nextOf(s), true); };
+    // El paso final de la parte 2 (submitP2) envía el cuestionario en vez de avanzar.
+    document.getElementById("cqNext").onclick = function () { if (s.submitP2) { finishP2(); } else { go(nextOf(s), true); } };
     var bl = document.getElementById("cqBackLow"); if (bl) bl.onclick = back;
   }
 
@@ -400,7 +433,7 @@
   function finish() {
     vars = F.computeVars ? F.computeVars(answers) : {};
     root.innerHTML = '<div class="cq__center"><div class="cq__loading"><span class="cq__spin"></span> Enviando tu información de forma segura...</div><div id="cq-ts" style="margin-top:18px;min-height:1px;display:flex;justify-content:center"></div></div>';
-    var payload = { product: F.product, intakeId: answers._intakeId, answers: answers, triage: vars, submittedAt: new Date().toISOString() };
+    var payload = { product: F.product, intakeId: answers._intakeId, answers: answers, triage: vars, submittedAt: new Date().toISOString(), fase: F.p2StartId ? "parte1" : undefined };
     var plan = (F.plans || []).filter(function (p) { return p.id === answers.plan; })[0];
     var redirected = false;
     // --- Meta Pixel: eventos de conversión. eventID = clave compartida con la CAPI (n8n) para deduplicar. ---
@@ -456,6 +489,38 @@
         .then(function (data) { clearTimeout(failsafe); var cid = data && data.casoId ? data.casoId : null; if (cid) { answers._caso = cid; save(); } proceedToPayment(cid); })
         .catch(function () { clearTimeout(failsafe); try { localStorage.setItem(F.storeKey + "_pending", JSON.stringify(payload)); } catch (e) {} proceedToPayment(null); });
     });
+  }
+
+  // ── Envío de la PARTE 2 (post-pago): POST al webhook de n8n, que funde las respuestas
+  // con el caso de la parte 1 (por intakeId), recalcula el cribado, asigna médico y genera
+  // el informe PreMed. Si falla, las respuestas siguen en este dispositivo y se puede
+  // reintentar (también desde el enlace del email). ──
+  function finishP2() {
+    vars = F.computeVars ? F.computeVars(answers) : {};
+    root.innerHTML = '<div class="cq__center"><div class="cq__loading"><span class="cq__spin"></span> Enviando tu cuestionario de forma segura...</div></div>';
+    var payload = { intakeId: answers._intakeId, answers: {}, triage: vars, submittedAt: new Date().toISOString() };
+    Object.keys(answers).forEach(function (k) { if (k.charAt(0) !== "_") payload.answers[k] = answers[k]; });
+    var done = false;
+    function fail() {
+      if (done) return; done = true;
+      root.innerHTML = '<div class="cq__center stop"><h1>No se ha podido enviar</h1><p>Comprueba tu conexión y vuelve a intentarlo en un momento. Tus respuestas siguen guardadas en este dispositivo y tienes el enlace en tu correo.</p><button class="btn" type="button" id="cqRetryP2">Reintentar</button></div>';
+      var b = document.getElementById("cqRetryP2"); if (b) b.onclick = function () { finishP2(); };
+    }
+    var t = setTimeout(fail, 15000);
+    fetch(F.part2Webhook, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) })
+      .then(function (r) { return r.json().catch(function () { return {}; }); })
+      .then(function (d) {
+        clearTimeout(t);
+        if (done) return;
+        if (d && d.ok) {
+          done = true;
+          px("P2Complete", { content_name: F.product, content_category: F.category || F.product });
+          ga("p2_complete", { product: F.product });
+          clearStore();
+          go(byId("ending_p2_ok"), false);
+        } else { fail(); }
+      })
+      .catch(function () { clearTimeout(t); fail(); });
   }
 
   document.body.classList.add("cq-body");
