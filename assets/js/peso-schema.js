@@ -1,7 +1,10 @@
-/* Clynia — esquema del cuestionario de PÉRDIDA DE PESO.
-   Reconstruido del Typeform mHfc5R7g (62 campos, lógica de cribado y riesgo).
-   El bloque de paciente añade los campos que exige REMPE (tipo doc, nacionalidad, dirección).
-   El formulario envía las respuestas al webhook de n8n (HTTPS) y recibe el casoId. */
+/* Clynia — esquema del cuestionario de PÉRDIDA DE PESO, en DOS PARTES (2026-07-16).
+   Parte 1 (pre-pago, mínima): datos básicos + cribado de seguridad + IMC + plan → pago.
+   Parte 2 (post-pago, desde gracias.html o el enlace del email ?p2=<intakeId>): el resto
+   del cuestionario clínico + los datos que exige REMPE para la receta. El motor
+   (form-engine.js) decide el modo; el corte es el paso con id F.p2StartId.
+   El formulario envía la parte 1 al webhook peso-intake (fase='parte1') y la parte 2 a
+   peso-intake-parte2 (merge server-side en n8n). */
 window.CLYNIA_FORM = {
   product: "Pérdida de peso",
   storeKey: "clynia_peso_v1",
@@ -21,6 +24,13 @@ window.CLYNIA_FORM = {
   // upsert por email, sin CAPI. Ver assets/js/form-engine.js (sendDiscard).
   discardWebhook: "https://n8n-ixwg.srv1722506.hstgr.cloud/webhook/peso-lead-descartar",
 
+  // Parte 2 (post-pago): el resto del cuestionario se envía aquí y n8n lo funde con el caso
+  // creado en la parte 1 (merge por intakeId), recalcula el cribado final, asigna médico y
+  // genera el informe PreMed. Ver form-engine.js (finishP2).
+  part2Webhook: "https://n8n-ixwg.srv1722506.hstgr.cloud/webhook/peso-intake-parte2",
+  // Primer paso de la parte 2: todo lo anterior es pre-pago; desde aquí (incluido), post-pago.
+  p2StartId: "p2_welcome",
+
   // pago = URL del Payment Link de Stripe (https://buy.stripe.com/...). Pegar los 3 enlaces aquí.
   plans: [
     { id: "valoracion", nombre: "Valoración médica", precio: 99, meta: "Pago único", pago: "https://buy.stripe.com/fZueVf0Jb18m2u459XfEk02", desc: "Una valoración puntual con un médico colegiado. No incluye seguimiento." },
@@ -29,9 +39,8 @@ window.CLYNIA_FORM = {
   ],
 
   steps: [
-    { id: "welcome", type: "statement", q: "Cuéntanos tu caso", body: "Te haremos unas preguntas para que un médico colegiado valore si un tratamiento médico es adecuado para ti. Tardarás unos minutos. Es gratis y no pagas nada hasta elegir un plan. La valoración médica cuesta 99€ (incluida si eliges seguimiento), y te la devolvemos si el médico considera que no procede.", cta: "Empezar" },
-
-    // ---------- BLOQUE PACIENTE (fijo + REMPE) ----------
+    // ═══════════ PARTE 1 (pre-pago, mínima) ═══════════
+    { id: "welcome", type: "statement", q: "Cuéntanos tu caso", body: "Unas preguntas rápidas (2 minutos) y eliges tu plan. Después del pago completarás tu cuestionario clínico, que es el que usará un médico colegiado para valorar tu caso. La valoración médica cuesta 99€ (incluida si eliges seguimiento), y te la devolvemos si el médico considera que no procede.", cta: "Empezar" },
     { id: "mayor_edad", section: "Sobre ti", type: "yesno", key: "mayor_edad", q: "Antes de empezar: ¿tienes 18 años o más?", next: function (a) { return a.mayor_edad === false ? "ending_menor" : null; } },
     { id: "nombre", section: "Sobre ti", type: "text", key: "nombre", q: "¿Cómo te llamas?", help: "Solo el nombre.", autocomplete: "given-name", placeholder: "Tu nombre" },
     // Email + consentimiento PRONTO: así, aunque no termines, podemos guardar tu solicitud y
@@ -42,26 +51,11 @@ window.CLYNIA_FORM = {
       { key: "acepta_datos_salud", required: true, label: "Doy mi consentimiento explícito al tratamiento de mis datos de salud con fines asistenciales." },
       { key: "acepta_comercial", required: false, label: "Quiero recibir comunicaciones de Clynia sobre mi solicitud y novedades." }
     ] },
-    { id: "primer_apellido", section: "Sobre ti", type: "text", key: "primer_apellido", q: "¿Cuál es tu primer apellido?", autocomplete: "family-name", placeholder: "Tu primer apellido", errMsg: "Necesitamos tu primer apellido." },
-    { id: "segundo_apellido", section: "Sobre ti", type: "text", key: "segundo_apellido", q: "¿Y tu segundo apellido?", help: "Si solo tienes un apellido, deja este campo en blanco y continúa.", autocomplete: "off", placeholder: "Tu segundo apellido (opcional)", required: false },
-    { id: "fecha_nacimiento", section: "Sobre ti", type: "date", key: "fecha_nacimiento", q: "¿Cuál es tu fecha de nacimiento?", next: function (a) { if (!a.fecha_nacimiento) return null; var d = new Date(a.fecha_nacimiento), t = new Date(), age = t.getFullYear() - d.getFullYear(), m = t.getMonth() - d.getMonth(); if (m < 0 || (m === 0 && t.getDate() < d.getDate())) age--; return age < 18 ? "ending_menor" : null; } },
-    { id: "sexo_biologico", section: "Sobre ti", type: "single", key: "sexo_biologico", q: "¿Cuál es tu sexo biológico?", help: "Lo necesita el médico para valorar dosis y contraindicaciones.", options: [{ label: "Hombre", value: "Hombre" }, { label: "Mujer", value: "Mujer" }, { label: "Prefiero no decirlo", value: "Prefiero no decirlo" }] },
-    { id: "tipo_documento", section: "Sobre ti", type: "single", key: "tipo_documento", q: "¿Qué documento de identidad usarás?", help: "Pedimos estos datos para que un médico colegiado pueda emitir tu receta, solo si valora que el tratamiento es adecuado para ti.", options: [{ label: "DNI", value: "DNI" }, { label: "NIE", value: "NIE" }, { label: "Pasaporte", value: "Pasaporte" }] },
-    { id: "num_documento", section: "Sobre ti", type: "text", key: "num_documento", q: "Número de tu documento", autocomplete: "off", placeholder: "Número de DNI/NIE/Pasaporte" },
-    { id: "nacionalidad", section: "Sobre ti", type: "text", key: "nacionalidad", q: "¿Cuál es tu nacionalidad?", placeholder: "Tu nacionalidad" },
-    // (El correo y el consentimiento se piden antes, junto al nombre, para poder guardar tu solicitud.)
-    { id: "telefono", section: "Sobre ti", type: "tel", key: "telefono", q: "¿Y tu número de teléfono?", help: "El médico te llamará por aquí si necesita ampliar algún dato." },
-    { id: "direccion", section: "Sobre ti", type: "text", key: "direccion", q: "¿Cuál es tu dirección postal?", help: "La necesitamos para poder emitir la receta médica, si el médico lo considera oportuno.", autocomplete: "address-line1", placeholder: "Tu calle y número" },
-    { id: "codigo_postal", section: "Sobre ti", type: "text", key: "codigo_postal", q: "Código postal", autocomplete: "postal-code", placeholder: "Tu código postal" },
-    { id: "localidad", section: "Sobre ti", type: "text", key: "localidad", q: "Localidad", autocomplete: "address-level2", placeholder: "Tu ciudad o población" },
-    { id: "provincia", section: "Sobre ti", type: "text", key: "provincia", q: "Provincia", autocomplete: "address-level1", placeholder: "Tu provincia" },
-
-    // ---------- BLOQUE CLÍNICO (peso) ----------
-    { id: "altura", section: "Cuestionario clínico", type: "number", key: "altura", q: "¿Cuál es tu altura?", unit: "cm", min: 100, max: 250 },
-    { id: "peso_actual", section: "Cuestionario clínico", type: "number", key: "peso_actual", q: "¿Cuál es tu peso actual?", unit: "kg", min: 30, max: 400 },
-    { id: "peso_objetivo", section: "Cuestionario clínico", type: "number", key: "peso_objetivo", q: "¿Cuál es tu peso objetivo?", unit: "kg", min: 30, max: 400 },
+    { id: "altura", section: "Tu objetivo", type: "number", key: "altura", q: "¿Cuál es tu altura?", unit: "cm", min: 100, max: 250 },
+    { id: "peso_actual", section: "Tu objetivo", type: "number", key: "peso_actual", q: "¿Cuál es tu peso actual?", unit: "kg", min: 30, max: 400 },
+    { id: "peso_objetivo", section: "Tu objetivo", type: "number", key: "peso_objetivo", q: "¿Cuál es tu peso objetivo?", unit: "kg", min: 30, max: 400 },
     {
-      id: "ritmo", section: "Cuestionario clínico", type: "single", key: "ritmo",
+      id: "ritmo", section: "Tu objetivo", type: "single", key: "ritmo",
       q: "Esto es lo que podrías conseguir",
       visual: function (a, v) {
         var imc = v.imc;
@@ -85,18 +79,13 @@ window.CLYNIA_FORM = {
       },
       options: [{ label: "Me parece bien", value: "Bien" }, { label: "Me gustaría bajar más rápido", value: "Más rápido" }, { label: "Prefiero un ritmo más lento", value: "Más lento" }]
     },
-    { id: "peso_maximo", section: "Cuestionario clínico", type: "number", key: "peso_maximo", q: "¿Cuál ha sido tu peso máximo en la edad adulta?", unit: "kg", min: 30, max: 400 },
-    { id: "anos_peso_maximo", section: "Cuestionario clínico", type: "number", key: "anos_peso_maximo", q: "¿Hace cuántos años?", unit: "años", min: 0, max: 80 },
-    { id: "puede_cintura", section: "Cuestionario clínico", type: "yesno", key: "puede_cintura", q: "¿Puedes medirte ahora el perímetro de cintura?", help: "Mídela a la altura del ombligo, sin apretar." },
-    { id: "cintura", section: "Cuestionario clínico", type: "number", key: "cintura", q: "¿Cuánto mide tu cintura?", unit: "cm", min: 40, max: 250, showIf: function (a) { return a.puede_cintura === true; } },
-    { id: "metodos_previos", section: "Cuestionario clínico", type: "longtext", key: "metodos_previos", q: "¿Qué has intentado antes para perder peso?", help: "Cuéntanoslo con tus palabras." },
 
-    { id: "embarazo", section: "Tu historia clínica", type: "multi", key: "embarazo", next: function (a, v) { return v.flag_rojo >= 1 ? "ending_rojo" : null; }, q: "¿Alguna de estas situaciones te aplica?", showIf: function (a) { return a.sexo_biologico === "Mujer" || a.sexo_biologico === "Prefiero no decirlo"; }, options: [{ label: "Estoy embarazada o podría estarlo", crit: true }, { label: "Estoy dando el pecho", crit: true }, { label: "He dado a luz en los últimos 6 meses" }, { label: "Ninguna de las anteriores", exclusive: true }] },
-    { id: "historia_familiar", section: "Tu historia clínica", type: "multi", key: "historia_familiar", q: "Historia familiar de enfermedades metabólicas", help: "Marca lo que aplique a familiares directos.", options: [{ label: "Sobrepeso u obesidad" }, { label: "Diabetes tipo 2" }, { label: "Hipertensión arterial" }, { label: "Colesterol alto" }, { label: "Cardiopatía (infarto, angina)" }, { label: "Ictus" }, { label: "Hígado graso" }, { label: "SOP" }, { label: "Hipotiroidismo" }, { label: "Otras" }, { label: "Ninguna", exclusive: true }] },
-    { id: "historia_familiar_otras", section: "Tu historia clínica", type: "longtext", key: "historia_familiar_otras", q: "Especifica cuáles", showIf: function (a) { return (a.historia_familiar || []).indexOf("Otras") > -1; } },
-
+    // Cribado de seguridad (las ÚNICAS preguntas que descartan): siempre ANTES del pago,
+    // para que un rojo no pueda pagar jamás. Una crítica marcada corta en el acto (next).
     { id: "intro_seguridad", type: "statement", q: "Ahora, unas preguntas de seguridad", body: "Sirven para valorar si los fármacos GLP-1 (semaglutida, liraglutida o tirzepatida) son seguros en tu caso. Responde con tranquilidad.", cta: "Continuar" },
-    { id: "contraindicaciones", section: "Tu historia clínica", type: "multi", key: "contraindicaciones", next: function (a, v) { return v.flag_rojo >= 1 ? "ending_rojo" : null; }, q: "¿Tienes o has tenido alguna de estas condiciones?", help: "Marca todas las que apliquen.", options: [
+    { id: "sexo_biologico", section: "Seguridad", type: "single", key: "sexo_biologico", q: "¿Cuál es tu sexo biológico?", help: "Lo necesita el médico para valorar dosis y contraindicaciones.", options: [{ label: "Hombre", value: "Hombre" }, { label: "Mujer", value: "Mujer" }, { label: "Prefiero no decirlo", value: "Prefiero no decirlo" }] },
+    { id: "embarazo", section: "Seguridad", type: "multi", key: "embarazo", next: function (a, v) { return v.flag_rojo >= 1 ? "ending_rojo" : null; }, q: "¿Alguna de estas situaciones te aplica?", showIf: function (a) { return a.sexo_biologico === "Mujer" || a.sexo_biologico === "Prefiero no decirlo"; }, options: [{ label: "Estoy embarazada o podría estarlo", crit: true }, { label: "Estoy dando el pecho", crit: true }, { label: "He dado a luz en los últimos 6 meses" }, { label: "Ninguna de las anteriores", exclusive: true }] },
+    { id: "contraindicaciones", section: "Seguridad", type: "multi", key: "contraindicaciones", next: function (a, v) { return v.flag_rojo >= 1 ? "ending_rojo" : null; }, q: "¿Tienes o has tenido alguna de estas condiciones?", help: "Marca todas las que apliquen.", options: [
       { label: "Cáncer medular de tiroides o MEN2", crit: true },
       { label: "Pancreatitis (aguda o crónica)", crit: true },
       { label: "Gastroparesia", crit: true },
@@ -110,6 +99,22 @@ window.CLYNIA_FORM = {
       { label: "Reacción alérgica a fármacos GLP-1", crit: true },
       { label: "Ninguna de las anteriores", exclusive: true }
     ] },
+
+    // ---------- CRIBADO + PLANES ----------
+    { id: "gate_triage", type: "gate", route: function (a, v) { return v.flag_rojo >= 1 ? "ending_rojo" : "plans"; } },
+    { id: "plans", section: "Elige tu plan", type: "plans", key: "plan", q: "Elige el plan que mejor se adapte a ti", help: "<span style=\"display:block;background:#eef5f2;border:1px solid #cfe3db;border-radius:12px;padding:12px 14px;margin:6px 0 12px;color:#2f4f45;text-align:left;line-height:1.4\"><strong style=\"color:#437066\">Si no procede, te devolvemos el importe.</strong><br>Un médico colegiado revisa tu caso. Si tras la valoración considera que el tratamiento no es adecuado para ti, te devolvemos lo que has pagado.</span><span style=\"display:block;color:var(--muted);font-size:.9em;text-align:left;line-height:1.4\">No pagas el medicamento aquí; si el médico te lo receta, lo compras en tu farmacia con tu receta.<br>Médicos colegiados en España · Pago seguro con Stripe · Datos cifrados.</span>", cta: "Continuar al pago" },
+
+    // ═══════════ PARTE 2 (post-pago: el resto del cuestionario) ═══════════
+    { id: "p2_welcome", type: "statement", q: "Pago confirmado. Ahora, tu cuestionario clínico", body: "Estas respuestas son las que usará tu médico para valorar tu caso y, si procede, emitir tu receta. Tardarás unos 5 minutos y puedes retomarlo cuando quieras: guardamos tu progreso en este dispositivo y tienes el enlace en tu correo.", cta: "Empezar" },
+
+    // ---------- BLOQUE CLÍNICO (resto) ----------
+    { id: "peso_maximo", section: "Cuestionario clínico", type: "number", key: "peso_maximo", q: "¿Cuál ha sido tu peso máximo en la edad adulta?", unit: "kg", min: 30, max: 400 },
+    { id: "anos_peso_maximo", section: "Cuestionario clínico", type: "number", key: "anos_peso_maximo", q: "¿Hace cuántos años?", unit: "años", min: 0, max: 80 },
+    { id: "puede_cintura", section: "Cuestionario clínico", type: "yesno", key: "puede_cintura", q: "¿Puedes medirte ahora el perímetro de cintura?", help: "Mídela a la altura del ombligo, sin apretar." },
+    { id: "cintura", section: "Cuestionario clínico", type: "number", key: "cintura", q: "¿Cuánto mide tu cintura?", unit: "cm", min: 40, max: 250, showIf: function (a) { return a.puede_cintura === true; } },
+    { id: "metodos_previos", section: "Cuestionario clínico", type: "longtext", key: "metodos_previos", q: "¿Qué has intentado antes para perder peso?", help: "Cuéntanoslo con tus palabras." },
+    { id: "historia_familiar", section: "Tu historia clínica", type: "multi", key: "historia_familiar", q: "Historia familiar de enfermedades metabólicas", help: "Marca lo que aplique a familiares directos.", options: [{ label: "Sobrepeso u obesidad" }, { label: "Diabetes tipo 2" }, { label: "Hipertensión arterial" }, { label: "Colesterol alto" }, { label: "Cardiopatía (infarto, angina)" }, { label: "Ictus" }, { label: "Hígado graso" }, { label: "SOP" }, { label: "Hipotiroidismo" }, { label: "Otras" }, { label: "Ninguna", exclusive: true }] },
+    { id: "historia_familiar_otras", section: "Tu historia clínica", type: "longtext", key: "historia_familiar_otras", q: "Especifica cuáles", showIf: function (a) { return (a.historia_familiar || []).indexOf("Otras") > -1; } },
     { id: "cardiometabolicas", section: "Tu historia clínica", type: "multi", key: "cardiometabolicas", q: "¿Alguna condición cardiometabólica?", options: [
       { label: "Hipertensión arterial" },
       { label: "Diabetes tipo 1", score: 2 },
@@ -165,14 +170,24 @@ window.CLYNIA_FORM = {
     { id: "algo_mas", section: "Casi listo", type: "yesno", key: "algo_mas", q: "¿Hay algo más que quieras decirle al equipo médico?" },
     { id: "mensaje_equipo", section: "Casi listo", type: "longtext", key: "mensaje_equipo", q: "Cuéntanoslo", showIf: function (a) { return a.algo_mas === true; } },
 
-    // (El consentimiento se pide al principio, junto al email, en el bloque "Sobre ti".)
-
-    // ---------- CRIBADO + PLANES ----------
-    { id: "gate_triage", type: "gate", route: function (a, v) { return v.flag_rojo >= 1 ? "ending_rojo" : "plans"; } },
-    { id: "plans", section: "Elige tu plan", type: "plans", key: "plan", q: "Elige el plan que mejor se adapte a ti", help: "<span style=\"display:block;background:#eef5f2;border:1px solid #cfe3db;border-radius:12px;padding:12px 14px;margin:6px 0 12px;color:#2f4f45;text-align:left;line-height:1.4\"><strong style=\"color:#437066\">Si no procede, te devolvemos el importe.</strong><br>Un médico colegiado revisa tu caso. Si tras la valoración considera que el tratamiento no es adecuado para ti, te devolvemos lo que has pagado.</span><span style=\"display:block;color:var(--muted);font-size:.9em;text-align:left;line-height:1.4\">No pagas el medicamento aquí; si el médico te lo receta, lo compras en tu farmacia con tu receta.<br>Médicos colegiados en España · Pago seguro con Stripe · Datos cifrados.</span>", cta: "Continuar al pago" },
+    // ---------- DATOS PARA LA RECETA (REMPE) ----------
+    { id: "p2_identidad", type: "statement", q: "Últimos datos: para tu receta", body: "Si el médico valora que el tratamiento es adecuado, estos datos son obligatorios para poder emitir tu receta médica (sistema REMPE). Son los últimos.", cta: "Continuar" },
+    { id: "primer_apellido", section: "Para tu receta", type: "text", key: "primer_apellido", q: "¿Cuál es tu primer apellido?", autocomplete: "family-name", placeholder: "Tu primer apellido", errMsg: "Necesitamos tu primer apellido." },
+    { id: "segundo_apellido", section: "Para tu receta", type: "text", key: "segundo_apellido", q: "¿Y tu segundo apellido?", help: "Si solo tienes un apellido, deja este campo en blanco y continúa.", autocomplete: "off", placeholder: "Tu segundo apellido (opcional)", required: false },
+    { id: "fecha_nacimiento", section: "Para tu receta", type: "date", key: "fecha_nacimiento", q: "¿Cuál es tu fecha de nacimiento?", next: function (a) { if (!a.fecha_nacimiento) return null; var d = new Date(a.fecha_nacimiento), t = new Date(), age = t.getFullYear() - d.getFullYear(), m = t.getMonth() - d.getMonth(); if (m < 0 || (m === 0 && t.getDate() < d.getDate())) age--; return age < 18 ? "ending_menor" : null; } },
+    { id: "tipo_documento", section: "Para tu receta", type: "single", key: "tipo_documento", q: "¿Qué documento de identidad usarás?", help: "Lo exige el sistema de receta médica (REMPE).", options: [{ label: "DNI", value: "DNI" }, { label: "NIE", value: "NIE" }, { label: "Pasaporte", value: "Pasaporte" }] },
+    { id: "num_documento", section: "Para tu receta", type: "text", key: "num_documento", q: "Número de tu documento", autocomplete: "off", placeholder: "Número de DNI/NIE/Pasaporte" },
+    { id: "nacionalidad", section: "Para tu receta", type: "text", key: "nacionalidad", q: "¿Cuál es tu nacionalidad?", placeholder: "Tu nacionalidad" },
+    { id: "telefono", section: "Para tu receta", type: "tel", key: "telefono", q: "¿Y tu número de teléfono?", help: "El médico te llamará por aquí si necesita ampliar algún dato." },
+    { id: "direccion", section: "Para tu receta", type: "text", key: "direccion", q: "¿Cuál es tu dirección postal?", autocomplete: "address-line1", placeholder: "Tu calle y número" },
+    { id: "codigo_postal", section: "Para tu receta", type: "text", key: "codigo_postal", q: "Código postal", autocomplete: "postal-code", placeholder: "Tu código postal" },
+    { id: "localidad", section: "Para tu receta", type: "text", key: "localidad", q: "Localidad", autocomplete: "address-level2", placeholder: "Tu ciudad o población" },
+    { id: "provincia", section: "Para tu receta", type: "text", key: "provincia", q: "Provincia", autocomplete: "address-level1", placeholder: "Tu provincia" },
+    { id: "p2_send", type: "statement", submitP2: true, q: "Todo listo para tu médico", body: "Al enviar, tu cuestionario completo pasa a un médico colegiado para su valoración. Te escribiremos por email con los siguientes pasos.", cta: "Enviar mi cuestionario" },
 
     // ---------- FINALES ----------
     { id: "ending_ok", type: "ending", variant: "ok", q: "¡Gracias! Hemos recibido tu solicitud", body: "En un momento podrás completar el pago de tu plan de forma segura. Después, un médico colegiado revisará tu caso y te contactará. No tienes que hacer nada más por ahora." },
+    { id: "ending_p2_ok", type: "ending", variant: "ok", q: "Cuestionario enviado. Ya está todo en marcha", body: "Un médico colegiado revisará tu caso y te contactará por email. Es muy probable que te llame por teléfono para conocerte mejor: mantén el móvil a mano estos días. Puedes seguir tu caso desde tu portal.", cta: "Ir a mi portal", href: "https://portal.clynia.es" },
     { id: "ending_menor", type: "ending", variant: "stop", q: "Este servicio es solo para mayores de 18 años", body: "Por ahora solo podemos atender a personas mayores de edad. Si te has equivocado con la fecha, vuelve atrás y corrígela.", href: "perdida-de-peso" },
     { id: "ending_rojo", type: "ending", variant: "stop", q: "Por tu seguridad, esto debe valorarlo un médico en persona", body: "Según lo que nos has contado, el tratamiento online no es lo más adecuado para ti ahora mismo. Te recomendamos acudir a tu médico de cabecera o a un centro de forma presencial para una valoración. Hemos guardado tus respuestas: si quieres que te orientemos, escríbenos a clynia@clynia.es.", cta: "Volver a Clynia", href: "perdida-de-peso" }
   ],
@@ -200,6 +215,10 @@ window.CLYNIA_FORM = {
     return { ok: /^[A-Z0-9]{5,20}$/.test(n) };
   },
 
+  // Cribado del CLIENTE (UX): decide el corte por crítica y el color orientativo. La copia
+  // AUTORITATIVA del cribado final vive en n8n ('Intake Peso — Parte 2' > Merge y preparar),
+  // que recalcula sobre las respuestas fundidas; el portal re-criba en intake/nuevo. Si
+  // cambian pesos o críticas, cambiar las TRES copias.
   computeVars: function (a) {
     var steps = window.CLYNIA_FORM.steps, score = 0, flag = 0;
     steps.forEach(function (s) {

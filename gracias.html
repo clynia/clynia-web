@@ -86,12 +86,15 @@
         <span class="ty__check" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
         </span>
-        <h1 class="ty__title">Gracias, hemos recibido <em>tu solicitud</em></h1>
-        <p class="ty__sub">Tu pago se ha completado correctamente. A partir de aquí no tienes que hacer nada más: nos ponemos en marcha.</p>
+        <h1 class="ty__title">Pago completado. Un último paso: <em>tu cuestionario</em></h1>
+        <p class="ty__sub">Tu pago se ha completado correctamente. Para que un médico colegiado pueda valorar tu caso, completa ahora tu cuestionario clínico. Son unos 5 minutos.</p>
+
+        <p style="margin:0 0 26px"><a class="btn btn--primary" id="tyP2" href="/peso.html">Completar mi cuestionario (5 min)</a></p>
+        <p class="ty__note" id="tyP2Mail" style="display:none;margin:-16px 0 26px">También te hemos enviado el enlace por email, por si prefieres hacerlo más tarde o desde otro dispositivo.</p>
 
         <div class="ty__steps">
-          <div class="ty__step"><span class="ty__num">1</span><span>Un <b>médico colegiado</b> revisará tu cuestionario clínico.</span></div>
-          <div class="ty__step"><span class="ty__num">2</span><span>Si valora que el tratamiento es <b>adecuado para ti</b>, te lo indicará junto con su seguimiento. Si no lo fuera, te lo explicaremos y te devolvemos el importe.</span></div>
+          <div class="ty__step"><span class="ty__num">1</span><span><b>Completa tu cuestionario clínico</b> (unos 5 minutos): es lo que revisará el médico. Tienes el enlace también en tu email.</span></div>
+          <div class="ty__step"><span class="ty__num">2</span><span>Un <b>médico colegiado</b> valorará tu caso. Si el tratamiento es adecuado para ti, te lo indicará junto con su seguimiento; si no lo fuera, te lo explicaremos y te devolvemos el importe.</span></div>
           <div class="ty__step"><span class="ty__num">3</span><span>Te <b>escribiremos por email</b> con los siguientes pasos. Revisa también tu carpeta de spam.</span></div>
         </div>
 
@@ -102,12 +105,27 @@
           <p>Es muy probable que <b>el médico te llame por teléfono</b> para conocer mejor tu caso. Mantén tu móvil a mano y, en la medida de lo posible, atento a llamadas estos días.</p>
         </div>
 
-        <a class="btn btn--primary" href="/">Volver a Clynia</a>
+        <a class="btn" href="/">Volver a Clynia</a>
         <p class="ty__note">¿Alguna duda? Escríbenos a <a href="mailto:clynia@clynia.es">clynia@clynia.es</a></p>
       </div>
     </main>
   </div>
 
+  <!-- CTA de la parte 2 (flujo en 2 partes): si el formulario de peso de ESTE dispositivo tiene
+       intakeId, el botón enlaza a peso.html?p2=<intakeId>; sin él (otro dispositivo), el botón
+       lleva a peso.html a secas (el motor entra en parte 2 por el marker de pagado) y se muestra
+       la nota del email. -->
+  <script>
+  (function () {
+    try {
+      var st = JSON.parse(localStorage.getItem("clynia_peso_v1") || "null");
+      var iid = st && st._intakeId;
+      var a = document.getElementById("tyP2");
+      if (a && iid && /^[a-zA-Z0-9-]{8,80}$/.test(String(iid))) { a.href = "/peso.html?p2=" + encodeURIComponent(iid); }
+      else { var n = document.getElementById("tyP2Mail"); if (n) n.style.display = "block"; }
+    } catch (e) {}
+  })();
+  </script>
   <!-- Meta Pixel: Purchase. Lee el ticket que dejó el checkout (valor + eventID para deduplicar con la CAPI de n8n). -->
   <script>
   (function () {
@@ -115,7 +133,10 @@
     try { p = JSON.parse(localStorage.getItem("clynia_pending_purchase") || "null"); } catch (e) { return; }
     if (!p || !p.value) return;
     try { localStorage.removeItem("clynia_pending_purchase"); } catch (e) {}
-    try { if (p.store) localStorage.removeItem(p.store); } catch (e) {}
+    // Flujo en 2 partes: ya NO se borra el store del formulario (la parte 2 lo necesita para
+    // continuar en este dispositivo); se marca "pagado" y el propio formulario lo limpia al
+    // enviar la parte 2 (o el TTL de 24h lo purga).
+    try { if (p.store) localStorage.setItem(p.store + "_paid", "1"); } catch (e) {}
     function fire() {
       try {
         if (!window.fbq) return;
