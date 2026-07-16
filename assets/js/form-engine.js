@@ -86,6 +86,32 @@
     } catch (e) {}
   }
 
+  // Al llegar a un final de "no apto" (cribado rojo o menor de edad), marca el lead parcial como
+  // "Descartado" en Airtable: lo saca del drip de recuperación y del embudo. Solo si la persona
+  // ya dejó email + consentimiento (si no, no hay lead que marcar). Una sola vez. No-op si el
+  // esquema no define F.discardWebhook. Además blinda _partialSent para que un pagehide tardío
+  // NO reescriba el lead de vuelta a "Parcial".
+  var discardSent = false;
+  function sendDiscard(motivo) {
+    try {
+      if (discardSent || answers._discardSent || !F.discardWebhook) return;
+      var email = answers.email;
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return;
+      if (answers.acepta_privacidad !== true || answers.acepta_datos_salud !== true) return;
+      var body = JSON.stringify({
+        email: email,
+        intakeId: answers._intakeId || "",
+        motivo: motivo || "No apto (web)",
+        origen: "web-peso-form",
+        ts: new Date().toISOString()
+      });
+      var sent = false;
+      if (navigator.sendBeacon) { try { sent = navigator.sendBeacon(F.discardWebhook, new Blob([body], { type: "text/plain;charset=UTF-8" })); } catch (e) {} }
+      if (!sent) { try { fetch(F.discardWebhook, { method: "POST", headers: { "Content-Type": "text/plain" }, body: body, keepalive: true, mode: "no-cors" }); } catch (e) {} }
+      discardSent = true; answers._discardSent = true; answers._partialSent = true; save();
+    } catch (e) {}
+  }
+
   function byId(id) { for (var i = 0; i < F.steps.length; i++) if (F.steps[i].id === id) return F.steps[i]; return null; }
   function idx(id) { for (var i = 0; i < F.steps.length; i++) if (F.steps[i].id === id) return i; return -1; }
   function visible(s) { return !s.showIf || s.showIf(answers, vars) !== false; }
@@ -321,6 +347,8 @@
 
   function renderEnding(s) {
     var stop = s.variant === "stop";
+    // No apto: saca el lead del drip y del embudo (marca Descartado). No-op si no hay lead.
+    if (stop) sendDiscard(s.id === "ending_menor" ? "Menor de edad (web)" : "Cribado rojo · no apto (web)");
     var ico = stop
       ? '<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>'
       : '<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';

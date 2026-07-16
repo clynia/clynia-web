@@ -15,6 +15,12 @@ window.CLYNIA_FORM = {
   // no termina. No bloquea ni sustituye el intake final. Ver assets/js/form-engine.js (sendPartial).
   leadWebhook: "https://n8n-ixwg.srv1722506.hstgr.cloud/webhook/peso-lead-parcial",
 
+  // Cuando el cribado sale rojo (o resulta no apto: menor de edad), avisamos a n8n para marcar
+  // ese lead parcial como "Descartado". Así sale del drip de recuperación (que solo escribe a
+  // Estado='Parcial') y deja de contar como lead no convertido en el embudo. Mismo Airtable,
+  // upsert por email, sin CAPI. Ver assets/js/form-engine.js (sendDiscard).
+  discardWebhook: "https://n8n-ixwg.srv1722506.hstgr.cloud/webhook/peso-lead-descartar",
+
   // pago = URL del Payment Link de Stripe (https://buy.stripe.com/...). Pegar los 3 enlaces aquí.
   plans: [
     { id: "valoracion", nombre: "Valoración médica", precio: 99, meta: "Pago único", pago: "https://buy.stripe.com/fZueVf0Jb18m2u459XfEk02", desc: "Una valoración puntual con un médico colegiado. No incluye seguimiento." },
@@ -85,12 +91,12 @@ window.CLYNIA_FORM = {
     { id: "cintura", section: "Cuestionario clínico", type: "number", key: "cintura", q: "¿Cuánto mide tu cintura?", unit: "cm", min: 40, max: 250, showIf: function (a) { return a.puede_cintura === true; } },
     { id: "metodos_previos", section: "Cuestionario clínico", type: "longtext", key: "metodos_previos", q: "¿Qué has intentado antes para perder peso?", help: "Cuéntanoslo con tus palabras." },
 
-    { id: "embarazo", section: "Tu historia clínica", type: "multi", key: "embarazo", q: "¿Alguna de estas situaciones te aplica?", showIf: function (a) { return a.sexo_biologico === "Mujer" || a.sexo_biologico === "Prefiero no decirlo"; }, options: [{ label: "Estoy embarazada o podría estarlo", crit: true }, { label: "Estoy dando el pecho", crit: true }, { label: "He dado a luz en los últimos 6 meses" }, { label: "Ninguna de las anteriores", exclusive: true }] },
+    { id: "embarazo", section: "Tu historia clínica", type: "multi", key: "embarazo", next: function (a, v) { return v.flag_rojo >= 1 ? "ending_rojo" : null; }, q: "¿Alguna de estas situaciones te aplica?", showIf: function (a) { return a.sexo_biologico === "Mujer" || a.sexo_biologico === "Prefiero no decirlo"; }, options: [{ label: "Estoy embarazada o podría estarlo", crit: true }, { label: "Estoy dando el pecho", crit: true }, { label: "He dado a luz en los últimos 6 meses" }, { label: "Ninguna de las anteriores", exclusive: true }] },
     { id: "historia_familiar", section: "Tu historia clínica", type: "multi", key: "historia_familiar", q: "Historia familiar de enfermedades metabólicas", help: "Marca lo que aplique a familiares directos.", options: [{ label: "Sobrepeso u obesidad" }, { label: "Diabetes tipo 2" }, { label: "Hipertensión arterial" }, { label: "Colesterol alto" }, { label: "Cardiopatía (infarto, angina)" }, { label: "Ictus" }, { label: "Hígado graso" }, { label: "SOP" }, { label: "Hipotiroidismo" }, { label: "Otras" }, { label: "Ninguna", exclusive: true }] },
     { id: "historia_familiar_otras", section: "Tu historia clínica", type: "longtext", key: "historia_familiar_otras", q: "Especifica cuáles", showIf: function (a) { return (a.historia_familiar || []).indexOf("Otras") > -1; } },
 
     { id: "intro_seguridad", type: "statement", q: "Ahora, unas preguntas de seguridad", body: "Sirven para valorar si los fármacos GLP-1 (semaglutida, liraglutida o tirzepatida) son seguros en tu caso. Responde con tranquilidad.", cta: "Continuar" },
-    { id: "contraindicaciones", section: "Tu historia clínica", type: "multi", key: "contraindicaciones", q: "¿Tienes o has tenido alguna de estas condiciones?", help: "Marca todas las que apliquen.", options: [
+    { id: "contraindicaciones", section: "Tu historia clínica", type: "multi", key: "contraindicaciones", next: function (a, v) { return v.flag_rojo >= 1 ? "ending_rojo" : null; }, q: "¿Tienes o has tenido alguna de estas condiciones?", help: "Marca todas las que apliquen.", options: [
       { label: "Cáncer medular de tiroides o MEN2", crit: true },
       { label: "Pancreatitis (aguda o crónica)", crit: true },
       { label: "Gastroparesia", crit: true },
