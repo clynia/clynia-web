@@ -214,9 +214,12 @@
   }
 
   function progress() {
-    var done = idx(current.id), total = F.steps.length, start = 0;
-    if (P2 && F.p2StartId) { start = idx(F.p2StartId); }
-    return Math.max(6, Math.min(96, Math.round(((done - start) / (total - start)) * 100)));
+    // Barra en 2 fases cuando el flujo tiene parte 2 (post-pago): la parte 1 mide
+    // solo sus propios pasos y llega llena en el paso del pago; la parte 2 reinicia.
+    var done = idx(current.id), total = F.steps.length, start = 0, end = total;
+    if (F.p2StartId) { if (P2) { start = idx(F.p2StartId); } else { end = idx(F.p2StartId); } }
+    if (!P2 && F.p2StartId && done >= end - 1) return 100;
+    return Math.max(6, Math.min(96, Math.round(((done - start) / (end - start)) * 100)));
   }
 
   function render() {

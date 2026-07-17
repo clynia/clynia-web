@@ -101,7 +101,8 @@ window.CLYNIA_FORM = {
     ] },
 
     // ---------- CRIBADO + PLANES ----------
-    { id: "gate_triage", type: "gate", route: function (a, v) { return v.flag_rojo >= 1 ? "ending_rojo" : "plans"; } },
+    { id: "gate_triage", type: "gate", route: function (a, v) { return v.flag_rojo >= 1 ? "ending_rojo" : "pre_pago"; } },
+    { id: "pre_pago", section: "Tu valoración", type: "statement", q: "Tu parte está casi hecha", body: "Con tus respuestas, un médico colegiado en España ya puede valorar tu caso. Elige tu plan y completa el pago: después terminarás tu cuestionario clínico (unos 5 minutos) y tu médico lo revisará. Si considera que el tratamiento no es adecuado para ti, te devolvemos el importe.", cta: "Elegir mi plan" },
     { id: "plans", section: "Elige tu plan", type: "plans", key: "plan", q: "Elige el plan que mejor se adapte a ti", help: "<span style=\"display:block;background:#eef5f2;border:1px solid #cfe3db;border-radius:12px;padding:12px 14px;margin:6px 0 12px;color:#2f4f45;text-align:left;line-height:1.4\"><strong style=\"color:#437066\">Si no procede, te devolvemos el importe.</strong><br>Un médico colegiado revisa tu caso. Si tras la valoración considera que el tratamiento no es adecuado para ti, te devolvemos lo que has pagado.</span><span style=\"display:block;color:var(--muted);font-size:.9em;text-align:left;line-height:1.4\">No pagas el medicamento aquí; si el médico te lo receta, lo compras en tu farmacia con tu receta.<br>Médicos colegiados en España · Pago seguro con Stripe · Datos cifrados.</span>", cta: "Continuar al pago" },
 
     // ═══════════ PARTE 2 (post-pago: el resto del cuestionario) ═══════════
