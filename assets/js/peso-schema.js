@@ -45,7 +45,7 @@ window.CLYNIA_FORM = {
     { id: "consent", section: "Sobre ti", type: "consent", key: "consent", q: "Antes de seguir: tus datos, protegidos", help: "Con tu permiso guardamos tu solicitud para que un médico colegiado pueda valorarla, y podrás retomarla cuando quieras.", cta: "Acepto y continúo", items: [
       { key: "acepta_privacidad", required: true, label: 'He leído y acepto la <a href="privacidad" target="_blank">Política de Privacidad</a> de Clynia.' },
       { key: "acepta_datos_salud", required: true, label: "Doy mi consentimiento explícito al tratamiento de mis datos de salud con fines asistenciales." },
-      { key: "acepta_acto_medico", required: true, label: "Consiento que un médico colegiado valore mi caso de forma asíncrona (telemedicina), como acto médico individualizado." },
+      { key: "acepta_acto_medico", required: true, label: "Consiento que un médico colegiado valore mi caso por telemedicina (comunicación no presencial), como acto médico individualizado." },
       { key: "acepta_comercial", required: false, label: "Quiero recibir comunicaciones de Clynia sobre mi solicitud y novedades." }
     ] },
     { id: "altura", section: "Tu objetivo", type: "number", key: "altura", q: "¿Cuál es tu altura?", unit: "cm", min: 100, max: 250 },
@@ -53,7 +53,7 @@ window.CLYNIA_FORM = {
     { id: "peso_objetivo", section: "Tu objetivo", type: "number", key: "peso_objetivo", q: "¿Cuál es tu peso objetivo?", unit: "kg", min: 30, max: 400 },
     {
       id: "ritmo", section: "Tu objetivo", type: "single", key: "ritmo",
-      q: "Esto es lo que podrías conseguir",
+      q: "Tu punto de partida",
       visual: function (a, v) {
         var imc = v.imc;
         var z = !imc ? { t: "", c: "#4f9e7f" } : imc < 18.5 ? { t: "Bajo peso", c: "#5b8fb0" } : imc < 25 ? { t: "Normopeso", c: "#4f9e7f" } : imc < 30 ? { t: "Sobrepeso", c: "#c89b4a" } : imc < 35 ? { t: "Obesidad grado I", c: "#cf8a4e" } : imc < 40 ? { t: "Obesidad grado II", c: "#cf6a5e" } : { t: "Obesidad grado III", c: "#c0524a" };
@@ -65,21 +65,14 @@ window.CLYNIA_FORM = {
           + '<div class="cq__gauge"><i style="left:' + pos + '%"></i></div>'
           + '<div class="cq__gauge-scale"><span>18,5</span><span>25</span><span>30</span><span>40</span></div>'
           + '</div>') : "";
-        var proj = ''
-          + '<div class="cq__card cq__proj">'
-          + '<div class="from"><div class="cq__imc-label">Ahora</div><div class="kg">' + (a.peso_actual || "—") + '<small> kg</small></div></div>'
-          + '<div class="cq__proj-arrow"><span>&minus;' + (v.kg_a_perder || 0) + ' kg</span></div>'
-          + '<div class="to"><div class="cq__imc-label">Tu objetivo</div><div class="kg" style="color:var(--green)">' + (a.peso_objetivo || "—") + '<small> kg</small></div></div>'
-          + '</div>';
-        var weeks = '<p class="cq__weeks">Con el acompañamiento de un médico colegiado, de forma saludable podrías lograrlo en torno a <strong>' + (v.semanas_min || "—") + '&ndash;' + (v.semanas_max || "—") + ' semanas</strong>. Es una estimación orientativa; tu médico ajustará tu ritmo.</p>';
-        return '<div class="cq__viz">' + imcCard + proj + weeks + '<p class="cq__ratehead">¿Te parece bien este ritmo?</p></div>';
+        return '<div class="cq__viz">' + imcCard + '<p class="cq__weeks">El IMC es solo una referencia orientativa. Un médico colegiado valorará tu caso completo y decidirá contigo el enfoque adecuado a tu ritmo.</p><p class="cq__ratehead">¿A qué ritmo te gustaría enfocarlo?</p></div>';
       },
-      options: [{ label: "Me parece bien", value: "Bien" }, { label: "Me gustaría bajar más rápido", value: "Más rápido" }, { label: "Prefiero un ritmo más lento", value: "Más lento" }]
+      options: [{ label: "Un ritmo saludable y sostenible", value: "Bien" }, { label: "Cuanto antes, si es seguro", value: "Más rápido" }, { label: "Con calma, sin prisa", value: "Más lento" }]
     },
 
     // Cribado de seguridad (las ÚNICAS preguntas que descartan): siempre ANTES del pago,
     // para que un rojo no pueda pagar jamás. Una crítica marcada corta en el acto (next).
-    { id: "intro_seguridad", type: "statement", q: "Ahora, unas preguntas de seguridad", body: "Sirven para valorar si los fármacos GLP-1 (semaglutida, liraglutida o tirzepatida) son seguros en tu caso. Responde con tranquilidad.", cta: "Continuar" },
+    { id: "intro_seguridad", type: "statement", q: "Ahora, unas preguntas de seguridad", body: "Sirven para que el médico valore si un tratamiento médico para el peso sería seguro en tu caso. Responde con tranquilidad.", cta: "Continuar" },
     { id: "sexo_biologico", section: "Seguridad", type: "single", key: "sexo_biologico", q: "¿Cuál es tu sexo biológico?", help: "Lo necesita el médico para valorar dosis y contraindicaciones.", options: [{ label: "Hombre", value: "Hombre" }, { label: "Mujer", value: "Mujer" }, { label: "Prefiero no decirlo", value: "Prefiero no decirlo" }] },
     { id: "embarazo", section: "Seguridad", type: "multi", key: "embarazo", next: function (a, v) { return v.flag_rojo >= 1 ? "ending_rojo" : null; }, q: "¿Alguna de estas situaciones te aplica?", showIf: function (a) { return a.sexo_biologico === "Mujer" || a.sexo_biologico === "Prefiero no decirlo"; }, options: [{ label: "Estoy embarazada o podría estarlo", crit: true }, { label: "Estoy dando el pecho", crit: true }, { label: "He dado a luz en los últimos 6 meses" }, { label: "Ninguna de las anteriores", exclusive: true }] },
     { id: "contraindicaciones", section: "Seguridad", type: "multi", key: "contraindicaciones", next: function (a, v) { return v.flag_rojo >= 1 ? "ending_rojo" : null; }, q: "¿Tienes o has tenido alguna de estas condiciones?", help: "Marca todas las que apliquen.", options: [

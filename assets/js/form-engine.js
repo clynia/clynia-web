@@ -57,7 +57,10 @@
     var safe = !step.showIf && step.type !== "ending";
     var sid = safe ? step.id : (step.type === "ending" ? "final" : "detalle_condicional");
     var sidx = safe ? idx(step.id) + 1 : 0;
-    px("QStep", { step: sid, step_index: sidx, content_name: F.product, content_category: F.category || F.product });
+    // Privacidad: a Meta enviamos SOLO la posición en el embudo (step_index), nunca el id del paso
+    // (que revelaría el tema de salud, p. ej. "embarazo"/"contraindicaciones"). El id se conserva
+    // solo en analítica de primera parte (GA), útil para el embudo y sobre propiedad propia.
+    px("QStep", { step_index: sidx, content_name: F.product, content_category: F.category || F.product });
     ga("question_step", { step: sid, step_index: sidx, product: F.product });
   }
 
