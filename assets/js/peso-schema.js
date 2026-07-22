@@ -1,17 +1,19 @@
-/* Clynia — esquema del cuestionario de PÉRDIDA DE PESO, en DOS PARTES (2026-07-16).
-   Parte 1 (pre-pago, mínima): datos básicos + cribado de seguridad + IMC + plan → pago.
-   Parte 2 (post-pago, desde gracias.html o el enlace del email ?p2=<intakeId>): el resto
-   del cuestionario clínico + los datos que exige REMPE para la receta. El motor
-   (form-engine.js) decide el modo; el corte es el paso con id F.p2StartId.
-   El formulario envía la parte 1 al webhook peso-intake (fase='parte1') y la parte 2 a
-   peso-intake-parte2 (merge server-side en n8n). */
+/* Clynia — esquema del cuestionario de PÉRDIDA DE PESO.
+   Modelo CONSULTA GRATIS PRIMERO (2026-07-22): la parte 1 es una consulta médica gratuita
+   (datos mínimos + cribado de seguridad + la pregunta libre del paciente). Se envía a
+   consulta-intake, que crea el Caso Tipo=Consulta y un médico colegiado lo revisa sin coste.
+   NO hay pago en la web pública. El cuestionario clínico profundo + REMPE se conserva como
+   PARTE 2 (modo ?p2=<intakeId>), al que solo llega el apto tras el OK del médico (enlace del
+   email/portal). El motor (form-engine.js) decide el modo; el corte es el paso con id F.p2StartId.
+   La parte 1 va al webhook (consulta-intake, fase='parte1') y la parte 2 a part2Webhook
+   (peso-intake-parte2), que funde por intakeId y pasa el Tipo de Consulta a Intake. */
 window.CLYNIA_FORM = {
   product: "Pérdida de peso",
   storeKey: "clynia_peso_v1",
-  webhook: "https://n8n-ixwg.srv1722506.hstgr.cloud/webhook/peso-intake",
-  // Checkout ACTIVO: n8n crea la Stripe Checkout Session en este webhook y devuelve la URL de pago.
-  // Si se dejara vacío, el formulario recurriría al Payment Link estático de cada plan (campo "pago").
-  checkoutEndpoint: "https://n8n-ixwg.srv1722506.hstgr.cloud/webhook/crear-checkout",
+  // CONSULTA GRATIS (parte 1, flujo por defecto): las respuestas van a consulta-intake, que crea el
+  // Caso Tipo=Consulta (Estado pago=Pendiente, Importe 0, sin médico) y dispara el Lead de Meta. NO
+  // hay pago aquí: la primera consulta es gratuita; el pago del plan llega después, ya como apto.
+  webhook: "https://n8n-ixwg.srv1722506.hstgr.cloud/webhook/consulta-intake",
 
   // Captura temprana de contacto: en cuanto tenemos email + consentimiento, guardamos un lead
   // parcial (webhook n8n -> Airtable "Leads parciales (peso)") para no perder a quien empieza y
@@ -24,23 +26,17 @@ window.CLYNIA_FORM = {
   // upsert por email, sin CAPI. Ver assets/js/form-engine.js (sendDiscard).
   discardWebhook: "https://n8n-ixwg.srv1722506.hstgr.cloud/webhook/peso-lead-descartar",
 
-  // Parte 2 (post-pago): el resto del cuestionario se envía aquí y n8n lo funde con el caso
-  // creado en la parte 1 (merge por intakeId), recalcula el cribado final, asigna médico y
-  // genera el informe PreMed. Ver form-engine.js (finishP2).
+  // FORMULARIO PROFUNDO (parte 2, modo ?p2=<intakeId>): el apto, tras el OK del médico, completa su
+  // cuestionario clínico + REMPE. Se envía aquí y n8n lo funde con el MISMO caso (merge por intakeId),
+  // pasa el Tipo de Consulta a Intake y prepara la receta. Solo se entra con ?p2= (enlace del email o
+  // portal del apto) o con el marker de pagado. Ver form-engine.js (finishP2). part2Webhook y p2StartId
+  // habilitan ese modo profundo; el flujo de consulta (parte 1) NUNCA los recorre.
   part2Webhook: "https://n8n-ixwg.srv1722506.hstgr.cloud/webhook/peso-intake-parte2",
-  // Primer paso de la parte 2: todo lo anterior es pre-pago; desde aquí (incluido), post-pago.
   p2StartId: "p2_welcome",
-
-  // pago = URL del Payment Link de Stripe (https://buy.stripe.com/...). Pegar los 3 enlaces aquí.
-  plans: [
-    { id: "valoracion", nombre: "Valoración médica", precio: 99, meta: "Pago único", pago: "https://buy.stripe.com/fZueVf0Jb18m2u459XfEk02", desc: "Una valoración puntual con un médico colegiado. No incluye seguimiento." },
-    { id: "plan4", nombre: "Plan 4 meses", precio: 299, meta: "menos de 75 €/mes", tag: "Más popular · Ahorras 25%", featured: true, pago: "https://buy.stripe.com/fZueVffE518m2u4fOBfEk03", desc: "Valoración + seguimiento y comunicación con tu equipo médico durante 4 meses." },
-    { id: "plan12", nombre: "Plan 12 meses", precio: 890, meta: "menos de 75 €/mes · Ahorras 25%", pago: "https://buy.stripe.com/aFa7sN0JbaIW7Oo45TfEk04", desc: "Acompañamiento médico completo durante todo el año." }
-  ],
 
   steps: [
     // ═══════════ PARTE 1 (pre-pago, mínima) ═══════════
-    { id: "welcome", type: "statement", q: "Cuéntanos tu caso", body: "Unas preguntas rápidas (2 minutos) y eliges tu plan. Después del pago completarás tu cuestionario clínico, que es el que usará un médico colegiado para valorar tu caso. La valoración médica cuesta 99€ (incluida si eliges seguimiento), y te la devolvemos si el médico considera que no procede.", cta: "Empezar" },
+    { id: "welcome", type: "statement", q: "Cuéntanos tu caso", body: "Unas preguntas rápidas (2 minutos). Con tus respuestas, un médico colegiado en España valorará tu caso de forma gratuita. La primera consulta no tiene coste: solo si el médico te considera candidato te propondrá un plan de tratamiento.", cta: "Empezar" },
     { id: "mayor_edad", section: "Sobre ti", type: "yesno", key: "mayor_edad", q: "Antes de empezar: ¿tienes 18 años o más?", next: function (a) { return a.mayor_edad === false ? "ending_menor" : null; } },
     { id: "nombre", section: "Sobre ti", type: "text", key: "nombre", q: "¿Cómo te llamas?", help: "Solo el nombre.", autocomplete: "given-name", placeholder: "Tu nombre" },
     // Email + consentimiento PRONTO: así, aunque no termines, podemos guardar tu solicitud y
@@ -49,6 +45,7 @@ window.CLYNIA_FORM = {
     { id: "consent", section: "Sobre ti", type: "consent", key: "consent", q: "Antes de seguir: tus datos, protegidos", help: "Con tu permiso guardamos tu solicitud para que un médico colegiado pueda valorarla, y podrás retomarla cuando quieras.", cta: "Acepto y continúo", items: [
       { key: "acepta_privacidad", required: true, label: 'He leído y acepto la <a href="privacidad" target="_blank">Política de Privacidad</a> de Clynia.' },
       { key: "acepta_datos_salud", required: true, label: "Doy mi consentimiento explícito al tratamiento de mis datos de salud con fines asistenciales." },
+      { key: "acepta_acto_medico", required: true, label: "Consiento que un médico colegiado valore mi caso de forma asíncrona (telemedicina), como acto médico individualizado." },
       { key: "acepta_comercial", required: false, label: "Quiero recibir comunicaciones de Clynia sobre mi solicitud y novedades." }
     ] },
     { id: "altura", section: "Tu objetivo", type: "number", key: "altura", q: "¿Cuál es tu altura?", unit: "cm", min: 100, max: 250 },
@@ -100,13 +97,14 @@ window.CLYNIA_FORM = {
       { label: "Ninguna de las anteriores", exclusive: true }
     ] },
 
-    // ---------- CRIBADO + PLANES ----------
-    { id: "gate_triage", type: "gate", route: function (a, v) { return v.flag_rojo >= 1 ? "ending_rojo" : "pre_pago"; } },
-    { id: "pre_pago", section: "Tu valoración", type: "statement", q: "Tu parte está casi hecha", body: "Con tus respuestas, un médico colegiado en España ya puede valorar tu caso. Elige tu plan y completa el pago: después terminarás tu cuestionario clínico (unos 5 minutos) y tu médico lo revisará. Si considera que el tratamiento no es adecuado para ti, te devolvemos el importe.", cta: "Elegir mi plan" },
-    { id: "plans", section: "Elige tu plan", type: "plans", key: "plan", q: "Elige el plan que mejor se adapte a ti", help: "<span style=\"display:block;background:#eef5f2;border:1px solid #cfe3db;border-radius:12px;padding:12px 14px;margin:6px 0 12px;color:#2f4f45;text-align:left;line-height:1.4\"><strong style=\"color:#437066\">Si no procede, te devolvemos el importe.</strong><br>Un médico colegiado revisa tu caso. Si tras la valoración considera que el tratamiento no es adecuado para ti, te devolvemos lo que has pagado.</span><span style=\"display:block;color:var(--muted);font-size:.9em;text-align:left;line-height:1.4\">No pagas el medicamento aquí; si el médico te lo receta, lo compras en tu farmacia con tu receta.<br>Médicos colegiados en España · Pago seguro con Stripe · Datos cifrados.</span>", cta: "Continuar al pago" },
+    // ---------- CRIBADO + CONSULTA (cierre de la consulta gratis) ----------
+    // gate_triage: última malla de seguridad (redundante con los next de embarazo/contraindicaciones).
+    // Un rojo corta a ending_rojo; si no, pasa a la pregunta libre y de ahí al envío (consulta-intake).
+    { id: "gate_triage", type: "gate", route: function (a, v) { return v.flag_rojo >= 1 ? "ending_rojo" : "consulta"; } },
+    { id: "consulta", section: "Tu consulta", type: "longtext", key: "consulta", submit: true, q: "¿Qué quieres consultar al médico?", help: "Cuéntanos solo lo relevante para tu caso: tu objetivo, desde cuándo te preocupa, qué has probado antes y cualquier duda para el médico. No hace falta que incluyas datos que no vengan al caso.", placeholder: "Escribe aquí tu consulta para el médico", cta: "Enviar mi consulta" },
 
     // ═══════════ PARTE 2 (post-pago: el resto del cuestionario) ═══════════
-    { id: "p2_welcome", type: "statement", q: "Pago confirmado. Ahora, tu cuestionario clínico", body: "Estas respuestas son las que usará tu médico para valorar tu caso y, si procede, emitir tu receta. Tardarás unos 5 minutos y puedes retomarlo cuando quieras: guardamos tu progreso en este dispositivo y tienes el enlace en tu correo.", cta: "Empezar" },
+    { id: "p2_welcome", type: "statement", q: "El médico ha revisado tu consulta. Ahora, tu cuestionario clínico", body: "Estas respuestas son las que usará tu médico para preparar, si procede, tu tratamiento y tu receta. Tardarás unos 5 minutos y puedes retomarlo cuando quieras: guardamos tu progreso en este dispositivo y tienes el enlace en tu correo.", cta: "Empezar" },
 
     // ---------- BLOQUE CLÍNICO (resto) ----------
     { id: "peso_maximo", section: "Cuestionario clínico", type: "number", key: "peso_maximo", q: "¿Cuál ha sido tu peso máximo en la edad adulta?", unit: "kg", min: 30, max: 400 },
@@ -187,7 +185,7 @@ window.CLYNIA_FORM = {
     { id: "p2_send", type: "statement", submitP2: true, q: "Todo listo para tu médico", body: "Al enviar, tu cuestionario completo pasa a un médico colegiado para su valoración. Te escribiremos por email con los siguientes pasos.", cta: "Enviar mi cuestionario" },
 
     // ---------- FINALES ----------
-    { id: "ending_ok", type: "ending", variant: "ok", q: "¡Gracias! Hemos recibido tu solicitud", body: "En un momento podrás completar el pago de tu plan de forma segura. Después, un médico colegiado revisará tu caso y te contactará. No tienes que hacer nada más por ahora." },
+    { id: "ending_ok", type: "ending", variant: "ok", q: "¡Gracias! Hemos recibido tu consulta", body: "Un médico colegiado revisará tu caso y te escribirá por email con su valoración. Si considera que un tratamiento es adecuado para ti, te lo indicará y podrás decidir si quieres continuar. No tienes que hacer nada más por ahora." },
     { id: "ending_p2_ok", type: "ending", variant: "ok", q: "Cuestionario enviado. Ya está todo en marcha", body: "Un médico colegiado revisará tu caso y te contactará por email. Es muy probable que te llame por teléfono para conocerte mejor: mantén el móvil a mano estos días. Puedes seguir tu caso desde tu portal.", cta: "Ir a mi portal", href: "https://portal.clynia.es" },
     { id: "ending_menor", type: "ending", variant: "stop", q: "Este servicio es solo para mayores de 18 años", body: "Por ahora solo podemos atender a personas mayores de edad. Si te has equivocado con la fecha, vuelve atrás y corrígela.", href: "perdida-de-peso" },
     { id: "ending_rojo", type: "ending", variant: "stop", q: "Por tu seguridad, esto debe valorarlo un médico en persona", body: "Según lo que nos has contado, el tratamiento online no es lo más adecuado para ti ahora mismo. Te recomendamos acudir a tu médico de cabecera o a un centro de forma presencial para una valoración. Hemos guardado tus respuestas: si quieres que te orientemos, escríbenos a clynia@clynia.es.", cta: "Volver a Clynia", href: "perdida-de-peso" }
@@ -216,10 +214,16 @@ window.CLYNIA_FORM = {
     return { ok: /^[A-Z0-9]{5,20}$/.test(n) };
   },
 
-  // Cribado del CLIENTE (UX): decide el corte por crítica y el color orientativo. La copia
-  // AUTORITATIVA del cribado final vive en n8n ('Intake Peso — Parte 2' > Merge y preparar),
-  // que recalcula sobre las respuestas fundidas; el portal re-criba en intake/nuevo. Si
-  // cambian pesos o críticas, cambiar las TRES copias.
+  // Cribado del CLIENTE (UX): decide el corte por crítica (flag_rojo) y el color orientativo.
+  // SET CRÍTICO CANÓNICO (corta a ending_rojo con flag_rojo>=1): embarazo/lactancia +
+  //   las 11 contraindicaciones GLP-1 (cáncer medular de tiroides/MEN2, pancreatitis, gastroparesia,
+  //   enf. GI grave, ERC terminal/diálisis, hepatopatía terminal/cirrosis, cáncer activo, TCA,
+  //   dependencia alcohol/opiáceos, ideación/intentos suicidas, alergia a GLP-1). Todas van con crit:true.
+  // SINCRONIZAR SIEMPRE LAS 3 COPIAS del set crítico y de los pesos (score) en la MISMA sesión:
+  //   1) aquí (computeVars) + los crit:true de los pasos embarazo/contraindicaciones,
+  //   2) n8n: 'Clynia · Consulta gratis' (webhook consulta-intake) recalcula el cribado de la consulta
+  //      gratis y marca Descartado en rojo; 'Intake Peso — Parte 2' > Merge recalcula el del profundo,
+  //   3) el portal re-criba en intake/nuevo.
   computeVars: function (a) {
     var steps = window.CLYNIA_FORM.steps, score = 0, flag = 0;
     steps.forEach(function (s) {
