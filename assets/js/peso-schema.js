@@ -86,7 +86,7 @@ window.CLYNIA_FORM = {
       { label: "Trastorno de la conducta alimentaria", crit: true },
       { label: "Dependencia de alcohol u opiáceos", crit: true },
       { label: "Pensamientos suicidas o intentos previos", crit: true },
-      { label: "Reacción alérgica a fármacos GLP-1", crit: true },
+      { label: "Reacción alérgica a medicación inyectable para el peso", crit: true },
       { label: "Ninguna de las anteriores", exclusive: true }
     ] },
 
