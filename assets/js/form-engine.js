@@ -126,6 +126,11 @@
         nombre: [answers.nombre, answers.primer_apellido].filter(Boolean).join(" "),
         telefono: answers.telefono || "",
         consent: true,
+        // Consentimiento de comunicaciones comerciales (casilla OPCIONAL del paso de consentimiento).
+        // Va aparte de `consent` (privacidad + datos de salud, obligatorias) porque la base legal es
+        // distinta: sin este flag no hay forma de acreditar el opt-in del art. 21 LSSI y cualquier
+        // campaña futura a estos leads se queda sin sustento. Antes se perdía aquí mismo.
+        comercial: answers.acepta_comercial === true,
         intakeId: answers._intakeId || "",
         origen: "web-peso-form",
         ts: new Date().toISOString()
@@ -563,17 +568,31 @@
         })
         .catch(function () { if (settled) return; settled = true; clearTimeout(t); payViaLink(casoId); });
     }
+    // ── Fallo del intake SIN caso creado ──
+    // Con plan (flujo de pago): NO bloqueamos, seguimos al pago igualmente (el caso se
+    // reconcilia después por email/intakeId). Sin plan (CONSULTA GRATIS y formularios de
+    // alta): la pantalla de gracias promete "lo hemos recibido y lo revisaremos"; mostrarla
+    // sin caso creado es mentir y perder el envío en silencio (nadie reintenta porque cree
+    // que ya está hecho). En ese caso se enseña reintento, igual que la parte 2 (finishP2).
+    function finishFail() {
+      if (redirected) return;
+      root.innerHTML = '<div class="cq__center stop"><h1>No se ha podido enviar</h1><p>Comprueba tu conexión y vuelve a intentarlo en un momento. Tus respuestas siguen guardadas en este dispositivo.</p><button class="btn" type="button" id="cqRetry1">Reintentar</button></div>';
+      var b = document.getElementById("cqRetry1"); if (b) b.onclick = function () { finish(); };
+    }
+    function afterIntake(cid) {
+      if (cid || plan) { proceedToPayment(cid); } else { finishFail(); }
+    }
     if (!F.webhook) { proceedToPayment(null); return; }
     // Si ya creamos el caso en este intake, no lo recreamos: evita duplicados al volver atrás y reintentar.
     if (answers._caso) { proceedToPayment(answers._caso); return; }
-    // Si el intake tarda demasiado, no bloqueamos al paciente: seguimos al pago igualmente.
-    var failsafe = setTimeout(function () { proceedToPayment(null); }, 14000);
+    // Failsafe: si el intake tarda demasiado, decide afterIntake (el pago sigue; la consulta reintenta).
+    var failsafe = setTimeout(function () { afterIntake(null); }, 14000);
     turnstileToken(function (cfToken) {
       payload.cf_token = cfToken;
       fetch(F.webhook, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) })
         .then(function (r) { return r.json().catch(function () { return {}; }); })
-        .then(function (data) { clearTimeout(failsafe); var cid = data && data.casoId ? data.casoId : null; if (cid) { answers._caso = cid; save(); } proceedToPayment(cid); })
-        .catch(function () { clearTimeout(failsafe); try { localStorage.setItem(F.storeKey + "_pending", JSON.stringify(payload)); } catch (e) {} proceedToPayment(null); });
+        .then(function (data) { clearTimeout(failsafe); var cid = data && data.casoId ? data.casoId : null; if (cid) { answers._caso = cid; save(); } afterIntake(cid); })
+        .catch(function () { clearTimeout(failsafe); try { localStorage.setItem(F.storeKey + "_pending", JSON.stringify(payload)); } catch (e) {} afterIntake(null); });
     });
   }
 
