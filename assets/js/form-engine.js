@@ -399,7 +399,11 @@
     var h = '<header class="cq__bar"><button class="cq__back" type="button"' + (history.length ? "" : " disabled") + ">&#8592;</button>";
     h += '<div class="cq__progress"><i style="width:' + progress() + '%"></i></div><img class="cq__brand" src="assets/logos/clynia-wordmark.png" alt="Clynia"></header>';
     h += '<main class="cq__stage"><div class="cq__step"><h1 class="cq__q">' + interp(s.q) + "</h1>";
-    if (s.body) h += '<p class="cq__help">' + interp(s.body) + "</p></div></main>";
+    if (s.badge) h += badgeHTML(s.badge);
+    if (s.body) h += '<p class="cq__help">' + interp(s.body) + "</p>";
+    if (s.steps && s.steps.length) h += flowHTML(s.steps);
+    // Cierre fuera del if: antes, un statement sin body dejaba div y main sin cerrar.
+    h += "</div></main>";
     h += '<footer class="cq__foot"><div class="in"><button class="cq__next" type="button" id="cqNext">' + esc(s.cta || "Continuar") + "</button>" + (history.length ? '<button class="cq__backlow" type="button" id="cqBackLow">&#8592; Atrás</button>' : "") + "</div></footer>";
     root.innerHTML = h;
     var b = root.querySelector(".cq__back"); if (b) b.onclick = back;
@@ -414,11 +418,26 @@
     check: '<path d="M20 6 9 17l-5-5"/>',
     medico: '<path d="M11 2v2"/><path d="M5 2v2"/><path d="M5 3H4a2 2 0 0 0-2 2v4a6 6 0 0 0 12 0V5a2 2 0 0 0-2-2h-1"/><path d="M8 15a6 6 0 0 0 12 0v-3"/><circle cx="20" cy="10" r="2"/>',
     email: '<rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>',
-    reloj: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>'
+    reloj: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+    ficha: '<path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M9 12h6"/><path d="M9 16h4"/>'
   };
   function endIcon(name) {
     var p = ENDICONS[name];
     return p ? '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + p + "</svg>" : "";
+  }
+  // Bloques compartidos por la pantalla final y las de tipo statement: mismo componente, mismo
+  // aspecto. Si cambias uno, cambian las dos: no dupliques el markup.
+  function badgeHTML(txt) {
+    return '<span class="cq__badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>' + esc(txt) + "</span>";
+  }
+  function flowHTML(steps) {
+    var h = '<ol class="cq__flow">';
+    for (var i = 0; i < steps.length; i++) {
+      var st = steps[i];
+      var dot = st.done ? endIcon("check") : (ENDICONS[st.icon] ? endIcon(st.icon) : String(i + 1));
+      h += '<li class="' + (st.done ? "is-done" : "") + '"><span class="cq__flow-dot" aria-hidden="true">' + dot + '</span><span class="cq__flow-txt"><strong>' + esc(st.t) + "</strong><span>" + esc(st.d) + "</span></span></li>";
+    }
+    return h + "</ol>";
   }
 
   function renderEnding(s) {
@@ -433,7 +452,7 @@
     var rico = !!(s.badge || (s.steps && s.steps.length));
     var h = '<div class="cq__center ' + (stop ? "stop" : "") + (rico ? " cq__center--flow" : "") + '">';
     // Marca oficial (wordmark con el punto verde). Nunca "Clynia" como texto ni recoloreado.
-    if (s.marca) h += '<div class="cq__brand"><img src="/assets/logos/clynia-wordmark.png" alt="Clynia"></div>';
+    if (s.marca) h += '<div class="cq__logo"><img src="/assets/logos/clynia-wordmark.png" alt="Clynia"></div>';
     if (s.icono !== false) h += '<div class="ico' + (stop ? "" : " ico--ok") + '">' + ico + "</div>";
     h += "<h1>" + interp(s.q) + "</h1>";
     // Distintivo tranquilizador ("no tienes que hacer nada"): opcional, solo si el schema lo trae.
