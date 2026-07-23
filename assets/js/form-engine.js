@@ -39,6 +39,21 @@
       save();
     }
   })();
+  // ── Modo PAGO (?pay=<casoId>): el apto llega desde el email tras el OK del médico. Entra directo
+  // al paso de planes (payStartId) con su casoId sembrado, sin repetir la parte 1; al elegir plan,
+  // finish() ve answers._caso y lanza el checkout (crear-checkout) sin recrear el caso. P2 gana sobre
+  // PAY: si ya pagó (?p2= o marker _paid), va a la parte 2, nunca de vuelta a planes. ──
+  var PAY = false;
+  (function () {
+    if (P2 || !F.payStartId) return;
+    var pc = null;
+    try { pc = new URLSearchParams(window.location.search).get("pay"); } catch (e) {}
+    if (!pc || !/^rec[a-zA-Z0-9]{6,20}$/.test(pc)) return; // casoId de Airtable (recXXXX…)
+    if (answers._caso && answers._caso !== pc) { answers = {}; } // otro caso en este dispositivo: empieza limpio
+    answers._caso = pc;
+    PAY = true;
+    save();
+  })();
   // --- Meta Pixel: evento de INICIO del cuestionario (se dispara una sola vez, al primer
   // avance). Sirve para etiquetar a quien empieza y no termina (retargeting) y medir el embudo. ---
   var started = false;
@@ -198,6 +213,8 @@
   function resume() {
     // Parte 2: siempre arranca en su primer paso (nunca en los de la parte 1 ni en planes).
     if (P2) { history = []; go(byId(F.p2StartId), false); return; }
+    // Modo pago (apto desde el email): arranca directo en el paso de planes, sin repetir la parte 1.
+    if (PAY) { history = []; go(byId(F.payStartId), false); return; }
     var target = null;
     try { target = sessionStorage.getItem(F.storeKey + "_return"); } catch (e) {}
     if (!target || !byId(target)) { history = []; go(resolveFrom(0), false); return; }

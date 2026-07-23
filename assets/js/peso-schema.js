@@ -34,6 +34,23 @@ window.CLYNIA_FORM = {
   part2Webhook: "https://n8n-ixwg.srv1722506.hstgr.cloud/webhook/peso-intake-parte2",
   p2StartId: "p2_welcome",
 
+  // PAGO DEL APTO (modo ?pay=<casoId>): tras el OK del médico, el apto elige plan y paga ANTES de
+  // la parte 2. El motor entra en modo pago por ?pay=, arranca en payStartId (paso de planes) con el
+  // casoId sembrado, y finish() postea {casoId, email, tipo_caso} a checkoutEndpoint (crear-checkout),
+  // que devuelve la URL de Stripe. La PARTE 1 (consulta gratis) NUNCA fija answers.plan, así que
+  // finish() cae en payViaLink sin plan -> ending_ok, sin cobrar: checkoutEndpoint/plans solo se
+  // activan cuando hay plan elegido, y al paso 'plans' solo se llega en modo pago.
+  checkoutEndpoint: "https://n8n-ixwg.srv1722506.hstgr.cloud/webhook/crear-checkout",
+  payStartId: "plans",
+  // pago = Payment Link de Stripe (respaldo si crear-checkout falla). id = clave que 'Mapear plan a
+  // price' (n8n · Crear Checkout Session) mapea a priceId: valoracion|plan4|plan12. No renombrar los
+  // id sin tocar ese nodo. (nombre/precio/desc son solo presentación y se pueden cambiar libremente.)
+  plans: [
+    { id: "valoracion", nombre: "Plan 1 mes", precio: 99, meta: "1 mes de seguimiento", pago: "https://buy.stripe.com/fZueVf0Jb18m2u459XfEk02", desc: "Valoración por un médico colegiado y acompañamiento durante tu primer mes de tratamiento." },
+    { id: "plan4", nombre: "Plan 4 meses", precio: 299, meta: "menos de 75 €/mes", tag: "Más popular · Ahorras 25%", featured: true, pago: "https://buy.stripe.com/fZueVffE518m2u4fOBfEk03", desc: "Valoración + seguimiento y comunicación con tu equipo médico durante 4 meses." },
+    { id: "plan12", nombre: "Plan 12 meses", precio: 890, meta: "menos de 75 €/mes · Ahorras 25%", pago: "https://buy.stripe.com/aFa7sN0JbaIW7Oo45TfEk04", desc: "Acompañamiento médico completo durante todo el año." }
+  ],
+
   steps: [
     // ═══════════ PARTE 1 (pre-pago, mínima) ═══════════
     { id: "welcome", type: "statement", q: "Cuéntanos tu caso", body: "Unas preguntas rápidas (2 minutos). Con tus respuestas, un médico colegiado en España valorará tu caso de forma gratuita. La primera consulta no tiene coste: solo si el médico te considera candidato te propondrá un plan de tratamiento.", cta: "Empezar" },
@@ -95,6 +112,12 @@ window.CLYNIA_FORM = {
     // Un rojo corta a ending_rojo; si no, pasa a la pregunta libre y de ahí al envío (consulta-intake).
     { id: "gate_triage", type: "gate", route: function (a, v) { return v.flag_rojo >= 1 ? "ending_rojo" : "consulta"; } },
     { id: "consulta", section: "Tu consulta", type: "longtext", key: "consulta", submit: true, q: "¿Qué quieres consultar al médico?", help: "Cuéntanos solo lo relevante para tu caso: tu objetivo, desde cuándo te preocupa, qué has probado antes y cualquier duda para el médico. No hace falta que incluyas datos que no vengan al caso.", placeholder: "Escribe aquí tu consulta para el médico", cta: "Enviar mi consulta" },
+
+    // ---------- PLANES (solo modo pago ?pay=): el apto elige plan -> finish() -> checkoutEndpoint ----------
+    // La parte 1 NUNCA llega aquí: el paso 'consulta' cierra con submit (finish -> ending_ok). A este
+    // paso solo se entra por payStartId en modo pago. Sin claim de garantía de devolución (pendiente
+    // de revisión legal farma); reactivar el bloque de garantía solo con el OK del abogado.
+    { id: "plans", section: "Elige tu plan", type: "plans", key: "plan", q: "Elige tu plan para empezar tu tratamiento", help: "<span style=\"display:block;color:var(--muted);font-size:.9em;text-align:left;line-height:1.4\">No pagas el medicamento aquí; si el médico te lo receta, lo compras en tu farmacia con tu receta.<br>Médicos colegiados en España · Pago seguro con Stripe · Datos cifrados.</span>", cta: "Continuar al pago" },
 
     // ═══════════ PARTE 2 (post-pago: el resto del cuestionario) ═══════════
     { id: "p2_welcome", type: "statement", q: "El médico ha revisado tu consulta. Ahora, tu cuestionario clínico", body: "Estas respuestas son las que usará tu médico para preparar, si procede, tu tratamiento y tu receta. Tardarás unos 5 minutos y puedes retomarlo cuando quieras: guardamos tu progreso en este dispositivo y tienes el enlace en tu correo.", cta: "Empezar" },

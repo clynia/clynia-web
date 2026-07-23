@@ -118,8 +118,12 @@
   <script>
   (function () {
     try {
+      // Preferimos el intakeId del ?p2= de la URL (lo pone success_url del checkout): funciona aunque
+      // el pago vuelva en otro dispositivo/navegador. Si no viene, caemos al de localStorage (mismo equipo).
+      var qp = null;
+      try { qp = new URLSearchParams(window.location.search).get("p2"); } catch (e) {}
       var st = JSON.parse(localStorage.getItem("clynia_peso_v1") || "null");
-      var iid = st && st._intakeId;
+      var iid = (qp && /^[a-zA-Z0-9-]{8,80}$/.test(qp)) ? qp : (st && st._intakeId);
       var a = document.getElementById("tyP2");
       if (a && iid && /^[a-zA-Z0-9-]{8,80}$/.test(String(iid))) { a.href = "/peso.html?p2=" + encodeURIComponent(iid); }
       else { var n = document.getElementById("tyP2Mail"); if (n) n.style.display = "block"; }
