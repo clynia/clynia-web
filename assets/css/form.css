@@ -140,9 +140,9 @@ textarea.cq__input{min-height:120px;resize:vertical}
 .cq__badge svg{width:17px;height:17px;flex:none}
 /* Marca en la pantalla final. Sin barra ni fondo: la marca respira y debajo lleva un filete corto
    en degradado que se desvanece a los lados, para que se lea como remate y no como header de plantilla. */
-.cq__brand{margin:0 auto 24px;text-align:center}
-.cq__brand img{height:26px;width:auto;display:inline-block}
-.cq__brand::after{content:"";display:block;width:64px;height:1px;margin:15px auto 0;background:linear-gradient(90deg,transparent,rgba(67,112,102,.38),transparent)}
+.cq__brand{margin:0 auto 26px;text-align:center}
+.cq__brand img{height:clamp(36px,10vw,44px);width:auto;display:inline-block}
+.cq__brand::after{content:"";display:block;width:76px;height:1px;margin:18px auto 0;background:linear-gradient(90deg,transparent,rgba(67,112,102,.38),transparent)}
 /* Ending enriquecido: el titular manda (verde y grande), sin marca redonda encima. */
 .cq__center--flow h1{color:var(--green);font-size:clamp(28px,6.5vw,34px);line-height:1.2;margin:0 0 16px}
 /* OJO: esta lista se llama cq__flow, NO cq__next. La clase .cq__next ya es el boton de siguiente
