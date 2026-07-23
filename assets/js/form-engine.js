@@ -24,13 +24,19 @@
     try { qp = new URLSearchParams(window.location.search).get("p2"); } catch (e) {}
     var paid = false;
     try { paid = localStorage.getItem(F.storeKey + "_paid") === "1"; } catch (e) {}
+    // ?pay=<casoId> es intento EXPLICITO de pagar ESE caso. Si viene y es de un caso DISTINTO al
+    // guardado, es un pago NUEVO: no debe secuestrarlo el modo parte 2 por un _paid viejo de una
+    // compra anterior (bug: el apto nuevo caia en el formulario en vez del pago).
+    var payp = null;
+    try { payp = new URLSearchParams(window.location.search).get("pay"); } catch (e) {}
+    var pagoNuevo = !!(payp && /^rec[a-zA-Z0-9]{6,20}$/.test(payp) && payp !== answers._caso);
     if (qp && /^[a-zA-Z0-9-]{8,80}$/.test(qp)) {
       if (answers._intakeId && answers._intakeId !== qp) { answers = {}; }
       answers._intakeId = qp;
       P2 = true;
-    } else if (paid && answers._intakeId) {
-      // Pagó en este dispositivo y vuelve a peso.html: continúa en la parte 2 (nunca en
-      // el paso de planes, que relanzaría un pago ya hecho).
+    } else if (paid && answers._intakeId && !pagoNuevo) {
+      // Pagó en este dispositivo y vuelve a peso.html (sin ?pay= de otro caso): continúa en la
+      // parte 2, nunca en el paso de planes (que relanzaría un pago ya hecho).
       P2 = true;
     }
     if (P2) {
@@ -52,6 +58,7 @@
     if (answers._caso && answers._caso !== pc) { answers = {}; } // otro caso en este dispositivo: empieza limpio
     answers._caso = pc;
     PAY = true;
+    try { localStorage.removeItem(F.storeKey + "_paid"); } catch (e) {} // pago NUEVO: limpia el marker de un pago anterior
     save();
   })();
   // --- Meta Pixel: evento de INICIO del cuestionario (se dispara una sola vez, al primer
