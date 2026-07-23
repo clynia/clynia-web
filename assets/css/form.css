@@ -52,6 +52,14 @@ textarea.cq__input{min-height:120px;resize:vertical}
 .cq__opt.multi .tick{border-radius:6px}
 .cq__opt.is-sel .tick{border-color:var(--green);background:var(--green)}
 .cq__opt.is-sel .tick::after{content:"";width:8px;height:8px;border-radius:inherit;background:#fff}
+/* Listas largas (contraindicaciones y cardiometabolicas tienen 16 opciones): se compactan para que
+   la ultima ("Ninguna") no quede enterrada al final del scroll. Limites que NO se cruzan: 44px de
+   alto minimo (objetivo tactil) y 16px de texto (legibilidad en movil). Solo se recorta el relleno,
+   la separacion y el tick, que es de donde sobra. */
+.cq__field{gap:7px}
+.cq__opt{padding:11px 14px;min-height:44px}
+.cq__opt .tick{width:20px;height:20px}
+.cq__stage{padding-bottom:26px}
 
 /* Consentimientos */
 .cq__consent{display:flex;gap:12px;align-items:flex-start;padding:14px;border:1.5px solid var(--line);
