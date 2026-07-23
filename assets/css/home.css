@@ -61,21 +61,24 @@
 }
 .topnav__docs:hover { border-color: var(--green); background: var(--green-tint); }
 .topnav__docs svg { width: 17px; height: 17px; }
+/* Acceso al portal: accion SECUNDARIA. Va discreto a proposito para no competir con el CTA
+   de "Empezar mi consulta gratis", que es el foco de conversion. No devolver a boton relleno. */
 .topnav__login {
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  padding: 11px 18px;
+  padding: 9px 13px;
   border-radius: 12px;
-  background: var(--green);
-  color: #fff;
+  background: transparent;
+  color: var(--green);
   font-weight: 600;
-  font-size: 14.5px;
-  transition: background-color 0.2s var(--ease), transform 0.18s var(--ease);
+  font-size: 14px;
+  opacity: 0.9;
+  transition: background-color 0.2s var(--ease), opacity 0.2s var(--ease), transform 0.18s var(--ease);
 }
-.topnav__login:hover { background: var(--green-700); }
+.topnav__login:hover { background: var(--green-tint); opacity: 1; }
 .topnav__login:active { transform: translateY(1px); }
-.topnav__login svg { width: 17px; height: 17px; }
+.topnav__login svg { width: 16px; height: 16px; }
 /* Móvil: etiquetas compactas (médicos corto, acceso corto) */
 .topnav__docs-full { display: none; }
 .topnav__login-full { display: none; }
