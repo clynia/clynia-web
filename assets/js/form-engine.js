@@ -428,7 +428,11 @@
     var ico = stop
       ? '<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>'
       : '<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
-    var h = '<div class="cq__center ' + (stop ? "stop" : "") + '"><div class="ico' + (stop ? "" : " ico--ok") + '">' + ico + "</div>";
+    // Ending "enriquecido" (el que trae distintivo o pasos): titular protagonista y, si el schema
+    // lo pide con icono:false, sin la marca redonda de encima.
+    var rico = !!(s.badge || (s.steps && s.steps.length));
+    var h = '<div class="cq__center ' + (stop ? "stop" : "") + (rico ? " cq__center--flow" : "") + '">';
+    if (s.icono !== false) h += '<div class="ico' + (stop ? "" : " ico--ok") + '">' + ico + "</div>";
     h += "<h1>" + interp(s.q) + "</h1>";
     // Distintivo tranquilizador ("no tienes que hacer nada"): opcional, solo si el schema lo trae.
     if (s.badge) {
@@ -437,11 +441,11 @@
     if (s.body) h += "<p>" + interp(s.body) + "</p>";
     // "Qué pasa ahora": línea temporal opcional. Hace visible que la pelota no está en su tejado.
     if (s.steps && s.steps.length) {
-      h += '<ol class="cq__next">';
+      h += '<ol class="cq__flow">';
       for (var i = 0; i < s.steps.length; i++) {
         var st = s.steps[i];
         var dot = st.done ? endIcon("check") : (ENDICONS[st.icon] ? endIcon(st.icon) : String(i + 1));
-        h += '<li class="' + (st.done ? "is-done" : "") + '"><span class="cq__next-dot" aria-hidden="true">' + dot + '</span><span class="cq__next-txt"><strong>' + esc(st.t) + "</strong><span>" + esc(st.d) + "</span></span></li>";
+        h += '<li class="' + (st.done ? "is-done" : "") + '"><span class="cq__flow-dot" aria-hidden="true">' + dot + '</span><span class="cq__flow-txt"><strong>' + esc(st.t) + "</strong><span>" + esc(st.d) + "</span></span></li>";
       }
       h += "</ol>";
     }
