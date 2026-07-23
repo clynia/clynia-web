@@ -125,6 +125,29 @@ textarea.cq__input{min-height:120px;resize:vertical}
   padding:15px 22px;border-radius:14px;background:var(--green);color:#fff;font-weight:600;text-decoration:none}
 .cq__center button.btn{border:0;cursor:pointer;font-family:inherit;font-size:16px}
 .cq__endlink{display:inline-block;margin-top:14px;color:var(--muted);font-size:14px;text-decoration:underline;background:none;border:0;cursor:pointer}
+
+/* ---- Pantalla final enriquecida: solo se activa si el schema trae badge/steps/ctaNote.
+   Sin estos campos el ending renderiza como siempre (menor de edad, cribado rojo, parte 2...). ---- */
+.cq__center .ico--ok{position:relative;background:#e7f0ec}
+.cq__center .ico--ok::after{content:"";position:absolute;inset:-7px;border-radius:50%;border:1.5px solid rgba(67,112,102,.25);pointer-events:none}
+@media (prefers-reduced-motion:no-preference){
+  .cq__center .ico--ok{animation:cqpop .45s cubic-bezier(.2,.7,.3,1) both}
+  .cq__center .ico--ok::after{animation:cqring 1.7s ease-out .25s both}
+}
+@keyframes cqpop{from{transform:scale(.82);opacity:0}to{transform:scale(1);opacity:1}}
+@keyframes cqring{from{transform:scale(.7);opacity:.6}to{transform:scale(1.3);opacity:0}}
+.cq__badge{display:inline-flex;align-items:center;gap:7px;align-self:center;margin:0 0 16px;padding:7px 14px;border-radius:999px;background:#e7f0ec;color:var(--green);font-size:13.5px;font-weight:600;line-height:1.3}
+.cq__badge svg{width:15px;height:15px;flex:none}
+.cq__next{list-style:none;margin:20px 0 0;padding:18px 18px 16px;text-align:left;border:1px solid var(--line);border-radius:16px;background:#fbfcfb}
+.cq__next li{position:relative;display:flex;gap:12px;padding-bottom:16px}
+.cq__next li:last-child{padding-bottom:0}
+.cq__next li:not(:last-child)::before{content:"";position:absolute;left:12px;top:27px;bottom:3px;width:1.5px;background:var(--line)}
+.cq__next-dot{position:relative;z-index:1;flex:none;width:25px;height:25px;border-radius:50%;display:grid;place-items:center;background:#fff;border:1.5px solid var(--line);color:var(--muted);font-size:12px;font-weight:700}
+.cq__next li.is-done .cq__next-dot{background:var(--green);border-color:var(--green);color:#fff}
+.cq__next-txt strong{display:block;font-size:15px;font-weight:600;line-height:1.35;color:#16201c}
+.cq__next-txt span{display:block;margin-top:3px;font-size:13.5px;line-height:1.55;color:var(--muted)}
+.cq__invite{margin-top:22px;padding-top:20px;border-top:1px solid var(--line)}
+.cq__center .cq__invite-note{font-size:14.5px;line-height:1.6;margin:0 0 14px}
 .cq__loading{display:flex;gap:8px;justify-content:center;align-items:center;color:var(--muted);font-size:15px}
 .cq__spin{width:18px;height:18px;border:2px solid var(--line);border-top-color:var(--green);border-radius:50%;animation:cqspin .7s linear infinite}
 @keyframes cqspin{to{transform:rotate(360deg)}}

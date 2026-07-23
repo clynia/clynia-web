@@ -415,14 +415,34 @@
     var ico = stop
       ? '<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>'
       : '<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
-    var h = '<div class="cq__center ' + (stop ? "stop" : "") + '"><div class="ico">' + ico + "</div>";
+    var h = '<div class="cq__center ' + (stop ? "stop" : "") + '"><div class="ico' + (stop ? "" : " ico--ok") + '">' + ico + "</div>";
     h += "<h1>" + interp(s.q) + "</h1>";
+    // Distintivo tranquilizador ("no tienes que hacer nada"): opcional, solo si el schema lo trae.
+    if (s.badge) {
+      h += '<span class="cq__badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>' + esc(s.badge) + "</span>";
+    }
     if (s.body) h += "<p>" + interp(s.body) + "</p>";
+    // "Qué pasa ahora": línea temporal opcional. Hace visible que la pelota no está en su tejado.
+    if (s.steps && s.steps.length) {
+      h += '<ol class="cq__next">';
+      for (var i = 0; i < s.steps.length; i++) {
+        var st = s.steps[i];
+        var dot = st.done
+          ? '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>'
+          : String(i + 1);
+        h += '<li class="' + (st.done ? "is-done" : "") + '"><span class="cq__next-dot" aria-hidden="true">' + dot + '</span><span class="cq__next-txt"><strong>' + esc(st.t) + "</strong><span>" + esc(st.d) + "</span></span></li>";
+      }
+      h += "</ol>";
+    }
     if (stop && history.length) {
       h += '<button class="btn" type="button" id="cqEndBack">&#8592; Volver y corregir</button>';
       if (s.href) h += '<a class="cq__endlink" href="' + esc(s.href) + '">Salir a Clynia</a>';
     } else if (s.cta && s.href) {
-      h += '<a class="btn" href="' + esc(s.href) + '">' + esc(s.cta) + "</a>";
+      if (s.ctaNote) {
+        h += '<div class="cq__invite"><p class="cq__invite-note">' + esc(s.ctaNote) + '</p><a class="btn" href="' + esc(s.href) + '">' + esc(s.cta) + "</a></div>";
+      } else {
+        h += '<a class="btn" href="' + esc(s.href) + '">' + esc(s.cta) + "</a>";
+      }
     }
     h += "</div>";
     root.innerHTML = h;
