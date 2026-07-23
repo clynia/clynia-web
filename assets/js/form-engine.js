@@ -408,6 +408,19 @@
     var bl = document.getElementById("cqBackLow"); if (bl) bl.onclick = back;
   }
 
+  // Iconos de la línea temporal del ending (trazo 24x24, mismo lenguaje visual que el resto del
+  // sitio). Si un paso no trae icono conocido, cae al número: nunca queda un hueco vacío.
+  var ENDICONS = {
+    check: '<path d="M20 6 9 17l-5-5"/>',
+    medico: '<path d="M11 2v2"/><path d="M5 2v2"/><path d="M5 3H4a2 2 0 0 0-2 2v4a6 6 0 0 0 12 0V5a2 2 0 0 0-2-2h-1"/><path d="M8 15a6 6 0 0 0 12 0v-3"/><circle cx="20" cy="10" r="2"/>',
+    email: '<rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>',
+    reloj: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>'
+  };
+  function endIcon(name) {
+    var p = ENDICONS[name];
+    return p ? '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + p + "</svg>" : "";
+  }
+
   function renderEnding(s) {
     var stop = s.variant === "stop";
     // No apto: saca el lead del drip y del embudo (marca Descartado). No-op si no hay lead.
@@ -427,9 +440,7 @@
       h += '<ol class="cq__next">';
       for (var i = 0; i < s.steps.length; i++) {
         var st = s.steps[i];
-        var dot = st.done
-          ? '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>'
-          : String(i + 1);
+        var dot = st.done ? endIcon("check") : (ENDICONS[st.icon] ? endIcon(st.icon) : String(i + 1));
         h += '<li class="' + (st.done ? "is-done" : "") + '"><span class="cq__next-dot" aria-hidden="true">' + dot + '</span><span class="cq__next-txt"><strong>' + esc(st.t) + "</strong><span>" + esc(st.d) + "</span></span></li>";
       }
       h += "</ol>";
