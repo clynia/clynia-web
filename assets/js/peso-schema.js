@@ -53,9 +53,13 @@ window.CLYNIA_FORM = {
 
   steps: [
     // ═══════════ PARTE 1 (pre-pago, mínima) ═══════════
-    { id: "welcome", type: "statement", q: "Cuéntale tu caso al médico", body: "Unas preguntas rápidas (2 minutos). Con tus respuestas, un médico colegiado en España valorará tu caso de forma gratuita. La primera consulta no tiene coste: solo si el médico te considera candidato te propondrá un plan de tratamiento.", cta: "Empezar" },
+    // Sin pantalla de bienvenida a propósito: aquí se llega desde "Empezar mi consulta gratis",
+    // así que un segundo "Empezar" solo restaba conversión. Lo que aportaba (duración, gratuidad y
+    // que el plan solo llega si el médico te considera candidato) vive en el help de esta primera
+    // pregunta. Abre por el nombre, el arranque más amable; la fecha va justo después y corta a los
+    // menores antes de pedir email, consentimiento o cualquier dato de salud.
+    { id: "nombre", section: "Sobre ti", type: "text", key: "nombre", q: "Te damos la bienvenida. ¿Cómo te llamas?", help: "Son unos 2 minutos. Un médico colegiado valora tu caso sin coste; solo si te considera candidato te propondrá un plan.", autocomplete: "given-name", placeholder: "Tu nombre" },
     { id: "nacimiento", section: "Sobre ti", type: "date", key: "fecha_nacimiento", q: "¿Cuál es tu fecha de nacimiento?", help: "El médico la necesita para valorar tu caso con seguridad. Este servicio es solo para mayores de 18 años.", next: function (a) { if (!a.fecha_nacimiento) return null; var d = new Date(a.fecha_nacimiento), t = new Date(), age = t.getFullYear() - d.getFullYear(), m = t.getMonth() - d.getMonth(); if (m < 0 || (m === 0 && t.getDate() < d.getDate())) age--; return age < 18 ? "ending_menor" : null; } },
-    { id: "nombre", section: "Sobre ti", type: "text", key: "nombre", q: "¿Cómo te llamas?", help: "Solo el nombre.", autocomplete: "given-name", placeholder: "Tu nombre" },
     // Email + consentimiento PRONTO: así, aunque no termines, podemos guardar tu solicitud y
     // retomarla contigo (lead parcial). El consentimiento va antes de pedirte datos de salud.
     { id: "email", section: "Sobre ti", type: "email", key: "email", q: "¿Cuál es tu correo electrónico?", help: "Aquí te enviamos la confirmación y guardamos tu solicitud, para que puedas retomarla si no la terminas ahora." },
