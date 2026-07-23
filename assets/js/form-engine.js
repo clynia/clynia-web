@@ -432,6 +432,8 @@
     // lo pide con icono:false, sin la marca redonda de encima.
     var rico = !!(s.badge || (s.steps && s.steps.length));
     var h = '<div class="cq__center ' + (stop ? "stop" : "") + (rico ? " cq__center--flow" : "") + '">';
+    // Marca oficial (wordmark con el punto verde). Nunca "Clynia" como texto ni recoloreado.
+    if (s.marca) h += '<div class="cq__brand"><img src="/assets/logos/clynia-wordmark.png" alt="Clynia"></div>';
     if (s.icono !== false) h += '<div class="ico' + (stop ? "" : " ico--ok") + '">' + ico + "</div>";
     h += "<h1>" + interp(s.q) + "</h1>";
     // Distintivo tranquilizador ("no tienes que hacer nada"): opcional, solo si el schema lo trae.
