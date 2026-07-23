@@ -53,7 +53,7 @@ window.CLYNIA_FORM = {
 
   steps: [
     // ═══════════ PARTE 1 (pre-pago, mínima) ═══════════
-    { id: "welcome", type: "statement", q: "Cuéntanos tu caso", body: "Unas preguntas rápidas (2 minutos). Con tus respuestas, un médico colegiado en España valorará tu caso de forma gratuita. La primera consulta no tiene coste: solo si el médico te considera candidato te propondrá un plan de tratamiento.", cta: "Empezar" },
+    { id: "welcome", type: "statement", q: "Cuéntale tu caso al médico", body: "Unas preguntas rápidas (2 minutos). Con tus respuestas, un médico colegiado en España valorará tu caso de forma gratuita. La primera consulta no tiene coste: solo si el médico te considera candidato te propondrá un plan de tratamiento.", cta: "Empezar" },
     { id: "mayor_edad", section: "Sobre ti", type: "yesno", key: "mayor_edad", q: "Antes de empezar: ¿tienes 18 años o más?", next: function (a) { return a.mayor_edad === false ? "ending_menor" : null; } },
     { id: "nombre", section: "Sobre ti", type: "text", key: "nombre", q: "¿Cómo te llamas?", help: "Solo el nombre.", autocomplete: "given-name", placeholder: "Tu nombre" },
     // Email + consentimiento PRONTO: así, aunque no termines, podemos guardar tu solicitud y
@@ -89,7 +89,6 @@ window.CLYNIA_FORM = {
 
     // Cribado de seguridad (las ÚNICAS preguntas que descartan): siempre ANTES del pago,
     // para que un rojo no pueda pagar jamás. Una crítica marcada corta en el acto (next).
-    { id: "intro_seguridad", type: "statement", q: "Ahora, unas preguntas de seguridad", body: "Sirven para que el médico valore si un tratamiento médico para el peso sería seguro en tu caso. Responde con tranquilidad.", cta: "Continuar" },
     { id: "sexo_biologico", section: "Seguridad", type: "single", key: "sexo_biologico", q: "¿Cuál es tu sexo biológico?", help: "Lo necesita el médico para valorar dosis y contraindicaciones.", options: [{ label: "Hombre", value: "Hombre" }, { label: "Mujer", value: "Mujer" }, { label: "Prefiero no decirlo", value: "Prefiero no decirlo" }] },
     { id: "embarazo", section: "Seguridad", type: "multi", key: "embarazo", next: function (a, v) { return v.flag_rojo >= 1 ? "ending_rojo" : null; }, q: "¿Alguna de estas situaciones te aplica?", showIf: function (a) { return a.sexo_biologico === "Mujer" || a.sexo_biologico === "Prefiero no decirlo"; }, options: [{ label: "Estoy embarazada o podría estarlo", crit: true }, { label: "Estoy dando el pecho", crit: true }, { label: "He dado a luz en los últimos 6 meses" }, { label: "Ninguna de las anteriores", exclusive: true }] },
     { id: "contraindicaciones", section: "Seguridad", type: "multi", key: "contraindicaciones", next: function (a, v) { return v.flag_rojo >= 1 ? "ending_rojo" : null; }, q: "¿Tienes o has tenido alguna de estas condiciones?", help: "Marca todas las que apliquen.", options: [
@@ -201,7 +200,7 @@ window.CLYNIA_FORM = {
     { id: "p2_send", type: "statement", submitP2: true, q: "Todo listo para tu médico", body: "Al enviar, tu cuestionario completo pasa a un médico colegiado para su valoración. Te escribiremos por email con los siguientes pasos.", cta: "Enviar mi cuestionario" },
 
     // ---------- FINALES ----------
-    { id: "ending_ok", type: "ending", variant: "ok", q: "¡Gracias! Hemos recibido tu consulta", body: "Un médico colegiado revisará tu caso y te escribirá por email con su valoración. Si considera que un tratamiento es adecuado para ti, te lo indicará y podrás decidir si quieres continuar. No tienes que hacer nada más por ahora." },
+    { id: "ending_ok", type: "ending", variant: "ok", q: "¡Gracias! Tu consulta ya está con un médico", body: "Un médico colegiado revisará tu caso y te escribirá por email con su valoración, normalmente en menos de 24 horas. No tienes que hacer nada más: te contactamos nosotros. Si un tratamiento es adecuado para ti, te lo indicará y decides si quieres continuar.", cta: "Ver artículos del blog", href: "/blog" },
     { id: "ending_p2_ok", type: "ending", variant: "ok", q: "Cuestionario enviado. Ya está todo en marcha", body: "Un médico colegiado revisará tu caso y te contactará por email. Es muy probable que te llame por teléfono para conocerte mejor: mantén el móvil a mano estos días. Puedes seguir tu caso desde tu portal.", cta: "Ir a mi portal", href: "https://portal.clynia.es" },
     { id: "ending_menor", type: "ending", variant: "stop", q: "Este servicio es solo para mayores de 18 años", body: "Por ahora solo podemos atender a personas mayores de edad. Si te has equivocado con la fecha, vuelve atrás y corrígela.", href: "perdida-de-peso" },
     { id: "ending_rojo", type: "ending", variant: "stop", q: "Por tu seguridad, esto debe valorarlo un médico en persona", body: "Según lo que nos has contado, el tratamiento online no es lo más adecuado para ti ahora mismo. Te recomendamos acudir a tu médico de cabecera o a un centro de forma presencial para una valoración. Hemos guardado tus respuestas: si quieres que te orientemos, escríbenos a clynia@clynia.es.", cta: "Volver a Clynia", href: "perdida-de-peso" }
