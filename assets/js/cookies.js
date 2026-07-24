@@ -8,6 +8,34 @@
   var KEY = "clynia_cookie_consent";
   var TSK = KEY + "_ts";
   var TTL = 180 * 24 * 60 * 60 * 1000; // 180 dias: renovacion del consentimiento y de la negativa
+
+  // Contentsquare (grabacion de sesion / mapas de calor): se inyecta en TODAS las paginas EXCEPTO
+  // las que declaren window.CLYNIA_NO_REPLAY (formularios con datos personales o de salud). El
+  // propio cs.js no envia NADA a Contentsquare sin consentimiento "all" (mismo criterio que GA4 y
+  // el pixel). Se inyecta aqui, antes del early-return de "consentimiento vigente", para que
+  // tambien cargue en las visitas de retorno (donde el banner ya no aparece).
+  try {
+    if (!window.CLYNIA_NO_REPLAY && !window.__clyniaCSInjected) {
+      window.__clyniaCSInjected = true;
+      var csEl = document.createElement("script");
+      csEl.src = "/assets/js/cs.js?v=20260724";
+      csEl.defer = true;
+      (document.head || document.documentElement).appendChild(csEl);
+    }
+  } catch (e) {}
+
+  // Menu de navegacion movil: se inyecta en TODAS las paginas; en las que no tienen barra
+  // (.topnav) no hace nada. Sin relacion con cookies/consentimiento (no traza nada).
+  try {
+    if (!window.__clyniaNavInjected) {
+      window.__clyniaNavInjected = true;
+      var navEl = document.createElement("script");
+      navEl.src = "/assets/js/nav.js?v=20260724";
+      navEl.defer = true;
+      (document.head || document.documentElement).appendChild(navEl);
+    }
+  } catch (e) {}
+
   try {
     var v = localStorage.getItem(KEY);
     var ts = parseInt(localStorage.getItem(TSK) || "0", 10);
@@ -59,6 +87,9 @@
       try { if (window.fbq) fbq("consent", v === "all" ? "grant" : "revoke"); } catch (e) {}
       // GA4: solo arranca (y vacia su cola de eventos) si el usuario acepta todo. Ver assets/js/ga.js.
       try { if (window.clyniaGAConsent) clyniaGAConsent(v); } catch (e) {}
+      // Contentsquare: solo graba la sesion si el usuario acepta todo. Ver assets/js/cs.js. Si cs.js
+      // aun no ha cargado cuando se pulsa, se auto-arranca al cargar porque ya lee el consentimiento.
+      try { if (window.clyniaCSConsent) clyniaCSConsent(v); } catch (e) {}
       // Contador anonimo de la decision (aceptar/rechazar): sin datos personales ni cookies, solo la
       // eleccion y la pagina, para medir la tasa de rechazo (webhook n8n -> Airtable "Consentimiento cookies").
       try {
