@@ -390,6 +390,18 @@
 
   function submitStep(s) {
     if (!validate(s)) { err(s.errMsg || "Responde para continuar."); return; }
+    // Rango de los números (min/max del schema). Los atributos min y max del input SOLO los aplica
+    // el navegador al enviar un formulario nativo, y aquí se avanza por JS, así que no se estaban
+    // comprobando: se colaba la altura en metros (1,63 en vez de 163) y el IMC salía por las nubes
+    // en la ficha del médico (pasó de verdad el 25 jul 2026). Se rechaza en vez de convertir: 1,63
+    // podría ser un error de tecleo y no toca adivinar un dato clínico.
+    if (s.type === "number" && answers[s.key] != null && answers[s.key] !== "") {
+      var nv = +answers[s.key];
+      if ((s.min != null && nv < s.min) || (s.max != null && nv > s.max)) {
+        err("Escríbelo" + (s.unit ? " en " + s.unit : "") + (s.min != null && s.max != null ? ", entre " + s.min + " y " + s.max : "") + ".");
+        return;
+      }
+    }
     // Validación suave del número de documento contra el tipo elegido (DNI/NIE/Pasaporte).
     if (s.key === "num_documento" && F.validarDocumento && !F.validarDocumento(answers.tipo_documento, answers.num_documento).ok) {
       err("Revisa el número: no parece un " + (answers.tipo_documento || "documento") + " válido.");
