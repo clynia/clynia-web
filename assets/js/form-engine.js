@@ -300,13 +300,18 @@
         var ck = (answers[it.key] === true) ? " checked" : "";
         return '<label class="cq__consent"><input type="checkbox" data-ck="' + esc(it.key) + '"' + ck + ">" + '<span>' + it.label + (it.required ? "" : ' <em style="color:var(--muted)">(opcional)</em>') + "</span></label>";
       }).join("");
+      // OJO con precioUI: `precio` es SIEMPRE el importe que se cobra de verdad y el que viaja a
+      // las analiticas y al ticket de compra. `precioUI` es solo lo que se pinta grande, para poder
+      // enseñar un anual como su equivalente mensual (32,50 en vez de 390) sin falsear el cobro.
       case "plans": return F.plans.map(function (p, i) {
         var sel = (v === p.id) ? " is-sel" : "";
-        return '<button type="button" class="cq__plan' + (p.featured ? " feat" : "") + sel + '" data-plan="' + esc(p.id) + '">' +
+        return (p.sep ? '<span class="cq__plansep"><span>' + esc(p.sep) + "</span></span>" : "") +
+          '<button type="button" class="cq__plan' + (p.featured ? " feat" : "") + sel + '" data-plan="' + esc(p.id) + '">' +
           (p.tag ? '<span class="tag">' + esc(p.tag) + "</span>" : "") +
           '<div class="name">' + esc(p.nombre) + "</div>" +
-          '<div class="price">' + esc(p.precio) + "€" +
+          '<div class="price">' + esc(p.precioUI != null ? p.precioUI : p.precio) + "€" +
             (p.unidad ? '<span class="unit">' + esc(p.unidad) + "</span>" : "") +
+            (p.antes ? '<span class="was">' + esc(p.antes) + "€</span>" : "") +
             (p.meta ? "<small>" + esc(p.meta) + "</small>" : "") + "</div>" +
           (p.desc ? '<div class="desc">' + esc(p.desc) + "</div>" : "") + "</button>";
       }).join("");

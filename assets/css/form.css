@@ -75,7 +75,18 @@ textarea.cq__input{min-height:120px;resize:vertical}
 .cq__file .name{font-size:14px;color:var(--muted)}
 
 /* Planes */
-.cq__plans{display:flex;flex-direction:column;gap:12px}
+/* Tira de garantias con icono, para el paso de planes: sustituye al parrafo largo de avisos que
+   habia antes de las tarjetas. Va toda con <span> y no con <ul>, porque el motor pinta el help
+   dentro de un <p> y una lista ahi lo partiria en dos. */
+.cq__trust{display:grid;gap:13px;margin:2px 0 4px;text-align:left}
+.cq__trust .ti{display:flex;gap:11px;align-items:flex-start;font-size:13.5px;line-height:1.45;color:var(--muted)}
+.cq__trust .ti > svg{flex:none;width:20px;height:20px;stroke:var(--green);fill:none;stroke-width:1.9;margin-top:1px}
+.cq__trust .ti b{display:block;color:var(--ink);font-weight:600;font-size:14.5px;margin-bottom:1px}
+
+.cq__plans{display:flex;flex-direction:column;gap:16px}
+/* Separador con etiqueta, para despegar el pago unico de las dos suscripciones. */
+.cq__plansep{display:flex;align-items:center;gap:12px;margin:8px 2px 0;color:var(--muted);font-size:13px}
+.cq__plansep::before,.cq__plansep::after{content:"";flex:1;height:1px;background:var(--line)}
 /* El `color` es OBLIGATORIO aqui: la tarjeta es un <button> y `font:inherit` hereda la tipografia
    pero NO el color, asi que sin esto el boton se queda con el color por defecto del sistema. En
    escritorio eso es negro y no se nota, pero en iOS es el azul de Apple: el nombre del plan y el
@@ -91,6 +102,9 @@ textarea.cq__input{min-height:120px;resize:vertical}
    detalle baja a su propio renglon; antes se pegaba al numero y lo dejaba dentro de un parrafo. */
 .cq__plan .price{font-size:40px;font-weight:700;line-height:1.02;letter-spacing:-.025em;margin:8px 0 2px}
 .cq__plan .price .unit{font-size:17px;font-weight:600;color:var(--muted);letter-spacing:0;margin-left:2px}
+/* Precio de referencia tachado, al lado del grande: es lo que hace que el anual se lea como MAS
+   barato y no como un importe mayor. */
+.cq__plan .price .was{font-size:16px;font-weight:600;color:var(--muted);text-decoration:line-through;letter-spacing:0;margin-left:9px}
 .cq__plan .price small{display:block;font-size:13.5px;font-weight:500;color:var(--muted);letter-spacing:0;margin-top:6px;line-height:1.45}
 .cq__plan .meta{color:var(--muted);font-size:13px}
 .cq__plan .desc{font-size:14px;color:var(--ink);margin-top:8px}

@@ -56,12 +56,18 @@ window.CLYNIA_FORM = {
   // modo. La consulta puntual reusa el flujo apto de peso (flujo=consulta-apto, 30 días tipo
   // valoración); la suscripción va por su webhook propio.
   plans: [
-    // `unidad` sale pegada al importe en pequeño (/mes, /año) y `meta` baja a su propio renglón.
-    // Por eso meta YA NO repite el precio: antes se leía "39€ 39 €/mes · sin compromiso", con el
-    // número dicho dos veces en la misma línea y el importe perdido dentro del párrafo.
-    { id: "sub_mensual", nombre: "Seguimiento mensual", precio: 39, unidad: "/mes", meta: "Sin compromiso, cancela cuando quieras", featured: true, tag: "Más elegido", stripePrice: "price_1TxpinRqcE5hSPKXJm4EAs4U", desc: "Acceso a tu médico colegiado y seguimiento continuado, mes a mes. Sin compromiso, cancela cuando quieras." },
-    { id: "sub_anual", nombre: "Seguimiento anual", precio: 390, unidad: "/año", meta: "Sale a 32,50 € al mes · 2 meses gratis, un 17% menos", tag: "2 meses gratis · 17% menos", stripePrice: "price_1TxqXKRqcE5hSPKXDbahsnfY", desc: "Lo mismo que el mensual pagando el año de una vez: pagas 10 meses y tienes 12. Son 390 € en lugar de 468 €." },
-    { id: "consulta_sexual", nombre: "Consulta puntual", precio: 99, meta: "Pago único, sin suscripción", stripePrice: "price_1TxqUPRqcE5hSPKXwHHCTwsk", desc: "Una consulta con un médico colegiado que valora tu caso y te dice qué procede. Incluye 30 días para hablar con él. Sin compromisos ni cobros recurrentes." }
+    // ORDEN Y FORMA DEL PRECIO. El anual va primero y se enseña por su EQUIVALENTE MENSUAL
+    // (32,50 €/mes, con el mensual de 39 € tachado al lado y "facturado una vez al año" debajo).
+    // Es como lo hace cualquier SaaS y es lo que evita que 390 € se lea como "mas caro" cuando en
+    // realidad es la opcion barata: el cliente compara en meses aunque pague de golpe.
+    //   precio    = lo que se COBRA de verdad; es lo que va a Stripe, a las analiticas y al ticket.
+    //   precioUI  = solo lo que se pinta grande. NO tocar `precio` para cuadrar el escaparate.
+    //   antes     = precio de referencia tachado (el mensual), para que se vea el ahorro.
+    // Sin etiqueta "Mas elegido" a proposito: el producto se lanzo hoy y no hay ni una compra, asi
+    // que decir que es el mas elegido seria inventarse una prueba social que no existe.
+    { id: "sub_anual", nombre: "Seguimiento anual", precio: 390, precioUI: "32,50", unidad: "/mes", antes: 39, meta: "Facturado una vez al año: 390 €", featured: true, tag: "2 meses gratis · ahorras 78 €", stripePrice: "price_1TxqXKRqcE5hSPKXDbahsnfY", desc: "Lo mismo que el mensual pagando el año de una vez: pagas 10 meses y tienes 12. Son 390 € en lugar de 468 €." },
+    { id: "sub_mensual", nombre: "Seguimiento mensual", precio: 39, unidad: "/mes", meta: "Facturado cada mes · sin permanencia", tag: "Mes a mes", stripePrice: "price_1TxpinRqcE5hSPKXJm4EAs4U", desc: "Acceso a tu médico colegiado y seguimiento continuado, mes a mes. Cancelas cuando quieras, desde tu portal." },
+    { id: "consulta_sexual", nombre: "Consulta puntual", precio: 99, meta: "Pago único · incluye 30 días con tu médico", sep: "¿Prefieres no suscribirte?", stripePrice: "price_1TxqUPRqcE5hSPKXwHHCTwsk", desc: "Una consulta con un médico colegiado que valora tu caso y te dice qué procede. Incluye 30 días para hablar con él. Sin compromisos ni cobros recurrentes." }
   ],
 
   steps: [
@@ -126,9 +132,27 @@ window.CLYNIA_FORM = {
     { id: "consulta", section: "Tu consulta", type: "longtext", key: "consulta", submit: true, q: "¿Qué quieres consultar al médico?", help: "Cuéntanos solo lo relevante: desde cuándo lo notas, en qué situaciones, cómo te afecta y cualquier duda para el médico. Es confidencial.", placeholder: "Escribe aquí tu consulta para el médico", cta: "Enviar mi consulta" },
 
     // ---------- PLANES (solo modo pago ?pay=): el apto elige plan -> finish() -> checkoutEndpoint ----------
-    // El "por solo 39 €" tiene que coincidir con el plan mas barato de plans[]: si cambia un
-    // precio, cambiar tambien esta linea. ("solo" sin tilde, que es lo que marca la RAE.)
-    { id: "plans", section: "Elige tu plan", type: "plans", key: "plan", q: "Empieza hoy por solo 39 €", help: "<span style=\"display:block;color:var(--muted);font-size:.9em;text-align:left;line-height:1.4\">Tu caso ya está valorado por un médico colegiado. Elige cómo quieres seguir y empiezas hoy mismo.<br><br><b style=\"color:var(--ink)\">En tu extracto bancario aparecerá solo como CLYNIA.</b> Nada que mencione salud sexual, ni el motivo de tu consulta, ni qué has contratado.<br><br>¿Tienes un código de descuento? Podrás introducirlo en el paso siguiente, antes de pagar.<br><br>No pagas el medicamento aquí; si el médico te lo receta, lo consigues en tu farmacia con tu receta.<br>Médicos colegiados en España · Pago seguro con Stripe · Datos cifrados.</span>", cta: "Continuar al pago" },
+    // El "desde 32,50 €/mes" tiene que coincidir con el equivalente mensual del plan mas barato de
+    // plans[] (el anual): si cambia un precio, cambiar tambien esta linea.
+    // La ayuda ya NO es un parrafo de avisos: son cuatro titulares con icono, para que se lea de
+    // un vistazo justo antes de pagar. Va todo con <span> porque el motor pinta el help dentro de
+    // un <p> y una lista lo partiria en dos.
+    {
+      id: "plans", section: "Elige tu plan", type: "plans", key: "plan",
+      q: "Estás a un paso. Empieza hoy desde 32,50 €/mes",
+      help:
+        "<span class=\"cq__trust\">"
+        + "<span class=\"ti\"><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"4\" y=\"10.5\" width=\"16\" height=\"10\" rx=\"2\"/><path d=\"M8 10.5V7a4 4 0 0 1 8 0v3.5\"/></svg>"
+        + "<span><b>En tu banco aparece solo CLYNIA</b>Nada que mencione el motivo de tu consulta ni qué has contratado.</span></span>"
+        + "<span class=\"ti\"><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z\"/><path d=\"m9 12 2 2 4-4\"/></svg>"
+        + "<span><b>Médicos colegiados en España</b>Tu caso ya lo ha valorado uno de ellos.</span></span>"
+        + "<span class=\"ti\"><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"2.5\" y=\"5\" width=\"19\" height=\"14\" rx=\"2\"/><path d=\"M2.5 10h19\"/></svg>"
+        + "<span><b>Pago seguro con Stripe</b>¿Tienes un código de descuento? Lo aplicas en el paso siguiente.</span></span>"
+        + "<span class=\"ti\"><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"m10.5 20.5 10-10a5 5 0 0 0-7-7l-10 10a5 5 0 0 0 7 7Z\"/><path d=\"m8.5 8.5 7 7\"/></svg>"
+        + "<span><b>El medicamento se compra aparte</b>Si el médico te lo receta, lo consigues en tu farmacia.</span></span>"
+        + "</span>",
+      cta: "Continuar al pago"
+    },
 
     // ═══════════ PARTE 2 (post-pago: el resto del cuestionario) ═══════════
     { id: "p2_welcome", type: "statement", q: "Te damos la bienvenida", badge: "Pago confirmado", body: "Para que tu médico ajuste todo a ti, necesita conocer tu caso con más detalle. Son unos 5 minutos y puedes retomarlo cuando quieras.", steps: [{ t: "Tu plan ya está activo", d: "Pago confirmado. De eso ya no tienes que preocuparte.", done: true }, { t: "Nos cuentas tu caso con detalle", d: "Unos 5 minutos. Guardamos tu progreso, así que puedes parar y seguir cuando te venga bien.", icon: "ficha" }, { t: "Tu médico prepara tu tratamiento", d: "Con tus respuestas ajusta la pauta a tu caso y, si procede, emite tu receta.", icon: "medico" }], cta: "Empezar" },
