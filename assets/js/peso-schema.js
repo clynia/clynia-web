@@ -63,13 +63,15 @@ window.CLYNIA_FORM = {
     // Email + consentimiento PRONTO: así, aunque no termines, podemos guardar tu solicitud y
     // retomarla contigo (lead parcial). El consentimiento va antes de pedirte datos de salud.
     { id: "email", section: "Sobre ti", type: "email", key: "email", q: "¿Cuál es tu correo electrónico?", help: "Aquí te enviamos la confirmación y guardamos tu solicitud, para que puedas retomarla si no la terminas ahora." },
-    // Teléfono en la PARTE 1 (2026-07-27, decisión de Alfonso): antes solo se pedía en la parte 2
-    // (REMPE), así que de las consultas gratis no quedaba ni un teléfono y no había forma de llamar
-    // a quien un médico ya había declarado apto. OPCIONAL a propósito: la parte 1 convierte al 64%
-    // y no se arriesga eso por un dato que la parte 2 vuelve a pedir si falta. Va aquí, detrás del
-    // email, para que sendPartial() lo mande con el lead parcial (ya viaja en su payload) y para que
-    // 'Upsert Paciente' (n8n · Consulta gratis) lo escriba en Pacientes > Teléfono, que ya lo mapea.
-    { id: "telefono1", section: "Sobre ti", type: "tel", key: "telefono", required: false, q: "¿Y tu teléfono?", help: "Opcional, pero ayuda: es la vía rápida si el médico necesita aclarar algo antes de valorar tu caso. Si prefieres no darlo, continúa sin rellenarlo." },
+    // Teléfono en la PARTE 1: antes solo se pedía en la parte 2 (REMPE), así que de las consultas
+    // gratis no quedaba ni un teléfono y no había forma de llamar a quien un médico ya había
+    // declarado apto. Va aquí, detrás del email, para que sendPartial() lo mande con el lead parcial
+    // (ya viaja en su payload) y para que 'Upsert Paciente' (n8n · Consulta gratis) lo escriba en
+    // Pacientes > Teléfono, que ya lo mapea.
+    // OBLIGATORIO desde el 27 jul 2026 (decisión de Alfonso): nació opcional para no tocar el 64%
+    // de conversión de la parte 1, pero si la consulta médica se regala, poder localizar al paciente
+    // es parte del trato. El motor exige 9 dígitos, que es lo que tiene un número español.
+    { id: "telefono1", section: "Sobre ti", type: "tel", key: "telefono", q: "¿Y tu teléfono?", help: "Es la vía rápida si el médico necesita aclarar algo antes de valorar tu caso. Lo usa solo el médico que la revise.", errMsg: "Necesitamos un teléfono donde poder localizarte: escríbelo con sus nueve dígitos." },
     { id: "consent", section: "Sobre ti", type: "consent", key: "consent", q: "Antes de seguir: tus datos, protegidos", help: "Con tu permiso guardamos tu solicitud para que un médico colegiado pueda valorarla, y podrás retomarla cuando quieras.", cta: "Acepto y continúo", items: [
       { key: "acepta_privacidad", required: true, label: 'He leído y acepto la <a href="privacidad" target="_blank">Política de Privacidad</a> de Clynia.' },
       { key: "acepta_datos_salud", required: true, label: "Doy mi consentimiento explícito al tratamiento de mis datos de salud con fines asistenciales." },

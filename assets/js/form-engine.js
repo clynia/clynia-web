@@ -401,6 +401,11 @@
       case "plans": return !!v;
       case "consent": return s.items.every(function (it) { return !it.required || answers[it.key] === true; });
       case "email": return v && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+      // Telefono: minimo 9 digitos, que es lo que tiene un numero español. Cuenta SOLO digitos, asi
+      // que admite espacios, guiones y prefijo (+34 600 11 22 33). Sin esto, un campo obligatorio
+      // invita a escribir "no" o "-" para pasar de pantalla, y la ficha se llena de basura, que es
+      // justo lo que no queremos si el plan es llamar.
+      case "tel": return v != null && (String(v).match(/\d/g) || []).length >= 9;
       case "number": return v != null && v !== "" && !isNaN(v);
       default: return v != null && String(v).trim() !== "";
     }

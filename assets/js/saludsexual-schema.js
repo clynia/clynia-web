@@ -78,11 +78,11 @@ window.CLYNIA_FORM = {
     { id: "nacimiento", section: "Sobre ti", type: "date", key: "fecha_nacimiento", q: "¿Cuál es tu fecha de nacimiento?", help: "El médico la necesita para valorar tu caso con seguridad. Este servicio es solo para mayores de 18 años.", next: function (a) { if (!a.fecha_nacimiento) return null; var d = new Date(a.fecha_nacimiento), t = new Date(), age = t.getFullYear() - d.getFullYear(), m = t.getMonth() - d.getMonth(); if (m < 0 || (m === 0 && t.getDate() < d.getDate())) age--; return age < 18 ? "ending_menor" : null; } },
     { id: "email", section: "Sobre ti", type: "email", key: "email", q: "¿Cuál es tu correo electrónico?", help: "Aquí te enviamos la confirmación y la respuesta del médico, en privado." },
     // Teléfono en la PARTE 1, la misma leccion que se aprendio en el embudo de peso: el contacto se
-    // captura pronto o se pierde. OPCIONAL a proposito, que aqui la discrecion pesa mas que en peso y
-    // no se arriesga la conversion de la parte 1 por un dato que la parte 2 vuelve a pedir si falta.
-    // Va detras del email para que sendPartial() lo mande con el lead parcial (ya viaja en su payload)
-    // y para que 'Upsert Paciente' lo escriba en Pacientes > Teléfono.
-    { id: "telefono1", section: "Sobre ti", type: "tel", key: "telefono", required: false, q: "¿Y tu teléfono?", help: "Opcional. Es la vía rápida si el médico necesita aclarar algo antes de valorar tu caso. Si prefieres que solo te escriba por email, continúa sin rellenarlo." },
+    // captura pronto o se pierde. Va detras del email para que sendPartial() lo mande con el lead
+    // parcial (ya viaja en su payload) y para que 'Upsert Paciente' lo escriba en Pacientes > Teléfono.
+    // OBLIGATORIO, igual que en peso: si la consulta medica se regala, poder localizar al paciente es
+    // parte del trato. El motor exige 9 digitos, que es lo que tiene un numero español.
+    { id: "telefono1", section: "Sobre ti", type: "tel", key: "telefono", q: "¿Y tu teléfono?", help: "Es la vía rápida si el médico necesita aclarar algo antes de valorar tu caso. Lo usa solo el médico que la revise.", errMsg: "Necesitamos un teléfono donde poder localizarte: escríbelo con sus nueve dígitos." },
     { id: "consent", section: "Sobre ti", type: "consent", key: "consent", q: "Antes de seguir: tus datos, protegidos", help: "Con tu permiso guardamos tu solicitud para que un médico colegiado pueda valorarla. Todo es confidencial.", cta: "Acepto y continúo", items: [
       { key: "acepta_privacidad", required: true, label: 'He leído y acepto la <a href="privacidad" target="_blank">Política de Privacidad</a> de Clynia.' },
       { key: "acepta_datos_salud", required: true, label: "Doy mi consentimiento explícito al tratamiento de mis datos de salud con fines asistenciales." },
