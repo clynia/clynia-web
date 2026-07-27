@@ -74,15 +74,36 @@
 
     /* Justificado a ambos lados CON guiones, igual que el resto del sitio. Estas clases viven solo
        en esta página, así que la regla de styles.css no las alcanzaba y se quedaban en bandera.
-       Se justifican los PÁRRAFOS de verdad; las líneas sueltas centradas del precio (plan__meta,
-       plan__ahorro, plan__for) se quedan centradas, que justificar una línea no hace nada bueno. */
+       CONDICIÓN para que justificar quede bien: la caja necesita unos 45 caracteres por línea como
+       mínimo. Por debajo caben 3 o 4 palabras y el navegador tiene que abrir los espacios hasta
+       dejar ríos de blanco. Por eso las cajas estrechas de esta página (tarjetas de privacidad y
+       tarjeta de precio) se ensanchan más abajo en vez de dejarlas justificadas a 23 caracteres.
+       Se quedan centradas solo las líneas sueltas del precio (plan__meta, plan__ahorro): justificar
+       una línea única no hace nada. */
     .privacy-card__text,
     .plans__note,
+    .plan__list li,
+    .plan__for,
     .faq__body p,
     .closing__sub {
       text-align: justify;
       -webkit-hyphens: auto;
       hyphens: auto;
+    }
+
+    /* UNA sola columna de texto en el hero. styles.css le pone a cada bloque un max-width propio
+       (403 px al párrafo, 309 px al pie legal) pensado para otras landings: aquí eso hacía que
+       cada bloque terminase en un punto distinto aunque todos estuvieran justificados, que es lo
+       que se veía escalonado. Sin ese tope, los cuatro nacen y mueren en el borde de .hero__copy. */
+    .hero__sub,
+    .hero__assurance,
+    .hero__pencaption {
+      max-width: none;
+    }
+    /* Y esta, además, traía margen lateral de 2 px, que la dejaba por dentro de la columna. */
+    .hero__assurance {
+      margin-left: 0;
+      margin-right: 0;
     }
 
     /* Sección única: privacidad */
@@ -131,16 +152,17 @@
       font-size: 1rem;
       line-height: 1.6;
     }
-    @media (min-width: 600px) {
-      .privacy__grid { grid-template-columns: repeat(2, 1fr); gap: 18px; }
-    }
-    @media (min-width: 980px) {
-      .privacy__grid { grid-template-columns: repeat(4, 1fr); gap: 20px; }
+    /* Dos columnas como máximo, nunca cuatro: a cuatro, cada tarjeta se queda en 23 caracteres por
+       línea y el texto justificado se abre en ríos de blanco. A dos salen unos 60 y justifica bien.
+       Hasta 760px va en una sola columna, que a esos anchos dos tampoco dan medida suficiente. */
+    @media (min-width: 760px) {
+      .privacy__grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
     }
 
-    /* Plan único centrado */
+    /* Plan único centrado. Ancho 460 y no 360: es la única tarjeta de la sección, y a 360 su texto
+       se quedaba en 42 caracteres por línea, demasiado estrecho para justificar. */
     .plans--solo { display: flex; justify-content: center; }
-    .plans--solo .plan { max-width: 360px; width: 100%; }
+    .plans--solo .plan { max-width: 460px; width: 100%; }
     .plans--solo .plan--featured { transform: none; }
   </style>
   <link rel="canonical" href="https://clynia.es/salud-sexual" />
@@ -209,15 +231,18 @@
               </a>
               <p class="hero__assurance">Tu primera consulta con un médico colegiado es gratis y te responde, normalmente, en menos de 24 h. Solo pagas si lo considera adecuado para ti y decides seguir.</p>
             </div>
+
+            <!-- Dentro de .hero__copy, no colgando del .wrap: así hereda la columna de texto en
+                 todos los anchos y termina donde termina el resto, en vez de llevar su propio
+                 ancho fijo. El orden de lectura no cambia; sigue siendo el último del hero. -->
+            <p class="hero__pencaption reveal d5">
+              La indicación médica corresponde siempre a un médico colegiado, si lo considera
+              adecuado para ti tras valorar tu caso, con la documentación clínica oportuna y
+              seguimiento.
+            </p>
           </div>
 
         </div>
-
-        <p class="hero__pencaption reveal d5">
-          La indicación médica corresponde siempre a un médico colegiado, si lo considera
-          adecuado para ti tras valorar tu caso, con la documentación clínica oportuna y
-          seguimiento.
-        </p>
       </div>
     </section>
 
