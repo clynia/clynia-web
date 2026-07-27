@@ -72,11 +72,18 @@ a { color: inherit; text-decoration: none; }
   letter-spacing: -0.012em;
   color: var(--ink);
 }
+/* Texto de cuerpo justificado a ambos lados CON guiones (preferencia de marca). El guionado es
+   imprescindible: justificar sin partir palabras abre calles blancas horribles en columnas
+   estrechas, sobre todo en movil. Funciona porque las paginas declaran <html lang="es">, que es
+   lo que le dice al navegador con que diccionario partir. Los TITULARES no se justifican nunca. */
 .lead {
   margin: 14px 0 0;
   font-size: 16.5px;
   line-height: 1.6;
   color: var(--ink-soft);
+  text-align: justify;
+  -webkit-hyphens: auto;
+  hyphens: auto;
 }
 
 /* ---------- Nav ---------- */
@@ -168,15 +175,22 @@ a { color: inherit; text-decoration: none; }
   line-height: 1.62;
   color: var(--ink-soft);
   max-width: 40ch;
+  text-align: justify;
+  -webkit-hyphens: auto;
+  hyphens: auto;
 }
+/* display:block, antes flex: era una caja flex que centraba el texto como un bloque, y dentro de
+   un flex la justificacion no llega al texto. Ninguna de las 5 paginas que la usan mete icono
+   (la regla del svg de abajo es residual), asi que como parrafo normal se justifica bien. */
 .hero__assurance {
   margin: 14px 2px 0;
   font-size: 13.5px;
+  line-height: 1.55;
   color: var(--ink-faint);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  justify-content: center;
+  display: block;
+  text-align: justify;
+  -webkit-hyphens: auto;
+  hyphens: auto;
 }
 .hero__assurance svg { width: 15px; height: 15px; color: var(--green); flex: none; }
 .hero__pencaption {
@@ -184,7 +198,9 @@ a { color: inherit; text-decoration: none; }
   font-size: 12px;
   line-height: 1.5;
   color: var(--ink-faint);
-  text-align: center;
+  text-align: justify;
+  -webkit-hyphens: auto;
+  hyphens: auto;
   max-width: 46ch;
 }
 
@@ -303,7 +319,7 @@ a { color: inherit; text-decoration: none; }
   color: var(--ink);
   margin: 0 0 14px;
 }
-.reframe__text { color: var(--ink-soft); font-size: 16px; margin: 0 auto 26px; max-width: 42ch; }
+.reframe__text { color: var(--ink-soft); font-size: 16px; margin: 0 auto 26px; max-width: 42ch; text-align: justify; -webkit-hyphens: auto; hyphens: auto; }
 
 /* ---------- Cómo funciona ---------- */
 .steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 16px; }
@@ -718,9 +734,10 @@ a { color: inherit; text-decoration: none; }
   .hero__copy { padding-top: 0; order: 1; }
   .hero__title { font-size: clamp(40px, 4vw, 54px); }
   .hero__sub { font-size: 18px; }
-  .hero__assurance { justify-content: flex-start; }
   .hero .btn--primary { width: auto; padding: 17px 34px; }
-  .hero__pencaption { text-align: left; margin-left: 0; }
+  /* Sin text-align:left: pisaba la justificacion de la base. La regla de .hero__assurance que
+     habia aqui (justify-content) era de cuando era flex; ya no aplica. */
+  .hero__pencaption { margin-left: 0; }
 
   .trust__grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px 28px; }
 
