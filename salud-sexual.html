@@ -23,7 +23,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Clynia · Salud sexual masculina online, con médicos colegiados</title>
-  <meta name="description" content="Salud sexual masculina con trato discreto en España. Te conectamos con médicos colegiados que valoran tu caso online y, si lo consideran adecuado para ti, te ofrecen acompañamiento y seguimiento médico. 100% online. Próximamente." />
+  <meta name="description" content="Salud sexual masculina con trato discreto en España. Te conectamos con médicos colegiados que valoran tu caso online y, si lo consideran adecuado para ti, te ofrecen acompañamiento y seguimiento médico. 100% online, con trato discreto." />
   <meta name="theme-color" content="#f6f4ef" />
   <link rel="icon" type="image/png" href="assets/img/favicon.png" />
 
@@ -34,6 +34,33 @@
   <link rel="stylesheet" href="assets/css/styles.css?v=20260727" />
 
   <style>
+    /* Selector mensual/anual (patrón SaaS). Segmentado, no dos tarjetas: el precio es el mismo
+       servicio, solo cambia cómo se paga, y así el ahorro del anual se lee de un vistazo. */
+    .ciclo {
+      display: inline-flex; align-items: center; gap: 4px; margin: 6px auto 26px;
+      padding: 5px; border-radius: 999px; background: #fff;
+      box-shadow: inset 0 0 0 1px var(--line), 0 6px 18px -12px rgba(40, 67, 60, .35);
+    }
+    .ciclo__opt {
+      display: inline-flex; align-items: center; gap: 8px; border: 0; cursor: pointer;
+      padding: 11px 22px; border-radius: 999px; background: transparent;
+      font: inherit; font-size: 15px; font-weight: 600; color: var(--ink-soft);
+      transition: background .22s var(--ease), color .22s var(--ease);
+    }
+    .ciclo__opt:hover { color: var(--ink); }
+    .ciclo__opt.is-on { background: var(--green); color: #fff; }
+    .ciclo__save {
+      font-size: 11.5px; font-weight: 700; letter-spacing: .02em; padding: 3px 8px;
+      border-radius: 999px; background: var(--green-tint); color: var(--green-900);
+      transition: background .22s var(--ease), color .22s var(--ease);
+    }
+    .ciclo__opt.is-on .ciclo__save { background: rgba(255, 255, 255, .22); color: #fff; }
+    .plan__price { display: flex; align-items: baseline; justify-content: center; gap: 8px; margin: 2px 0 4px; }
+    .plan__amount { font-family: "Fraunces", Georgia, serif; font-weight: 500; font-size: 46px; line-height: 1; color: var(--ink); }
+    .plan__unit { font-size: 15px; color: var(--ink-soft); }
+    .plan__ahorro { margin: 0 0 6px; font-size: 13.5px; font-weight: 600; color: var(--green); }
+    [hidden] { display: none !important; }
+
     /* Sección única: privacidad */
     .privacy__grid {
       display: grid;
@@ -93,7 +120,6 @@
     .plans--solo .plan--featured { transform: none; }
   </style>
   <link rel="canonical" href="https://clynia.es/salud-sexual" />
-  <meta name="robots" content="noindex, follow" />
   <script src="assets/js/ga.js?v=20260702b"></script>
 </head>
 <body>
@@ -146,18 +172,18 @@
             </h1>
             <p class="hero__sub reveal d4">
               Las dificultades de erección o de rendimiento son habituales y casi nunca se
-              hablan. Cuando abramos, podrás contar tu caso gratis y un médico colegiado lo
-              revisará en privado, contactándote, normalmente, en menos de 24 horas. Si lo considera
-              adecuado para ti, te ofrece acompañamiento y seguimiento médico. Todo online,
-              desde casa y sin que se entere nadie.
+              hablan. Cuenta tu caso gratis y un médico colegiado lo revisa en privado y te
+              contacta, normalmente, en menos de 24 horas. Si lo considera adecuado para ti, te
+              ofrece acompañamiento y seguimiento médico. Todo online, desde casa y sin que se
+              entere nadie.
             </p>
 
             <div class="reveal d5">
-              <a class="btn btn--primary" href="/lista?categoria=salud-sexual" data-cta="salud-sexual">
-                Avísame
+              <a class="btn btn--primary" href="saludsexual" data-cta="salud-sexual">
+                Empieza gratis
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
               </a>
-              <p class="hero__assurance">Próximamente: consulta gratis con un médico colegiado, con respuesta, normalmente, en menos de 24 h. Déjanos tus datos y te avisamos en privado en cuanto esté disponible.</p>
+              <p class="hero__assurance">Tu primera consulta con un médico colegiado es gratis y te responde, normalmente, en menos de 24 h. Solo pagas si lo considera adecuado para ti y decides seguir.</p>
             </div>
           </div>
 
@@ -208,8 +234,8 @@
             con causas concretas que a menudo tienen abordaje médico. Lo sensato es que la
             valore un médico, sin juicios y a tu ritmo.
           </p>
-          <a class="btn btn--primary btn--inline" href="/lista?categoria=salud-sexual">
-            Avísame
+          <a class="btn btn--primary btn--inline" href="saludsexual">
+            Empieza gratis
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
           </a>
         </div>
@@ -264,32 +290,45 @@
     <section class="section section--tint" id="planes">
       <div class="wrap">
         <header class="section__head reveal-up">
-          <h2 class="h2">Un seguimiento mensual, sencillo y sin permanencia.</h2>
-          <p class="lead">Cuando abramos, cuentas tu caso gratis y un médico colegiado lo revisa sin coste: te contacta, normalmente, en menos de 24 horas por teléfono, email o tu portal, y si no consigue localizarte, te escribe. Si lo considera adecuado para ti, puedes seguir con un acompañamiento mensual por 39 € al mes, sin permanencia y que cancelas cuando quieras. Esto es lo que incluye.</p>
+          <h2 class="h2">Un seguimiento sencillo y sin permanencia.</h2>
+          <p class="lead">Cuentas tu caso gratis y un médico colegiado lo revisa sin coste: te contacta, normalmente, en menos de 24 horas por teléfono, email o tu portal, y si no consigue localizarte, te escribe. Si lo considera adecuado para ti, puedes seguir con un acompañamiento continuado. Tú eliges cómo pagarlo.</p>
         </header>
+
+        <div style="text-align:center">
+          <div class="ciclo" role="group" aria-label="Elige cómo pagar">
+            <button type="button" class="ciclo__opt is-on" data-ciclo="mes" aria-pressed="true">Mensual</button>
+            <button type="button" class="ciclo__opt" data-ciclo="ano" aria-pressed="false">Anual <span class="ciclo__save">Ahorras 17%</span></button>
+          </div>
+        </div>
 
         <div class="plans plans--solo">
           <article class="plan plan--featured reveal-up">
-            <span class="plan__tag">Próximamente</span>
-            <h3 class="plan__name">Seguimiento mensual</h3>
-            <p class="plan__meta">39 € al mes · sin permanencia, cancela cuando quieras</p>
+            <h3 class="plan__name">Seguimiento con tu médico</h3>
+            <p class="plan__price">
+              <span class="plan__amount" data-precio="mes">39 €</span>
+              <span class="plan__amount" data-precio="ano" hidden>32,50 €</span>
+              <span class="plan__unit">al mes</span>
+            </p>
+            <p class="plan__meta" data-nota="mes">Se cobra cada mes. Sin permanencia: cancelas cuando quieras.</p>
+            <p class="plan__meta" data-nota="ano" hidden>390 € al año, en un solo pago.</p>
+            <p class="plan__ahorro" data-nota="ano" hidden>Ahorras 78 € frente a pagarlo mes a mes (468 € al año).</p>
             <ul class="plan__list">
               <li>Consulta gratis con un médico colegiado e independiente, respuesta, normalmente, en menos de 24 h</li>
               <li>Tu médico a mano por el portal para tus dudas, en privado</li>
-              <li>Recetas de repetición cuando el médico lo considere adecuado para ti</li>
-              <li>Tu receta electrónica, para recogerla en cualquier farmacia</li>
-              <li>Facturación discreta y datos protegidos conforme al RGPD</li>
+              <li>Seguimiento continuado: tu médico ve cómo te va y ajusta lo que haga falta</li>
+              <li>Las decisiones clínicas son siempre de tu médico, tras valorar tu caso</li>
+              <li>Facturación discreta (en tu banco, solo CLYNIA) y datos protegidos conforme al RGPD</li>
             </ul>
-            <p class="plan__for">Te avisamos en cuanto puedas empezar. Sin compromiso.</p>
-            <a class="btn btn--primary" href="/lista?categoria=salud-sexual">Avísame</a>
+            <p class="plan__for">Empiezas contando tu caso. No pagas nada hasta que un médico lo revise.</p>
+            <a class="btn btn--primary" href="saludsexual">Empieza gratis</a>
           </article>
         </div>
 
         <p class="plans__note reveal-up">
-          Aún no está disponible: déjanos tus datos y serás de los primeros en saberlo. El
-          medicamento no va incluido; si el médico te lo receta, lo compras en tu farmacia con
-          tu receta. Si tras valorar tu caso considera que no procede una indicación médica, te
-          lo dirá con transparencia.
+          Si prefieres no suscribirte, hay una consulta puntual de 99 € con 30 días para hablar
+          con tu médico. El medicamento no va incluido en ninguna de las dos opciones: si tu
+          médico considera que procede una indicación, la consigues en tu farmacia. Y si tras
+          valorar tu caso considera que no procede, te lo dirá con transparencia.
         </p>
       </div>
     </section>
@@ -326,9 +365,9 @@
       <div class="wrap">
         <div class="closing__inner reveal-up">
           <h2 class="closing__title">Da el paso, en privado y sin prisa.</h2>
-          <p class="closing__sub">Aún no está disponible, pero puedes ser de los primeros. Cuando abra, tu consulta con un médico colegiado será gratis y con respuesta, normalmente, en menos de 24 horas. Déjanos tus datos y te avisamos en privado en cuanto puedas empezar. Sin compromiso.</p>
-          <a class="btn btn--light" id="ctaFinal" href="/lista?categoria=salud-sexual">
-            Avísame
+          <p class="closing__sub">Tu consulta con un médico colegiado es gratis y te responde, normalmente, en menos de 24 horas. Cuentas tu caso desde el móvil, en privado, y decides después. Sin compromiso.</p>
+          <a class="btn btn--light" id="ctaFinal" href="saludsexual">
+            Empieza gratis
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
           </a>
         </div>
@@ -399,8 +438,8 @@
   <div class="sticky-cta" id="stickyCta" aria-hidden="true">
     <div class="sticky-cta__inner">
       <span class="sticky-cta__hint">Sin compromiso</span>
-      <a class="btn btn--primary" href="/lista?categoria=salud-sexual">
-        Avísame
+      <a class="btn btn--primary" href="saludsexual">
+        Empieza gratis
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
       </a>
     </div>
@@ -465,6 +504,29 @@
           }, { threshold: 0 }).observe(finalCta);
         }
       }
+    })();
+  </script>
+  <script>
+    // Selector mensual/anual. Sin dependencias: enseña u oculta los importes y las notas segun el
+    // ciclo elegido. Arranca en MENSUAL, que es la entrada de menor compromiso; el ahorro del anual
+    // se ve igualmente en la propia pestana.
+    (function () {
+      var opts = document.querySelectorAll(".ciclo__opt");
+      if (!opts.length) return;
+      function set(ciclo) {
+        opts.forEach(function (b) {
+          var on = b.getAttribute("data-ciclo") === ciclo;
+          b.classList.toggle("is-on", on);
+          b.setAttribute("aria-pressed", on ? "true" : "false");
+        });
+        document.querySelectorAll("[data-precio],[data-nota]").forEach(function (el) {
+          var k = el.getAttribute("data-precio") || el.getAttribute("data-nota");
+          el.hidden = k !== ciclo;
+        });
+      }
+      opts.forEach(function (b) {
+        b.addEventListener("click", function () { set(b.getAttribute("data-ciclo")); });
+      });
     })();
   </script>
   <script src="assets/js/cursor-glow.js" defer></script>

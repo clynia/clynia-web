@@ -53,8 +53,9 @@ window.CLYNIA_FORM = {
   // modo. La consulta puntual reusa el flujo apto de peso (flujo=consulta-apto, 30 días tipo
   // valoración); la suscripción va por su webhook propio.
   plans: [
-    { id: "sub_mensual", nombre: "Seguimiento mensual", precio: 39, meta: "39 €/mes · cancela cuando quieras", featured: true, tag: "Más elegido", stripePrice: "price_1TxpinRqcE5hSPKXJm4EAs4U", desc: "Acceso a tu médico colegiado, seguimiento y recetas de repetición cuando el médico lo considere adecuado. Sin permanencia: te das de baja cuando quieras." },
-    { id: "consulta_sexual", nombre: "Consulta puntual", precio: 39, meta: "pago único · sin suscripción", stripePrice: "price_1TweFvRqcE5hSPKX2eBnqIdD", desc: "Una consulta con un médico colegiado que valora tu caso y, si lo considera adecuado, te indica el tratamiento. Incluye 30 días para hablar con tu médico. Sin compromisos ni cobros recurrentes." }
+    { id: "sub_anual", nombre: "Seguimiento anual", precio: 390, meta: "390 € al año · sale a 32,50 €/mes · ahorras 78 € (17%)", featured: true, tag: "Ahorras 17%", stripePrice: "price_1TxqXKRqcE5hSPKXDbahsnfY", desc: "Lo mismo que el mensual, pagando el año de una vez: 390 € en lugar de 468 €. Acceso a tu médico colegiado y seguimiento continuado durante 12 meses." },
+    { id: "sub_mensual", nombre: "Seguimiento mensual", precio: 39, meta: "39 €/mes · cancela cuando quieras", stripePrice: "price_1TxpinRqcE5hSPKXJm4EAs4U", desc: "Acceso a tu médico colegiado y seguimiento continuado, mes a mes. Sin permanencia: te das de baja cuando quieras." },
+    { id: "consulta_sexual", nombre: "Consulta puntual", precio: 99, meta: "pago único · sin suscripción", stripePrice: "price_1TxqUPRqcE5hSPKXwHHCTwsk", desc: "Una consulta con un médico colegiado que valora tu caso y te dice qué procede. Incluye 30 días para hablar con él. Sin compromisos ni cobros recurrentes." }
   ],
 
   steps: [
@@ -86,9 +87,7 @@ window.CLYNIA_FORM = {
     // neutra y las marcas van en las opciones junto al principio activo, para que el médico sepa qué le
     // fue bien. ⚠ compliance: verificar el render antes de publicar (nombres de marca en parte 1).
     { id: "medicacion_previa", section: "Tu consulta", type: "single", key: "medicacion_previa", q: "¿Has probado antes alguna medicación para la erección? ¿Qué tal te fue?", help: "Nos ayuda a saber qué ha funcionado ya en tu caso. Si no lo sabes con seguridad, no pasa nada.", options: [
-      { label: "Sí, sildenafilo (Viagra) y me fue bien", value: "Sildenafilo bien" },
-      { label: "Sí, tadalafilo (Cialis) y me fue bien", value: "Tadalafilo bien" },
-      { label: "Sí, otra y me fue bien", value: "Otra bien" },
+      { label: "Sí, y me fue bien", value: "Previa bien" },
       { label: "La probé, pero no me funcionó o me sentó mal", value: "Probada con problemas" },
       { label: "No he probado ninguna", value: "Ninguna" }
     ] },
