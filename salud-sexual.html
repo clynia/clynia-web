@@ -37,29 +37,53 @@
     /* Selector mensual/anual (patrón SaaS). Segmentado, no dos tarjetas: el precio es el mismo
        servicio, solo cambia cómo se paga, y así el ahorro del anual se lee de un vistazo. */
     .ciclo {
-      display: inline-flex; align-items: center; gap: 4px; margin: 6px auto 26px;
+      position: relative; display: inline-flex; align-items: center; gap: 2px; margin: 6px auto 24px;
       padding: 5px; border-radius: 999px; background: #fff;
-      box-shadow: inset 0 0 0 1px var(--line), 0 6px 18px -12px rgba(40, 67, 60, .35);
+      box-shadow: inset 0 0 0 1px var(--line), 0 10px 26px -18px rgba(40, 67, 60, .55);
+    }
+    /* Pastilla que se desliza bajo la opción activa. La posición y el ancho los fija el JS con las
+       medidas reales del botón, porque las dos opciones no miden lo mismo (la anual lleva badge). */
+    .ciclo__thumb {
+      position: absolute; top: 5px; bottom: 5px; left: 0; width: 0; border-radius: 999px;
+      background: var(--green); box-shadow: 0 6px 16px -8px rgba(40, 67, 60, .7);
+      transition: transform .34s cubic-bezier(.4, 0, .2, 1), width .34s cubic-bezier(.4, 0, .2, 1);
+      pointer-events: none;
     }
     .ciclo__opt {
-      display: inline-flex; align-items: center; gap: 8px; border: 0; cursor: pointer;
-      padding: 11px 22px; border-radius: 999px; background: transparent;
-      font: inherit; font-size: 15px; font-weight: 600; color: var(--ink-soft);
-      transition: background .22s var(--ease), color .22s var(--ease);
+      position: relative; z-index: 1;
+      display: inline-flex; align-items: center; gap: 9px; border: 0; cursor: pointer;
+      padding: 12px 24px; border-radius: 999px; background: transparent;
+      font: inherit; font-size: 15px; font-weight: 600; letter-spacing: -.005em; color: var(--ink-soft);
+      transition: color .26s var(--ease);
     }
     .ciclo__opt:hover { color: var(--ink); }
-    .ciclo__opt.is-on { background: var(--green); color: #fff; }
+    .ciclo__opt.is-on { color: #fff; }
     .ciclo__save {
-      font-size: 11.5px; font-weight: 700; letter-spacing: .02em; padding: 3px 8px;
-      border-radius: 999px; background: var(--green-tint); color: var(--green-900);
-      transition: background .22s var(--ease), color .22s var(--ease);
+      font-size: 11px; font-weight: 700; letter-spacing: .03em; text-transform: none;
+      padding: 4px 9px; border-radius: 999px;
+      background: var(--green-tint); color: var(--green-900);
+      transition: background .26s var(--ease), color .26s var(--ease);
     }
-    .ciclo__opt.is-on .ciclo__save { background: rgba(255, 255, 255, .22); color: #fff; }
+    .ciclo__opt.is-on .ciclo__save { background: rgba(255, 255, 255, .2); color: #fff; }
+    @media (prefers-reduced-motion: reduce) { .ciclo__thumb { transition: none; } }
     .plan__price { display: flex; align-items: baseline; justify-content: center; gap: 8px; margin: 2px 0 4px; }
     .plan__amount { font-family: "Fraunces", Georgia, serif; font-weight: 500; font-size: 46px; line-height: 1; color: var(--ink); }
     .plan__unit { font-size: 15px; color: var(--ink-soft); }
     .plan__ahorro { margin: 0 0 6px; font-size: 13.5px; font-weight: 600; color: var(--green); }
     [hidden] { display: none !important; }
+
+    /* Justificado a ambos lados CON guiones, igual que el resto del sitio. Estas clases viven solo
+       en esta página, así que la regla de styles.css no las alcanzaba y se quedaban en bandera.
+       Se justifican los PÁRRAFOS de verdad; las líneas sueltas centradas del precio (plan__meta,
+       plan__ahorro, plan__for) se quedan centradas, que justificar una línea no hace nada bueno. */
+    .privacy-card__text,
+    .plans__note,
+    .faq__body p,
+    .closing__sub {
+      text-align: justify;
+      -webkit-hyphens: auto;
+      hyphens: auto;
+    }
 
     /* Sección única: privacidad */
     .privacy__grid {
@@ -296,8 +320,9 @@
 
         <div style="text-align:center">
           <div class="ciclo" role="group" aria-label="Elige cómo pagar">
+            <span class="ciclo__thumb" aria-hidden="true"></span>
             <button type="button" class="ciclo__opt is-on" data-ciclo="mes" aria-pressed="true">Mensual</button>
-            <button type="button" class="ciclo__opt" data-ciclo="ano" aria-pressed="false">Anual <span class="ciclo__save">Ahorras 17%</span></button>
+            <button type="button" class="ciclo__opt" data-ciclo="ano" aria-pressed="false">Anual <span class="ciclo__save">2 meses gratis · 17% menos</span></button>
           </div>
         </div>
 
@@ -309,9 +334,9 @@
               <span class="plan__amount" data-precio="ano" hidden>32,50 €</span>
               <span class="plan__unit">al mes</span>
             </p>
-            <p class="plan__meta" data-nota="mes">Se cobra cada mes. Sin permanencia: cancelas cuando quieras.</p>
-            <p class="plan__meta" data-nota="ano" hidden>390 € al año, en un solo pago.</p>
-            <p class="plan__ahorro" data-nota="ano" hidden>Ahorras 78 € frente a pagarlo mes a mes (468 € al año).</p>
+            <p class="plan__meta" data-nota="mes">Sin compromiso, cancela cuando quieras.</p>
+            <p class="plan__meta" data-nota="ano" hidden>390 € al año, en un solo pago. Sin compromiso: al terminar decides si sigues.</p>
+            <p class="plan__ahorro" data-nota="ano" hidden>Pagas 10 meses y tienes 12: ahorras 78 €, un 17% menos que los 468 € del mes a mes.</p>
             <ul class="plan__list">
               <li>Consulta gratis con un médico colegiado e independiente, respuesta, normalmente, en menos de 24 h</li>
               <li>Tu médico a mano por el portal para tus dudas, en privado</li>
@@ -512,8 +537,18 @@
     // se ve igualmente en la propia pestana.
     (function () {
       var opts = document.querySelectorAll(".ciclo__opt");
+      var thumb = document.querySelector(".ciclo__thumb");
       if (!opts.length) return;
+      var actual = "mes"; // arranca en MENSUAL: es la entrada de menor compromiso
+      function moverPastilla() {
+        if (!thumb) return;
+        var b = document.querySelector('.ciclo__opt[data-ciclo="' + actual + '"]');
+        if (!b) return;
+        thumb.style.width = b.offsetWidth + "px";
+        thumb.style.transform = "translateX(" + b.offsetLeft + "px)";
+      }
       function set(ciclo) {
+        actual = ciclo;
         opts.forEach(function (b) {
           var on = b.getAttribute("data-ciclo") === ciclo;
           b.classList.toggle("is-on", on);
@@ -523,10 +558,15 @@
           var k = el.getAttribute("data-precio") || el.getAttribute("data-nota");
           el.hidden = k !== ciclo;
         });
+        moverPastilla();
       }
       opts.forEach(function (b) {
         b.addEventListener("click", function () { set(b.getAttribute("data-ciclo")); });
       });
+      moverPastilla();
+      // Las fuentes web cambian el ancho de los botones al cargar; recolocamos cuando estén listas.
+      if (document.fonts && document.fonts.ready) { document.fonts.ready.then(moverPastilla); }
+      window.addEventListener("resize", moverPastilla);
     })();
   </script>
   <script src="assets/js/cursor-glow.js" defer></script>

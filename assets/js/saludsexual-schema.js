@@ -54,8 +54,8 @@ window.CLYNIA_FORM = {
   // modo. La consulta puntual reusa el flujo apto de peso (flujo=consulta-apto, 30 días tipo
   // valoración); la suscripción va por su webhook propio.
   plans: [
-    { id: "sub_anual", nombre: "Seguimiento anual", precio: 390, meta: "390 € al año · sale a 32,50 €/mes · ahorras 78 € (17%)", featured: true, tag: "Ahorras 17%", stripePrice: "price_1TxqXKRqcE5hSPKXDbahsnfY", desc: "Lo mismo que el mensual, pagando el año de una vez: 390 € en lugar de 468 €. Acceso a tu médico colegiado y seguimiento continuado durante 12 meses." },
-    { id: "sub_mensual", nombre: "Seguimiento mensual", precio: 39, meta: "39 €/mes · cancela cuando quieras", stripePrice: "price_1TxpinRqcE5hSPKXJm4EAs4U", desc: "Acceso a tu médico colegiado y seguimiento continuado, mes a mes. Sin permanencia: te das de baja cuando quieras." },
+    { id: "sub_mensual", nombre: "Seguimiento mensual", precio: 39, meta: "39 €/mes · sin compromiso, cancela cuando quieras", featured: true, tag: "Más elegido", stripePrice: "price_1TxpinRqcE5hSPKXJm4EAs4U", desc: "Acceso a tu médico colegiado y seguimiento continuado, mes a mes. Sin compromiso, cancela cuando quieras." },
+    { id: "sub_anual", nombre: "Seguimiento anual", precio: 390, meta: "390 € al año · sale a 32,50 €/mes · 2 meses gratis, un 17% menos", tag: "2 meses gratis · 17% menos", stripePrice: "price_1TxqXKRqcE5hSPKXDbahsnfY", desc: "Lo mismo que el mensual pagando el año de una vez: pagas 10 meses y tienes 12. Son 390 € en lugar de 468 €." },
     { id: "consulta_sexual", nombre: "Consulta puntual", precio: 99, meta: "pago único · sin suscripción", stripePrice: "price_1TxqUPRqcE5hSPKXwHHCTwsk", desc: "Una consulta con un médico colegiado que valora tu caso y te dice qué procede. Incluye 30 días para hablar con él. Sin compromisos ni cobros recurrentes." }
   ],
 
