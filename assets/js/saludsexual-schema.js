@@ -9,12 +9,13 @@
    id F.p2StartId. La parte 1 va al webhook (consulta-intake-sexual, fase='parte1') y la parte 2 a
    part2Webhook (sexual-intake-parte2), que funde por intakeId y pasa el Tipo de Consulta a Intake.
 
-   PENDIENTE antes de PUBLICAR (la página NO está enlazada todavía):
-   - Revisión clínica + legal del contenido y del cribado PDE5 (lo pide el propio producto).
-   - Pase de /clynia-compliance, con foco en la pregunta de medicación previa (nombra Viagra/Cialis
-     como anamnesis, no como reclamo) y en el cribado renderizado.
-   - Decisión de PRECIOS y planes de Alfonso (el bloque `plans` es un DEFAULT espejo del peso;
-     el checkout no cobrará bien hasta cablear los price de Stripe del producto). */
+   EN MARCHA desde el 27 jul 2026: página enlazada desde la portada, indexable y con precios
+   decididos (ver `plans`). La pregunta de medicación previa se responde EN ABIERTO a propósito: el
+   nombre del fármaco lo escribe el paciente en el campo de texto de detalle, no lo mostramos
+   nosotros. Este fichero se sirve público, así que aquí tampoco se nombran marcas de medicamentos
+   de receta, ni siquiera en comentarios.
+   PENDIENTE: revisión clínica y legal del cribado PDE5, y sacar el píxel de Meta de esta página
+   (hallazgo abierto de la auditoría del 27 jul: la URL revela interés en salud sexual). */
 window.CLYNIA_FORM = {
   product: "Salud sexual",
   storeKey: "clynia_sexual_v1",
