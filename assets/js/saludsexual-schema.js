@@ -77,6 +77,12 @@ window.CLYNIA_FORM = {
     { id: "nombre", section: "Sobre ti", type: "text", key: "nombre", q: "Te damos la bienvenida. ¿Cómo te llamas?", help: "Son unos 2 minutos y es privado. Un médico colegiado valora tu caso sin coste; solo si lo considera adecuado para ti te propondrá continuar.", autocomplete: "given-name", placeholder: "Tu nombre" },
     { id: "nacimiento", section: "Sobre ti", type: "date", key: "fecha_nacimiento", q: "¿Cuál es tu fecha de nacimiento?", help: "El médico la necesita para valorar tu caso con seguridad. Este servicio es solo para mayores de 18 años.", next: function (a) { if (!a.fecha_nacimiento) return null; var d = new Date(a.fecha_nacimiento), t = new Date(), age = t.getFullYear() - d.getFullYear(), m = t.getMonth() - d.getMonth(); if (m < 0 || (m === 0 && t.getDate() < d.getDate())) age--; return age < 18 ? "ending_menor" : null; } },
     { id: "email", section: "Sobre ti", type: "email", key: "email", q: "¿Cuál es tu correo electrónico?", help: "Aquí te enviamos la confirmación y la respuesta del médico, en privado." },
+    // Teléfono en la PARTE 1, la misma leccion que se aprendio en el embudo de peso: el contacto se
+    // captura pronto o se pierde. OPCIONAL a proposito, que aqui la discrecion pesa mas que en peso y
+    // no se arriesga la conversion de la parte 1 por un dato que la parte 2 vuelve a pedir si falta.
+    // Va detras del email para que sendPartial() lo mande con el lead parcial (ya viaja en su payload)
+    // y para que 'Upsert Paciente' lo escriba en Pacientes > Teléfono.
+    { id: "telefono1", section: "Sobre ti", type: "tel", key: "telefono", required: false, q: "¿Y tu teléfono?", help: "Opcional. Es la vía rápida si el médico necesita aclarar algo antes de valorar tu caso. Si prefieres que solo te escriba por email, continúa sin rellenarlo." },
     { id: "consent", section: "Sobre ti", type: "consent", key: "consent", q: "Antes de seguir: tus datos, protegidos", help: "Con tu permiso guardamos tu solicitud para que un médico colegiado pueda valorarla. Todo es confidencial.", cta: "Acepto y continúo", items: [
       { key: "acepta_privacidad", required: true, label: 'He leído y acepto la <a href="privacidad" target="_blank">Política de Privacidad</a> de Clynia.' },
       { key: "acepta_datos_salud", required: true, label: "Doy mi consentimiento explícito al tratamiento de mis datos de salud con fines asistenciales." },
@@ -194,7 +200,8 @@ window.CLYNIA_FORM = {
     { id: "tipo_documento", section: "Para tu receta", type: "single", key: "tipo_documento", q: "¿Qué documento de identidad usarás?", help: "Lo exige el sistema de receta médica (REMPE).", options: [{ label: "DNI", value: "DNI" }, { label: "NIE", value: "NIE" }, { label: "Pasaporte", value: "Pasaporte" }] },
     { id: "num_documento", section: "Para tu receta", type: "text", key: "num_documento", q: "Número de tu documento", autocomplete: "off", placeholder: "Número de DNI/NIE/Pasaporte" },
     { id: "nacionalidad", section: "Para tu receta", type: "text", key: "nacionalidad", q: "¿Cuál es tu nacionalidad?", placeholder: "Tu nacionalidad" },
-    { id: "telefono", section: "Para tu receta", type: "tel", key: "telefono", q: "¿Y tu número de teléfono?", help: "El médico te llamará por aquí si necesita ampliar algún dato." },
+    // Solo si NO lo dio en la parte 1 (paso telefono1), para no pedirle dos veces lo mismo.
+    { id: "telefono", section: "Para tu receta", type: "tel", key: "telefono", q: "¿Y tu número de teléfono?", help: "El médico te llamará por aquí si necesita ampliar algún dato.", showIf: function (a) { return !String(a.telefono || "").trim(); } },
     { id: "direccion", section: "Para tu receta", type: "text", key: "direccion", q: "¿Cuál es tu dirección postal?", autocomplete: "address-line1", placeholder: "Tu calle y número" },
     { id: "codigo_postal", section: "Para tu receta", type: "text", key: "codigo_postal", q: "Código postal", autocomplete: "postal-code", placeholder: "Tu código postal" },
     { id: "localidad", section: "Para tu receta", type: "text", key: "localidad", q: "Localidad", autocomplete: "address-level2", placeholder: "Tu ciudad o población" },
