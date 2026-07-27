@@ -1,6 +1,30 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+  <!-- Parametros de la vuelta de Stripe. Se leen y se BORRAN de la barra de direcciones aqui
+       arriba del todo, ANTES de que arranque ningun tercero (pixel de Meta, GA4, Contentsquare),
+       para que ni el identificador del caso ni el producto salgan del equipo:
+         p2 = IntakeId del caso, para encadenar la parte 2 del cuestionario.
+         f  = de que formulario viene (s = salud sexual; ausente o cualquier otra cosa = peso).
+              Abreviado a proposito: en una URL, "salud sexual" es un dato de salud.
+       Con esto la URL que ven las analiticas y el historial del navegador es /gracias a secas. -->
+  <script>
+  (function () {
+    try {
+      var u = new URL(location.href);
+      var p2 = u.searchParams.get("p2");
+      var f = u.searchParams.get("f");
+      window.__clyniaP2 = (p2 && /^[a-zA-Z0-9-]{8,80}$/.test(p2)) ? p2 : null;
+      window.__clyniaForm = f === "s" ? "sexual" : "peso";
+      if (p2 || f) {
+        u.searchParams.delete("p2");
+        u.searchParams.delete("f");
+        history.replaceState(null, "", u.pathname + (u.search || "") + u.hash);
+      }
+    } catch (e) { window.__clyniaP2 = null; window.__clyniaForm = "peso"; }
+  })();
+  </script>
+
   <!-- Meta Pixel Code -->
   <script>
   !function(f,b,e,v,n,t,s)
@@ -111,22 +135,38 @@
     </main>
   </div>
 
-  <!-- CTA de la parte 2 (flujo en 2 partes): si el formulario de peso de ESTE dispositivo tiene
-       intakeId, el botón enlaza a peso.html?p2=<intakeId>; sin él (otro dispositivo), el botón
-       lleva a peso.html a secas (el motor entra en parte 2 por el marker de pagado) y se muestra
-       la nota del email. -->
+  <!-- CTA de la parte 2 (flujo en 2 partes). Dos decisiones: A QUE formulario y CON QUE intakeId.
+       El formulario lo manda el checkout en ?f= (ya leido y limpiado en el <head>), porque el
+       IntakeId no dice de que producto es; si no viniera, se deduce de que store de cuestionario
+       existe en este equipo. Esto estaba escrito a fuego a peso.html, asi que quien pagaba salud
+       sexual acababa en la parte 2 del cuestionario de peso.
+       El intakeId sale del ?p2= (funciona aunque el pago vuelva en otro dispositivo) y, si no
+       viene, del store local. Sin ninguno de los dos, el boton lleva al formulario a secas (el
+       motor entra en parte 2 por el marker de pagado) y se enseña la nota del email. -->
   <script>
   (function () {
+    var FORMS = {
+      peso:   { pagina: "/peso.html",        store: "clynia_peso_v1" },
+      sexual: { pagina: "/saludsexual.html", store: "clynia_sexual_v1" }
+    };
+    function leer(k) { try { return JSON.parse(localStorage.getItem(k) || "null"); } catch (e) { return null; } }
     try {
-      // Preferimos el intakeId del ?p2= de la URL (lo pone success_url del checkout): funciona aunque
-      // el pago vuelva en otro dispositivo/navegador. Si no viene, caemos al de localStorage (mismo equipo).
-      var qp = null;
-      try { qp = new URLSearchParams(window.location.search).get("p2"); } catch (e) {}
-      var st = JSON.parse(localStorage.getItem("clynia_peso_v1") || "null");
-      var iid = (qp && /^[a-zA-Z0-9-]{8,80}$/.test(qp)) ? qp : (st && st._intakeId);
+      // Si el checkout no marco el producto, gana el store que exista en este equipo. Se mira
+      // sexual primero: peso es el que va por defecto, asi que solo se elige si no hay otro.
+      var cual = window.__clyniaForm;
+      if (cual !== "sexual" && leer(FORMS.sexual.store) && !leer(FORMS.peso.store)) { cual = "sexual"; }
+      var F = FORMS[cual] || FORMS.peso;
+
       var a = document.getElementById("tyP2");
-      if (a && iid && /^[a-zA-Z0-9-]{8,80}$/.test(String(iid))) { a.href = "/peso.html?p2=" + encodeURIComponent(iid); }
-      else { var n = document.getElementById("tyP2Mail"); if (n) n.style.display = "block"; }
+      if (a) { a.href = F.pagina; }
+
+      var st = leer(F.store);
+      var iid = window.__clyniaP2 || (st && st._intakeId);
+      if (a && iid && /^[a-zA-Z0-9-]{8,80}$/.test(String(iid))) {
+        a.href = F.pagina + "?p2=" + encodeURIComponent(iid);
+      } else {
+        var n = document.getElementById("tyP2Mail"); if (n) n.style.display = "block";
+      }
     } catch (e) {}
   })();
   </script>
