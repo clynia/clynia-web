@@ -66,6 +66,14 @@
     }
     .ciclo__opt.is-on .ciclo__save { background: rgba(255, 255, 255, .2); color: #fff; }
     @media (prefers-reduced-motion: reduce) { .ciclo__thumb { transition: none; } }
+    /* Con TRES opciones ya no cabe en una linea en movil: el selector pasa a ancho completo, las
+       opciones se reparten el hueco y el badge del ahorro baja debajo de su etiqueta en vez de
+       ensanchar ese boton al doble. La pastilla se recoloca sola, porque el JS la mide del boton. */
+    @media (max-width: 620px) {
+      .ciclo--3 { display: flex; width: 100%; margin-left: 0; margin-right: 0; }
+      .ciclo--3 .ciclo__opt { flex: 1 1 0; justify-content: center; flex-direction: column; gap: 3px; padding: 10px 6px; font-size: 13.5px; }
+      .ciclo--3 .ciclo__save { font-size: 10px; padding: 2px 7px; letter-spacing: .01em; }
+    }
     .plan__price { display: flex; align-items: baseline; justify-content: center; gap: 8px; margin: 2px 0 4px; }
     .plan__amount { font-family: "Fraunces", Georgia, serif; font-weight: 500; font-size: 46px; line-height: 1; color: var(--ink); }
     .plan__unit { font-size: 15px; color: var(--ink-soft); }
@@ -347,28 +355,42 @@
         </header>
 
         <div style="text-align:center">
-          <div class="ciclo" role="group" aria-label="Elige cómo pagar">
+          <!-- Tres opciones, y arranca en ANUAL: es el equivalente mensual mas bajo, asi que es el
+               que ancla el precio de toda la pagina. La consulta suelta entra aqui en vez de vivir
+               en una nota debajo, que era donde nadie la veia. -->
+          <div class="ciclo ciclo--3" role="group" aria-label="Elige cómo pagar">
             <span class="ciclo__thumb" aria-hidden="true"></span>
-            <button type="button" class="ciclo__opt is-on" data-ciclo="mes" aria-pressed="true">Mensual</button>
-            <button type="button" class="ciclo__opt" data-ciclo="ano" aria-pressed="false">Anual <span class="ciclo__save">2 meses gratis · 17% menos</span></button>
+            <button type="button" class="ciclo__opt is-on" data-ciclo="ano" aria-pressed="true">Anual <span class="ciclo__save">2 meses gratis</span></button>
+            <button type="button" class="ciclo__opt" data-ciclo="mes" aria-pressed="false">Mensual</button>
+            <button type="button" class="ciclo__opt" data-ciclo="suelta" aria-pressed="false">Consulta suelta</button>
           </div>
         </div>
 
         <div class="plans plans--solo">
           <article class="plan plan--featured reveal-up">
-            <h3 class="plan__name">Seguimiento con tu médico</h3>
+            <h3 class="plan__name" data-nota="ano mes">Seguimiento con tu médico</h3>
+            <h3 class="plan__name" data-nota="suelta" hidden>Consulta puntual</h3>
             <p class="plan__price">
-              <span class="plan__amount" data-precio="mes">39 €</span>
-              <span class="plan__amount" data-precio="ano" hidden>32,50 €</span>
-              <span class="plan__unit">al mes</span>
+              <span class="plan__amount" data-precio="ano">32,50 €</span>
+              <span class="plan__amount" data-precio="mes" hidden>39 €</span>
+              <span class="plan__amount" data-precio="suelta" hidden>99 €</span>
+              <span class="plan__unit" data-nota="ano mes">al mes</span>
+              <span class="plan__unit" data-nota="suelta" hidden>pago único</span>
             </p>
-            <p class="plan__meta" data-nota="mes">Sin compromiso, cancela cuando quieras.</p>
-            <p class="plan__meta" data-nota="ano" hidden>390 € al año, en un solo pago. Sin compromiso: al terminar decides si sigues.</p>
-            <p class="plan__ahorro" data-nota="ano" hidden>Pagas 10 meses y tienes 12: ahorras 78 €, un 17% menos que los 468 € del mes a mes.</p>
-            <ul class="plan__list">
+            <p class="plan__meta" data-nota="ano">390 € al año, en un solo pago. Sin compromiso: al terminar decides si sigues.</p>
+            <p class="plan__meta" data-nota="mes" hidden>Sin compromiso, cancela cuando quieras.</p>
+            <p class="plan__meta" data-nota="suelta" hidden>Una sola vez. Sin suscripción y sin cobros recurrentes.</p>
+            <p class="plan__ahorro" data-nota="ano">Pagas 10 meses y tienes 12: ahorras 78 €, un 17% menos que los 468 € del mes a mes.</p>
+            <ul class="plan__list" data-nota="ano mes">
               <li>Consulta gratis con un médico colegiado e independiente, respuesta, normalmente, en menos de 24 h</li>
               <li>Tu médico a mano por el portal para tus dudas, en privado</li>
               <li>Seguimiento continuado: tu médico ve cómo te va y ajusta lo que haga falta</li>
+              <li>Las decisiones clínicas son siempre de tu médico, tras valorar tu caso</li>
+              <li>Facturación discreta (en tu banco, solo CLYNIA) y datos protegidos conforme al RGPD</li>
+            </ul>
+            <ul class="plan__list" data-nota="suelta" hidden>
+              <li>Consulta gratis con un médico colegiado e independiente, respuesta, normalmente, en menos de 24 h</li>
+              <li>30 días para escribirle por el portal y resolver lo que surja</li>
               <li>Las decisiones clínicas son siempre de tu médico, tras valorar tu caso</li>
               <li>Facturación discreta (en tu banco, solo CLYNIA) y datos protegidos conforme al RGPD</li>
             </ul>
@@ -378,10 +400,9 @@
         </div>
 
         <p class="plans__note reveal-up">
-          Si prefieres no suscribirte, hay una consulta puntual de 99 € con 30 días para hablar
-          con tu médico. El medicamento no va incluido en ninguna de las dos opciones: si tu
-          médico considera que procede una indicación, la consigues en tu farmacia. Y si tras
-          valorar tu caso considera que no procede, te lo dirá con transparencia.
+          El medicamento no va incluido en ninguna de las tres opciones: si tu médico considera que
+          procede una indicación, lo consigues en tu farmacia con tu receta. Y si tras valorar tu
+          caso considera que no procede, te lo dirá con transparencia.
         </p>
       </div>
     </section>
@@ -571,7 +592,7 @@
       var opts = document.querySelectorAll(".ciclo__opt");
       var thumb = document.querySelector(".ciclo__thumb");
       if (!opts.length) return;
-      var actual = "mes"; // arranca en MENSUAL: es la entrada de menor compromiso
+      var actual = "ano"; // arranca en ANUAL: es el equivalente mensual mas bajo y ancla el precio
       function moverPastilla() {
         if (!thumb) return;
         var b = document.querySelector('.ciclo__opt[data-ciclo="' + actual + '"]');
@@ -586,9 +607,12 @@
           b.classList.toggle("is-on", on);
           b.setAttribute("aria-pressed", on ? "true" : "false");
         });
+        // El atributo admite VARIAS claves separadas por espacio ("ano mes"), para lo que es comun
+        // a las dos suscripciones y no a la consulta suelta: el nombre del plan, la unidad y la
+        // lista de lo que incluye.
         document.querySelectorAll("[data-precio],[data-nota]").forEach(function (el) {
-          var k = el.getAttribute("data-precio") || el.getAttribute("data-nota");
-          el.hidden = k !== ciclo;
+          var k = el.getAttribute("data-precio") || el.getAttribute("data-nota") || "";
+          el.hidden = k.split(" ").indexOf(ciclo) === -1;
         });
         moverPastilla();
       }
