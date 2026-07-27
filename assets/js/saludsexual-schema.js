@@ -1,33 +1,70 @@
-/* Clynia — esquema del cuestionario de SALUD SEXUAL (masculina: disfunción eréctil y eyaculación precoz).
-   Mismo motor (form-engine.js) y estilo que el cuestionario de peso.
-   Bloque de paciente con campos REMPE. Cribado de seguridad para inhibidores de la PDE5
-   (sildenafilo, tadalafilo): las contraindicaciones absolutas llevan a ending_rojo.
-   Envía las respuestas al webhook de n8n. Categoría próximamente: la página NO está vinculada todavía.
-   Contenido clínico pendiente de revisión por el equipo médico/legal. */
+/* Clynia — esquema del cuestionario de SALUD SEXUAL MASCULINA (disfunción eréctil y rendimiento).
+   Modelo CONSULTA GRATIS PRIMERO (clonado del peso, 2026-07-23): la parte 1 es una consulta médica
+   gratuita (datos mínimos + motivo + medicación previa que le funcionó + cribado de seguridad PDE5
+   + la pregunta libre del paciente). Se envía a consulta-intake-sexual, que crea el Caso
+   Producto='Salud sexual', Tipo=Consulta, y Diego (médico colegiado con el flag "Aprueba consultas")
+   lo revisa sin coste. NO hay pago en la web pública. El cuestionario clínico profundo + REMPE se
+   conserva como PARTE 2 (modo ?p2=<intakeId>), al que solo llega el apto tras el OK del médico y el
+   pago (enlace del email/portal). El motor (form-engine.js) decide el modo; el corte es el paso con
+   id F.p2StartId. La parte 1 va al webhook (consulta-intake-sexual, fase='parte1') y la parte 2 a
+   part2Webhook (sexual-intake-parte2), que funde por intakeId y pasa el Tipo de Consulta a Intake.
+
+   PENDIENTE antes de PUBLICAR (la página NO está enlazada todavía):
+   - Revisión clínica + legal del contenido y del cribado PDE5 (lo pide el propio producto).
+   - Pase de /clynia-compliance, con foco en la pregunta de medicación previa (nombra Viagra/Cialis
+     como anamnesis, no como reclamo) y en el cribado renderizado.
+   - Decisión de PRECIOS y planes de Alfonso (el bloque `plans` es un DEFAULT espejo del peso;
+     el checkout no cobrará bien hasta cablear los price de Stripe del producto). */
 window.CLYNIA_FORM = {
   product: "Salud sexual",
   storeKey: "clynia_sexual_v1",
-  webhook: "https://n8n-ixwg.srv1722506.hstgr.cloud/webhook/sexual-intake",
+  // CONSULTA GRATIS (parte 1, flujo por defecto): las respuestas van a consulta-intake-sexual, que crea
+  // el Caso Producto='Salud sexual', Tipo=Consulta (Estado pago=Pendiente, Importe 0, sin médico) y
+  // dispara el Lead de Meta. NO hay pago aquí: la primera consulta es gratuita; el pago del plan llega
+  // después, ya como apto. (Workflow n8n clonado del de peso, cribado PDE5 propio.)
+  webhook: "https://n8n-ixwg.srv1722506.hstgr.cloud/webhook/consulta-intake-sexual",
+
+  // FORMULARIO PROFUNDO (parte 2, modo ?p2=<intakeId>): el apto, tras el OK del médico y el pago,
+  // completa su cuestionario clínico + REMPE. Se envía aquí y n8n lo funde con el MISMO caso (merge por
+  // intakeId), pasa el Tipo de Consulta a Intake y prepara la receta. Solo se entra con ?p2= (enlace del
+  // email o portal del apto) o con el marker de pagado.
+  part2Webhook: "https://n8n-ixwg.srv1722506.hstgr.cloud/webhook/sexual-intake-parte2",
+  p2StartId: "p2_welcome",
+
+  // PAGO DEL APTO (modo ?pay=<casoId>): tras el OK del médico, el apto elige plan y paga ANTES de la
+  // parte 2. El motor entra en modo pago por ?pay=, arranca en payStartId (paso de planes) con el casoId
+  // sembrado, y finish() postea {casoId, email, tipo_caso} a checkoutEndpoint (crear-checkout), que
+  // devuelve la URL de Stripe. La PARTE 1 (consulta gratis) NUNCA fija answers.plan.
+  // Checkout UNIFICADO de sexual (n8n `crear-checkout-sexual`, id 4peozw8uOKcWFz0D): ramifica por el id
+  // del plan → suscripción (mode=subscription) o pago único (mode=payment, descriptor CLYNIA). NO toca
+  // el `crear-checkout` de peso.
+  checkoutEndpoint: "https://n8n-ixwg.srv1722506.hstgr.cloud/webhook/crear-checkout-sexual",
+  payStartId: "plans",
+  // DOS OPCIONES tras el apto (decisión de Alfonso, 24 jul): suscripción mensual (auto-renueva) o
+  // consulta puntual (pago único). Stripe LIVE: suscripción 29€/mes prod_UwVqEfp3fakjLi /
+  // price_1TwcpFRqcE5hSPKXVslzya08; consulta puntual 39€ prod_UwXKHPZalnPs6x / price_1TweFvRqcE5hSPKX2eBnqIdD,
+  // ambos con descriptor de banco "CLYNIA". El id del plan ('sub_mensual' | 'consulta_sexual') lo mapea el
+  // checkout unificado a su price y su modo. La consulta puntual reusa el flujo apto de peso (flujo=consulta-apto,
+  // 30 días tipo valoración); la suscripción va por su webhook propio. No live hasta revisión clínica/legal + compliance.
+  plans: [
+    { id: "sub_mensual", nombre: "Seguimiento mensual", precio: 29, meta: "29 €/mes · cancela cuando quieras", featured: true, tag: "Más elegido", stripePrice: "price_1TwcpFRqcE5hSPKXVslzya08", desc: "Acceso a tu médico colegiado, seguimiento y recetas de repetición cuando el médico lo considere adecuado. Sin permanencia: te das de baja cuando quieras." },
+    { id: "consulta_sexual", nombre: "Consulta puntual", precio: 39, meta: "pago único · sin suscripción", stripePrice: "price_1TweFvRqcE5hSPKX2eBnqIdD", desc: "Una consulta con un médico colegiado que valora tu caso y, si lo considera adecuado, te indica el tratamiento. Incluye 30 días para hablar con tu médico. Sin compromisos ni cobros recurrentes." }
+  ],
 
   steps: [
-    { id: "welcome", type: "statement", q: "Cuéntanos tu caso", body: "Te haremos unas preguntas para que un médico colegiado valore si un tratamiento médico es adecuado para ti. Tardarás unos minutos. Es gratis y todo lo que nos cuentes es confidencial.", cta: "Empezar" },
-
-    // ---------- BLOQUE PACIENTE (REMPE) ----------
-    { id: "mayor_edad", section: "Sobre ti", type: "yesno", key: "mayor_edad", q: "Antes de empezar: ¿tienes 18 años o más?", next: function (a) { return a.mayor_edad === false ? "ending_menor" : null; } },
-    { id: "nombre", section: "Sobre ti", type: "text", key: "nombre", q: "¿Cómo te llamas?", help: "Solo el nombre.", autocomplete: "given-name", placeholder: "Tu nombre" },
-    { id: "primer_apellido", section: "Sobre ti", type: "text", key: "primer_apellido", q: "¿Cuál es tu primer apellido?", autocomplete: "family-name", placeholder: "Tu primer apellido" },
-    { id: "segundo_apellido", section: "Sobre ti", type: "text", key: "segundo_apellido", q: "¿Y tu segundo apellido?", help: "Si solo tienes un apellido, deja este campo en blanco y continúa.", autocomplete: "off", placeholder: "Tu segundo apellido (opcional)", required: false },
-    { id: "fecha_nacimiento", section: "Sobre ti", type: "date", key: "fecha_nacimiento", q: "¿Cuál es tu fecha de nacimiento?", next: function (a) { if (!a.fecha_nacimiento) return null; var d = new Date(a.fecha_nacimiento), t = new Date(), age = t.getFullYear() - d.getFullYear(), m = t.getMonth() - d.getMonth(); if (m < 0 || (m === 0 && t.getDate() < d.getDate())) age--; return age < 18 ? "ending_menor" : null; } },
+    // ═══════════ PARTE 1 (consulta gratis, mínima) ═══════════
+    // Sin pantalla de bienvenida: se llega desde "Empezar mi consulta gratis". La duración, la
+    // gratuidad y el trato discreto viven en el help de la primera pregunta.
+    { id: "nombre", section: "Sobre ti", type: "text", key: "nombre", q: "Te damos la bienvenida. ¿Cómo te llamas?", help: "Son unos 2 minutos y es privado. Un médico colegiado valora tu caso sin coste; solo si lo considera adecuado para ti te propondrá continuar.", autocomplete: "given-name", placeholder: "Tu nombre" },
+    { id: "nacimiento", section: "Sobre ti", type: "date", key: "fecha_nacimiento", q: "¿Cuál es tu fecha de nacimiento?", help: "El médico la necesita para valorar tu caso con seguridad. Este servicio es solo para mayores de 18 años.", next: function (a) { if (!a.fecha_nacimiento) return null; var d = new Date(a.fecha_nacimiento), t = new Date(), age = t.getFullYear() - d.getFullYear(), m = t.getMonth() - d.getMonth(); if (m < 0 || (m === 0 && t.getDate() < d.getDate())) age--; return age < 18 ? "ending_menor" : null; } },
+    { id: "email", section: "Sobre ti", type: "email", key: "email", q: "¿Cuál es tu correo electrónico?", help: "Aquí te enviamos la confirmación y la respuesta del médico, en privado." },
+    { id: "consent", section: "Sobre ti", type: "consent", key: "consent", q: "Antes de seguir: tus datos, protegidos", help: "Con tu permiso guardamos tu solicitud para que un médico colegiado pueda valorarla. Todo es confidencial.", cta: "Acepto y continúo", items: [
+      { key: "acepta_privacidad", required: true, label: 'He leído y acepto la <a href="privacidad" target="_blank">Política de Privacidad</a> de Clynia.' },
+      { key: "acepta_datos_salud", required: true, label: "Doy mi consentimiento explícito al tratamiento de mis datos de salud con fines asistenciales." },
+      { key: "acepta_acto_medico", required: true, label: "Consiento que un médico colegiado valore mi caso por telemedicina (comunicación no presencial), como acto médico individualizado." },
+      { key: "acepta_comercial", required: false, label: "Quiero recibir comunicaciones de Clynia sobre mi solicitud y novedades." }
+    ] },
     { id: "sexo_biologico", section: "Sobre ti", type: "single", key: "sexo_biologico", q: "¿Cuál es tu sexo biológico?", help: "Lo necesita el médico para valorar el tratamiento y sus contraindicaciones.", options: [{ label: "Hombre", value: "Hombre" }, { label: "Mujer", value: "Mujer" }], next: function (a) { return a.sexo_biologico === "Mujer" ? "ending_sexo" : null; } },
-    { id: "tipo_documento", section: "Sobre ti", type: "single", key: "tipo_documento", q: "¿Qué documento de identidad usarás?", help: "Pedimos estos datos para que un médico colegiado pueda emitir tu receta, solo si valora que el tratamiento es adecuado para ti.", options: [{ label: "DNI", value: "DNI" }, { label: "NIE", value: "NIE" }, { label: "Pasaporte", value: "Pasaporte" }] },
-    { id: "num_documento", section: "Sobre ti", type: "text", key: "num_documento", q: "Número de tu documento", autocomplete: "off", placeholder: "Número de DNI/NIE/Pasaporte" },
-    { id: "nacionalidad", section: "Sobre ti", type: "text", key: "nacionalidad", q: "¿Cuál es tu nacionalidad?", placeholder: "Tu nacionalidad" },
-    { id: "email", section: "Sobre ti", type: "email", key: "email", q: "¿Cuál es tu correo electrónico?", help: "Te enviaremos aquí la confirmación y las indicaciones." },
-    { id: "telefono", section: "Sobre ti", type: "tel", key: "telefono", q: "¿Y tu número de teléfono?", help: "El médico te llamará por aquí si necesita ampliar algún dato." },
-    { id: "direccion", section: "Sobre ti", type: "text", key: "direccion", q: "¿Cuál es tu dirección postal?", help: "La necesitamos para poder emitir la receta médica, si el médico lo considera oportuno.", autocomplete: "address-line1", placeholder: "Tu calle y número" },
-    { id: "codigo_postal", section: "Sobre ti", type: "text", key: "codigo_postal", q: "Código postal", autocomplete: "postal-code", placeholder: "Tu código postal" },
-    { id: "localidad", section: "Sobre ti", type: "text", key: "localidad", q: "Localidad", autocomplete: "address-level2", placeholder: "Tu ciudad o población" },
-    { id: "provincia", section: "Sobre ti", type: "text", key: "provincia", q: "Provincia", autocomplete: "address-level1", placeholder: "Tu provincia" },
 
     // ---------- MOTIVO DE CONSULTA ----------
     { id: "motivo", section: "Tu consulta", type: "single", key: "motivo", q: "¿Cuál es tu principal motivo de consulta?", options: [
@@ -38,51 +75,74 @@ window.CLYNIA_FORM = {
       { label: "Otra" }
     ] },
     { id: "motivo_otra", section: "Tu consulta", type: "longtext", key: "motivo_otra", q: "Cuéntanos un poco más", showIf: function (a) { return a.motivo === "Otra"; } },
-    { id: "ed_duracion", section: "Tu consulta", type: "single", key: "ed_duracion", q: "¿Desde cuándo notas estas dificultades?", options: [{ label: "Menos de 3 meses" }, { label: "Entre 3 y 12 meses" }, { label: "Más de un año" }] },
-    { id: "ed_frecuencia", section: "Tu consulta", type: "single", key: "ed_frecuencia", q: "En los últimos 6 meses, ¿con qué frecuencia has podido mantener una erección suficiente para la relación?", options: [{ label: "Casi siempre" }, { label: "La mayoría de las veces" }, { label: "Aproximadamente la mitad de las veces" }, { label: "Pocas veces" }, { label: "Casi nunca o nunca" }] },
-    { id: "ed_inicio", section: "Tu consulta", type: "single", key: "ed_inicio", q: "¿Cómo empezó?", options: [{ label: "De forma gradual" }, { label: "De forma repentina" }] },
-    { id: "ed_matutinas", section: "Tu consulta", type: "yesno", key: "ed_matutinas", q: "¿Tienes erecciones espontáneas, por ejemplo al despertar?" },
 
-    // ---------- SEGURIDAD ----------
-    { id: "intro_seguridad", type: "statement", q: "Ahora, unas preguntas de seguridad", body: "Sirven para valorar si un tratamiento para la erección (los llamados inhibidores de la PDE5, como sildenafilo o tadalafilo) es seguro en tu caso. Responde con tranquilidad.", cta: "Continuar" },
-    { id: "nitratos", section: "Tu seguridad", type: "yesno", key: "nitratos", q: "¿Tomas nitratos o medicación para el corazón como nitroglicerina o mononitrato/dinitrato de isosorbida, o usas «poppers» (nitritos)?", help: "Importante: combinarlos con estos tratamientos puede ser peligroso.", next: function (a) { return a.nitratos === true ? "ending_rojo" : null; } },
-    { id: "riociguat", section: "Tu seguridad", type: "yesno", key: "riociguat", q: "¿Tomas riociguat (Adempas) u otro medicamento para la hipertensión pulmonar?", next: function (a) { return a.riociguat === true ? "ending_rojo" : null; } },
-    { id: "corazon", section: "Tu seguridad", type: "multi", key: "corazon", q: "¿Tienes o has tenido alguna de estas situaciones del corazón o la circulación?", help: "Marca todas las que apliquen.", options: [
+    // Medicación previa que le funcionó (petición de Alfonso). ANAMNESIS, no reclamo: la pregunta es
+    // neutra y las marcas van en las opciones junto al principio activo, para que el médico sepa qué le
+    // fue bien. ⚠ compliance: verificar el render antes de publicar (nombres de marca en parte 1).
+    { id: "medicacion_previa", section: "Tu consulta", type: "single", key: "medicacion_previa", q: "¿Has probado antes alguna medicación para la erección? ¿Qué tal te fue?", help: "Nos ayuda a saber qué ha funcionado ya en tu caso. Si no lo sabes con seguridad, no pasa nada.", options: [
+      { label: "Sí, sildenafilo (Viagra) y me fue bien", value: "Sildenafilo bien" },
+      { label: "Sí, tadalafilo (Cialis) y me fue bien", value: "Tadalafilo bien" },
+      { label: "Sí, otra y me fue bien", value: "Otra bien" },
+      { label: "La probé, pero no me funcionó o me sentó mal", value: "Probada con problemas" },
+      { label: "No he probado ninguna", value: "Ninguna" }
+    ] },
+    { id: "medicacion_previa_detalle", section: "Tu consulta", type: "longtext", key: "medicacion_previa_detalle", q: "Cuéntanos cuál y cómo te fue (nombre, dosis si la recuerdas)", showIf: function (a) { return a.medicacion_previa && a.medicacion_previa !== "Ninguna"; }, required: false },
+
+    // ---------- CRIBADO DE SEGURIDAD (las preguntas que descartan; SIEMPRE antes de la consulta) ----------
+    // Sirven para valorar si un tratamiento de la erección (inhibidores de la PDE5: sildenafilo,
+    // tadalafilo…) es seguro. Las contraindicaciones absolutas cortan en el acto (next -> ending_rojo).
+    { id: "intro_seguridad", type: "statement", q: "Ahora, unas preguntas de seguridad", body: "Son rápidas y sirven para descartar situaciones en las que un tratamiento de la erección no sería seguro. Respóndelas con tranquilidad.", cta: "Continuar" },
+    { id: "nitratos", section: "Seguridad", type: "yesno", key: "nitratos", q: "¿Tomas nitratos o medicación para el corazón como nitroglicerina o mononitrato/dinitrato de isosorbida, o usas «poppers» (nitritos)?", help: "Importante: combinarlos con estos tratamientos puede ser peligroso.", next: function (a) { return a.nitratos === true ? "ending_rojo" : null; } },
+    { id: "riociguat", section: "Seguridad", type: "yesno", key: "riociguat", q: "¿Tomas riociguat (Adempas) u otro medicamento para la hipertensión pulmonar?", next: function (a) { return a.riociguat === true ? "ending_rojo" : null; } },
+    { id: "corazon", section: "Seguridad", type: "multi", key: "corazon", next: function (a, v) { return v.flag_rojo >= 1 ? "ending_rojo" : null; }, q: "¿Tienes o has tenido alguna de estas situaciones del corazón o la circulación?", help: "Marca todas las que apliquen.", options: [
       { label: "Infarto en los últimos 6 meses", crit: true },
       { label: "Ictus en los últimos 6 meses", crit: true },
       { label: "Angina inestable o dolor en el pecho al esfuerzo o durante el sexo", crit: true },
       { label: "Insuficiencia cardíaca grave", crit: true },
       { label: "Arritmia grave no controlada", crit: true },
       { label: "Tensión muy baja (hipotensión)", crit: true },
-      { label: "Hipertensión", score: 1 },
-      { label: "Angina estable controlada", score: 2 },
-      { label: "Arritmia controlada", score: 1 },
       { label: "Ninguna de las anteriores", exclusive: true }
     ] },
-    { id: "vista", section: "Tu seguridad", type: "multi", key: "vista", q: "¿Tienes o has tenido algún problema serio de visión?", options: [
+    { id: "vista", section: "Seguridad", type: "multi", key: "vista", next: function (a, v) { return v.flag_rojo >= 1 ? "ending_rojo" : null; }, q: "¿Tienes o has tenido algún problema serio de visión?", options: [
       { label: "Pérdida brusca de visión en un ojo (neuropatía óptica)", crit: true },
       { label: "Retinitis pigmentosa", crit: true },
       { label: "Ninguno", exclusive: true }
     ] },
-    { id: "otras_condiciones", section: "Tu seguridad", type: "multi", key: "otras_condiciones", q: "¿Alguna de estas condiciones de salud?", options: [
+    { id: "alergia_pde5", section: "Seguridad", type: "yesno", key: "alergia_pde5", q: "¿Eres alérgico al sildenafilo, tadalafilo, vardenafilo o avanafilo?", next: function (a) { return a.alergia_pde5 === true ? "ending_rojo" : null; } },
+
+    // ---------- CRIBADO + CONSULTA (cierre de la consulta gratis) ----------
+    { id: "gate_triage", type: "gate", route: function (a, v) { return v.flag_rojo >= 1 ? "ending_rojo" : "consulta"; } },
+    { id: "consulta", section: "Tu consulta", type: "longtext", key: "consulta", submit: true, q: "¿Qué quieres consultar al médico?", help: "Cuéntanos solo lo relevante: desde cuándo lo notas, en qué situaciones, cómo te afecta y cualquier duda para el médico. Es confidencial.", placeholder: "Escribe aquí tu consulta para el médico", cta: "Enviar mi consulta" },
+
+    // ---------- PLANES (solo modo pago ?pay=): el apto elige plan -> finish() -> checkoutEndpoint ----------
+    { id: "plans", section: "Elige tu plan", type: "plans", key: "plan", q: "Elige tu plan para empezar", help: "<span style=\"display:block;color:var(--muted);font-size:.9em;text-align:left;line-height:1.4\">No pagas el medicamento aquí; si el médico te lo receta, lo consigues en tu farmacia con tu receta.<br>Médicos colegiados en España · Pago seguro con Stripe · Datos cifrados.</span>", cta: "Continuar al pago" },
+
+    // ═══════════ PARTE 2 (post-pago: el resto del cuestionario) ═══════════
+    { id: "p2_welcome", type: "statement", q: "Te damos la bienvenida", badge: "Pago confirmado", body: "Para que tu médico ajuste todo a ti, necesita conocer tu caso con más detalle. Son unos 5 minutos y puedes retomarlo cuando quieras.", steps: [{ t: "Tu plan ya está activo", d: "Pago confirmado. De eso ya no tienes que preocuparte.", done: true }, { t: "Nos cuentas tu caso con detalle", d: "Unos 5 minutos. Guardamos tu progreso, así que puedes parar y seguir cuando te venga bien.", icon: "ficha" }, { t: "Tu médico prepara tu tratamiento", d: "Con tus respuestas ajusta la pauta a tu caso y, si procede, emite tu receta.", icon: "medico" }], cta: "Empezar" },
+
+    // ---------- BLOQUE CLÍNICO (resto) ----------
+    { id: "ed_duracion", section: "Cuestionario clínico", type: "single", key: "ed_duracion", q: "¿Desde cuándo notas estas dificultades?", options: [{ label: "Menos de 3 meses" }, { label: "Entre 3 y 12 meses" }, { label: "Más de un año" }] },
+    { id: "ed_frecuencia", section: "Cuestionario clínico", type: "single", key: "ed_frecuencia", q: "En los últimos 6 meses, ¿con qué frecuencia has podido mantener una erección suficiente para la relación?", options: [{ label: "Casi siempre" }, { label: "La mayoría de las veces" }, { label: "Aproximadamente la mitad de las veces" }, { label: "Pocas veces" }, { label: "Casi nunca o nunca" }] },
+    { id: "ed_inicio", section: "Cuestionario clínico", type: "single", key: "ed_inicio", q: "¿Cómo empezó?", options: [{ label: "De forma gradual" }, { label: "De forma repentina" }] },
+    { id: "ed_matutinas", section: "Cuestionario clínico", type: "yesno", key: "ed_matutinas", q: "¿Tienes erecciones espontáneas, por ejemplo al despertar?" },
+    { id: "otras_condiciones", section: "Tu historia clínica", type: "multi", key: "otras_condiciones", q: "¿Alguna de estas condiciones de salud?", options: [
       { label: "Enfermedad del hígado grave (cirrosis)", crit: true },
       { label: "Enfermedad renal grave", score: 2 },
       { label: "Diabetes", score: 1 },
       { label: "Colesterol alto", score: 1 },
+      { label: "Hipertensión", score: 1 },
       { label: "Enfermedad de Peyronie o deformidad del pene", score: 1 },
       { label: "Priapismo previo (erección dolorosa de más de 4 horas)", score: 2 },
       { label: "Úlcera de estómago activa", score: 1 },
       { label: "Ninguna", exclusive: true }
     ] },
-    { id: "tension", section: "Tu seguridad", type: "single", key: "tension", q: "¿Cuál es tu rango de tensión arterial?", options: [{ label: "Normal", value: "Normal" }, { label: "Algo elevada", value: "Elevada", score: 1 }, { label: "Alta y en tratamiento", value: "Alta tratada", score: 1 }, { label: "Alta sin controlar", value: "Alta sin controlar", score: 3 }, { label: "No lo sé", value: "NS" }] },
-    { id: "alfa_bloqueantes", section: "Tu seguridad", type: "yesno", key: "alfa_bloqueantes", q: "¿Tomas alfa-bloqueantes para la próstata o la tensión (tamsulosina, doxazosina...)?", scoreIfYes: 2 },
-    { id: "medicamentos_actuales", section: "Tu seguridad", type: "yesno", key: "medicamentos_actuales", q: "¿Tomas algún otro medicamento con receta de forma habitual?" },
-    { id: "lista_medicamentos", section: "Tu seguridad", type: "longtext", key: "lista_medicamentos", q: "¿Cuáles?", help: "Indica nombre y dosis si los conoces.", showIf: function (a) { return a.medicamentos_actuales === true; } },
-    { id: "alergia_tratamiento", section: "Tu seguridad", type: "yesno", key: "alergia_tratamiento", q: "¿Eres alérgico al sildenafilo, tadalafilo, vardenafilo o avanafilo?", next: function (a) { return a.alergia_tratamiento === true ? "ending_rojo" : null; } },
-    { id: "tratamiento_previo", section: "Tu seguridad", type: "single", key: "tratamiento_previo", q: "¿Has tomado antes algún tratamiento para la erección?", options: [{ label: "Sí, y me fue bien", value: "Sí, bien" }, { label: "Sí, pero no me fue bien o tuve efectos", value: "Sí, con problemas" }, { label: "No, nunca", value: "No" }] },
-    { id: "tratamiento_previo_detalle", section: "Tu seguridad", type: "longtext", key: "tratamiento_previo_detalle", q: "Cuéntanos cuál y cómo te fue", showIf: function (a) { return a.tratamiento_previo && a.tratamiento_previo.indexOf("Sí") === 0; } },
+    { id: "tension", section: "Tu historia clínica", type: "single", key: "tension", q: "¿Cuál es tu rango de tensión arterial?", options: [{ label: "Normal", value: "Normal" }, { label: "Algo elevada", value: "Elevada", score: 1 }, { label: "Alta y en tratamiento", value: "Alta tratada", score: 1 }, { label: "Alta sin controlar", value: "Alta sin controlar", score: 3 }, { label: "No lo sé", value: "NS" }] },
+    { id: "alfa_bloqueantes", section: "Tu historia clínica", type: "yesno", key: "alfa_bloqueantes", q: "¿Tomas alfa-bloqueantes para la próstata o la tensión (tamsulosina, doxazosina...)?", scoreIfYes: 2 },
+    { id: "medicamentos_actuales", section: "Tu historia clínica", type: "yesno", key: "medicamentos_actuales", q: "¿Tomas algún otro medicamento con receta de forma habitual?" },
+    { id: "lista_medicamentos", section: "Tu historia clínica", type: "longtext", key: "lista_medicamentos", q: "¿Cuáles?", help: "Indica nombre y dosis si los conoces.", showIf: function (a) { return a.medicamentos_actuales === true; } },
+    { id: "alergia_medicamentos", section: "Tu historia clínica", type: "yesno", key: "alergia_medicamentos", q: "¿Tienes alergia a algún otro medicamento?", scoreIfYes: 1 },
+    { id: "lista_alergias", section: "Tu historia clínica", type: "longtext", key: "lista_alergias", q: "¿A cuál o cuáles?", showIf: function (a) { return a.alergia_medicamentos === true; } },
 
-    // ---------- ESTILO DE VIDA ----------
     { id: "tabaquismo", section: "Estilo de vida", type: "single", key: "tabaquismo", q: "¿Fumas?", options: [{ label: "No fumo ni he fumado", value: "No" }, { label: "Exfumador", value: "Ex" }, { label: "Fumador", value: "Fumador", score: 1 }] },
     { id: "alcohol", section: "Estilo de vida", type: "single", key: "alcohol", q: "¿Consumes alcohol?", options: [{ label: "No consumo", value: "No" }, { label: "Ocasional", value: "Ocasional" }, { label: "Habitual (semanal)", value: "Habitual", score: 1 }, { label: "Diario", value: "Diario", score: 2 }] },
     { id: "drogas", section: "Estilo de vida", type: "yesno", key: "drogas", q: "¿Consumes drogas recreativas?", help: "Es relevante por posibles interacciones, y es confidencial.", scoreIfYes: 1 },
@@ -90,21 +150,54 @@ window.CLYNIA_FORM = {
     { id: "algo_mas", section: "Casi listo", type: "yesno", key: "algo_mas", q: "¿Hay algo más que quieras decirle al equipo médico?" },
     { id: "mensaje_equipo", section: "Casi listo", type: "longtext", key: "mensaje_equipo", q: "Cuéntanoslo", showIf: function (a) { return a.algo_mas === true; } },
 
-    // ---------- CRIBADO + CONSENTIMIENTO ----------
-    { id: "gate_triage", type: "gate", route: function (a, v) { return v.flag_rojo >= 1 ? "ending_rojo" : "consent"; } },
-    { id: "consent", section: "Casi listo", type: "consent", key: "consent", q: "Tus datos, protegidos", cta: "Acepto y envío", submit: true, items: [
-      { key: "acepta_privacidad", required: true, label: 'He leído y acepto la <a href="privacidad" target="_blank">Política de Privacidad</a> de Clynia.' },
-      { key: "acepta_datos_salud", required: true, label: "Doy mi consentimiento explícito al tratamiento de mis datos de salud con fines asistenciales." },
-      { key: "acepta_comercial", required: false, label: "Quiero recibir comunicaciones de Clynia sobre mi tratamiento y novedades." }
-    ] },
+    // ---------- DATOS PARA LA RECETA (REMPE) ----------
+    { id: "p2_identidad", type: "statement", q: "Últimos datos: para tu receta", body: "Si el médico valora que el tratamiento es adecuado, estos datos son obligatorios para poder emitir tu receta médica (sistema REMPE). Son los últimos.", cta: "Continuar" },
+    { id: "primer_apellido", section: "Para tu receta", type: "text", key: "primer_apellido", q: "¿Cuál es tu primer apellido?", autocomplete: "family-name", placeholder: "Tu primer apellido", errMsg: "Necesitamos tu primer apellido." },
+    { id: "segundo_apellido", section: "Para tu receta", type: "text", key: "segundo_apellido", q: "¿Y tu segundo apellido?", help: "Si solo tienes un apellido, deja este campo en blanco y continúa.", autocomplete: "off", placeholder: "Tu segundo apellido (opcional)", required: false },
+    { id: "tipo_documento", section: "Para tu receta", type: "single", key: "tipo_documento", q: "¿Qué documento de identidad usarás?", help: "Lo exige el sistema de receta médica (REMPE).", options: [{ label: "DNI", value: "DNI" }, { label: "NIE", value: "NIE" }, { label: "Pasaporte", value: "Pasaporte" }] },
+    { id: "num_documento", section: "Para tu receta", type: "text", key: "num_documento", q: "Número de tu documento", autocomplete: "off", placeholder: "Número de DNI/NIE/Pasaporte" },
+    { id: "nacionalidad", section: "Para tu receta", type: "text", key: "nacionalidad", q: "¿Cuál es tu nacionalidad?", placeholder: "Tu nacionalidad" },
+    { id: "telefono", section: "Para tu receta", type: "tel", key: "telefono", q: "¿Y tu número de teléfono?", help: "El médico te llamará por aquí si necesita ampliar algún dato." },
+    { id: "direccion", section: "Para tu receta", type: "text", key: "direccion", q: "¿Cuál es tu dirección postal?", autocomplete: "address-line1", placeholder: "Tu calle y número" },
+    { id: "codigo_postal", section: "Para tu receta", type: "text", key: "codigo_postal", q: "Código postal", autocomplete: "postal-code", placeholder: "Tu código postal" },
+    { id: "localidad", section: "Para tu receta", type: "text", key: "localidad", q: "Localidad", autocomplete: "address-level2", placeholder: "Tu ciudad o población" },
+    { id: "provincia", section: "Para tu receta", type: "text", key: "provincia", q: "Provincia", autocomplete: "address-level1", placeholder: "Tu provincia" },
+    { id: "p2_send", type: "statement", submitP2: true, q: "Todo listo para tu médico", body: "Al enviar, tu cuestionario completo pasa a un médico colegiado para su valoración. Te escribiremos por email con los siguientes pasos.", cta: "Enviar mi cuestionario" },
 
     // ---------- FINALES ----------
-    { id: "ending_ok", type: "ending", variant: "ok", q: "¡Gracias! Hemos recibido tu solicitud", body: "Un médico colegiado revisará tu caso y te contactará para los siguientes pasos. Si el tratamiento es adecuado para ti, te indicará cómo continuar. No tienes que hacer nada más por ahora." },
-    { id: "ending_menor", type: "ending", variant: "stop", q: "Este servicio es solo para mayores de 18 años", body: "Por ahora solo podemos atender a personas mayores de edad. Si te has equivocado con la fecha, vuelve atrás y corrígela.", cta: "Volver a Clynia", href: "/" },
-    { id: "ending_sexo", type: "ending", variant: "stop", q: "De momento, este servicio está enfocado en la salud sexual masculina", body: "Estamos preparando la atención de salud sexual femenina. Si quieres que te avisemos cuando esté disponible, escríbenos a clynia@clynia.es. Gracias por tu interés.", cta: "Volver a Clynia", href: "/" },
-    { id: "ending_rojo", type: "ending", variant: "stop", q: "Por tu seguridad, esto debe valorarlo un médico en persona", body: "Según lo que nos has contado, un tratamiento online no es lo más adecuado para ti ahora mismo. Te recomendamos acudir a tu médico de cabecera o a un especialista de forma presencial. Si quieres que te orientemos, escríbenos a clynia@clynia.es.", cta: "Volver a Clynia", href: "/" }
+    { id: "ending_ok", type: "ending", variant: "ok", q: "¡Gracias! Tu consulta ya está con un médico", marca: true, icono: false, badge: "No tienes que hacer nada más", body: "Te contactamos nosotros, en privado. Esto es lo que pasa a partir de ahora:", steps: [{ t: "Consulta recibida", d: "Ya la tenemos guardada y en la cola de revisión médica.", done: true }, { t: "Un médico colegiado la revisa", d: "Mira tu caso con calma, sin cita previa y sin salas de espera.", icon: "medico" }, { t: "Te escribe por email", d: "Normalmente en menos de 24 horas. Si un tratamiento es adecuado para ti, te lo indicará y decides entonces si quieres continuar.", icon: "email" }], ctaNote: "Mientras tanto, en nuestro blog contamos cómo cuidar tu salud con criterio médico.", cta: "Ver artículos del blog", href: "/blog" },
+    { id: "ending_p2_ok", type: "ending", variant: "ok", q: "Cuestionario enviado. Ya está todo en marcha", body: "Un médico colegiado revisará tu caso y te contactará por email. Es muy probable que te llame por teléfono para conocerte mejor: mantén el móvil a mano estos días. Puedes seguir tu caso desde tu portal.", cta: "Ir a mi portal", href: "https://portal.clynia.es" },
+    { id: "ending_menor", type: "ending", variant: "stop", q: "Este servicio es solo para mayores de 18 años", body: "Por ahora solo podemos atender a personas mayores de edad. Si te has equivocado con la fecha, vuelve atrás y corrígela.", href: "salud-sexual" },
+    { id: "ending_sexo", type: "ending", variant: "stop", q: "De momento, este servicio está enfocado en la salud sexual masculina", body: "Estamos preparando la atención de salud sexual femenina. Si quieres que te avisemos cuando esté disponible, escríbenos a clynia@clynia.es. Gracias por tu interés.", cta: "Volver a Clynia", href: "salud-sexual" },
+    { id: "ending_rojo", type: "ending", variant: "stop", q: "Por tu seguridad, esto debe valorarlo un médico en persona", body: "Según lo que nos has contado, un tratamiento online no es lo más adecuado para ti ahora mismo. Te recomendamos acudir a tu médico de cabecera o a un especialista de forma presencial. Hemos guardado tus respuestas: si quieres que te orientemos, escríbenos a clynia@clynia.es.", cta: "Volver a Clynia", href: "salud-sexual" }
   ],
 
+  // Valida el número de documento contra el tipo elegido (idéntico al de peso). Suave: solo bloquea lo
+  // claramente inválido. NUNCA aplica el dígito de control del DNI/NIE a un pasaporte.
+  validarDocumento: function (tipo, num) {
+    if (!tipo) return { ok: true };
+    var n = String(num == null ? "" : num).toUpperCase().replace(/[\s-]/g, "").trim();
+    if (n === "") return { ok: true };
+    var CONTROL = "TRWAGMYFPDXBNJZSQVHLCKE";
+    if (tipo === "DNI") {
+      if (!/^[0-9]{8}[A-Z]$/.test(n)) return { ok: false };
+      return { ok: n.charAt(8) === CONTROL.charAt(parseInt(n.substring(0, 8), 10) % 23) };
+    }
+    if (tipo === "NIE") {
+      if (!/^[XYZ][0-9]{7}[A-Z]$/.test(n)) return { ok: false };
+      var pre = { X: "0", Y: "1", Z: "2" }[n.charAt(0)];
+      var num8 = parseInt(pre + n.substring(1, 8), 10);
+      return { ok: n.charAt(8) === CONTROL.charAt(num8 % 23) };
+    }
+    return { ok: /^[A-Z0-9]{5,20}$/.test(n) };
+  },
+
+  // Cribado del CLIENTE (UX): decide el corte por crítica (flag_rojo) y el color orientativo.
+  // SET CRÍTICO (corta a ending_rojo con flag_rojo>=1): nitratos, riociguat, alergia PDE5 (los tres
+  //   yesno de arriba cortan además en el acto con su next), + las críticas de 'corazon', 'vista' y
+  //   'otras_condiciones' (cirrosis). Todas las de tipo multi/single van con crit:true.
+  // SINCRONIZAR SIEMPRE con el backstop server del workflow n8n 'Clynia · Consulta gratis — Salud sexual'
+  //   (nodo 'Preparar datos') y con la Parte 2. Si cambian críticas o pesos, cambiar ambas copias.
   computeVars: function (a) {
     var steps = window.CLYNIA_FORM.steps, score = 0, flag = 0;
     steps.forEach(function (s) {
@@ -116,6 +209,11 @@ window.CLYNIA_FORM = {
         if (o) { if (o.score) score += o.score; if (o.crit) flag++; }
       } else if (s.type === "yesno" && v === true && s.scoreIfYes) { score += s.scoreIfYes; }
     });
+    // Contraindicaciones absolutas por yesno (cortan también en el acto vía next; aquí para que
+    // gate_triage y 'Elegible' queden correctos si se llegara por otro camino).
+    if (a.nitratos === true) flag++;
+    if (a.riociguat === true) flag++;
+    if (a.alergia_pde5 === true) flag++;
     return { flag_rojo: flag, riesgo_score: score, cribado: flag >= 1 ? "Rojo" : (score >= 6 ? "Amarillo" : "Verde"), elegible: flag < 1 };
   }
 };
