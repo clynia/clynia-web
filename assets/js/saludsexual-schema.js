@@ -41,13 +41,19 @@ window.CLYNIA_FORM = {
   checkoutEndpoint: "https://n8n-ixwg.srv1722506.hstgr.cloud/webhook/crear-checkout-sexual",
   payStartId: "plans",
   // DOS OPCIONES tras el apto (decisión de Alfonso, 24 jul): suscripción mensual (auto-renueva) o
-  // consulta puntual (pago único). Stripe LIVE: suscripción 29€/mes prod_UwVqEfp3fakjLi /
-  // price_1TwcpFRqcE5hSPKXVslzya08; consulta puntual 39€ prod_UwXKHPZalnPs6x / price_1TweFvRqcE5hSPKX2eBnqIdD,
-  // ambos con descriptor de banco "CLYNIA". El id del plan ('sub_mensual' | 'consulta_sexual') lo mapea el
-  // checkout unificado a su price y su modo. La consulta puntual reusa el flujo apto de peso (flujo=consulta-apto,
-  // 30 días tipo valoración); la suscripción va por su webhook propio. No live hasta revisión clínica/legal + compliance.
+  // consulta puntual (pago único). Stripe LIVE: suscripción 39€/mes prod_UwVqEfp3fakjLi /
+  // price_1TxpinRqcE5hSPKXJm4EAs4U (subida de 29 a 39 el 27 jul para dejar margen a los descuentos;
+  // el price viejo price_1TwcpFRqcE5hSPKXVslzya08 sigue activo en Stripe solo como vuelta atrás y no
+  // lo usa nadie); consulta puntual 39€ prod_UwXKHPZalnPs6x / price_1TweFvRqcE5hSPKX2eBnqIdD.
+  // DESCRIPTOR DE BANCO "CLYNIA" en los dos, verificado el 27 jul: la suscripción lo hereda del
+  // producto y el pago único lo manda por cobro el checkout (payment_intent_data). Si se cambia uno,
+  // cambiar el otro Y el copy: la web PROMETE ese texto exacto en el paso de pago, y dejaría de
+  // coincidir con lo que ve el paciente en su banco.
+  // El id del plan ('sub_mensual' | 'consulta_sexual') lo mapea el checkout unificado a su price y su
+  // modo. La consulta puntual reusa el flujo apto de peso (flujo=consulta-apto, 30 días tipo
+  // valoración); la suscripción va por su webhook propio.
   plans: [
-    { id: "sub_mensual", nombre: "Seguimiento mensual", precio: 29, meta: "29 €/mes · cancela cuando quieras", featured: true, tag: "Más elegido", stripePrice: "price_1TwcpFRqcE5hSPKXVslzya08", desc: "Acceso a tu médico colegiado, seguimiento y recetas de repetición cuando el médico lo considere adecuado. Sin permanencia: te das de baja cuando quieras." },
+    { id: "sub_mensual", nombre: "Seguimiento mensual", precio: 39, meta: "39 €/mes · cancela cuando quieras", featured: true, tag: "Más elegido", stripePrice: "price_1TxpinRqcE5hSPKXJm4EAs4U", desc: "Acceso a tu médico colegiado, seguimiento y recetas de repetición cuando el médico lo considere adecuado. Sin permanencia: te das de baja cuando quieras." },
     { id: "consulta_sexual", nombre: "Consulta puntual", precio: 39, meta: "pago único · sin suscripción", stripePrice: "price_1TweFvRqcE5hSPKX2eBnqIdD", desc: "Una consulta con un médico colegiado que valora tu caso y, si lo considera adecuado, te indica el tratamiento. Incluye 30 días para hablar con tu médico. Sin compromisos ni cobros recurrentes." }
   ],
 
@@ -115,7 +121,7 @@ window.CLYNIA_FORM = {
     { id: "consulta", section: "Tu consulta", type: "longtext", key: "consulta", submit: true, q: "¿Qué quieres consultar al médico?", help: "Cuéntanos solo lo relevante: desde cuándo lo notas, en qué situaciones, cómo te afecta y cualquier duda para el médico. Es confidencial.", placeholder: "Escribe aquí tu consulta para el médico", cta: "Enviar mi consulta" },
 
     // ---------- PLANES (solo modo pago ?pay=): el apto elige plan -> finish() -> checkoutEndpoint ----------
-    { id: "plans", section: "Elige tu plan", type: "plans", key: "plan", q: "Elige tu plan para empezar", help: "<span style=\"display:block;color:var(--muted);font-size:.9em;text-align:left;line-height:1.4\">No pagas el medicamento aquí; si el médico te lo receta, lo consigues en tu farmacia con tu receta.<br>Médicos colegiados en España · Pago seguro con Stripe · Datos cifrados.</span>", cta: "Continuar al pago" },
+    { id: "plans", section: "Elige tu plan", type: "plans", key: "plan", q: "Elige tu plan para empezar", help: "<span style=\"display:block;color:var(--muted);font-size:.9em;text-align:left;line-height:1.4\"><b style=\"color:var(--ink)\">En tu extracto bancario aparecerá solo como CLYNIA.</b> Nada que mencione salud sexual, ni el motivo de tu consulta, ni qué has contratado.<br><br>No pagas el medicamento aquí; si el médico te lo receta, lo consigues en tu farmacia con tu receta.<br>Médicos colegiados en España · Pago seguro con Stripe · Datos cifrados.</span>", cta: "Continuar al pago" },
 
     // ═══════════ PARTE 2 (post-pago: el resto del cuestionario) ═══════════
     { id: "p2_welcome", type: "statement", q: "Te damos la bienvenida", badge: "Pago confirmado", body: "Para que tu médico ajuste todo a ti, necesita conocer tu caso con más detalle. Son unos 5 minutos y puedes retomarlo cuando quieras.", steps: [{ t: "Tu plan ya está activo", d: "Pago confirmado. De eso ya no tienes que preocuparte.", done: true }, { t: "Nos cuentas tu caso con detalle", d: "Unos 5 minutos. Guardamos tu progreso, así que puedes parar y seguir cuando te venga bien.", icon: "ficha" }, { t: "Tu médico prepara tu tratamiento", d: "Con tus respuestas ajusta la pauta a tu caso y, si procede, emite tu receta.", icon: "medico" }], cta: "Empezar" },
