@@ -76,15 +76,22 @@ textarea.cq__input{min-height:120px;resize:vertical}
 
 /* Planes */
 .cq__plans{display:flex;flex-direction:column;gap:12px}
-.cq__plan{position:relative;text-align:left;width:100%;font:inherit;cursor:pointer;background:var(--surface);
+/* El `color` es OBLIGATORIO aqui: la tarjeta es un <button> y `font:inherit` hereda la tipografia
+   pero NO el color, asi que sin esto el boton se queda con el color por defecto del sistema. En
+   escritorio eso es negro y no se nota, pero en iOS es el azul de Apple: el nombre del plan y el
+   precio salian azules en el movil (la descripcion no, porque tiene color propio). */
+.cq__plan{position:relative;text-align:left;width:100%;font:inherit;color:var(--ink);cursor:pointer;background:var(--surface);
   border:1.5px solid var(--line);border-radius:var(--radius);padding:18px;transition:border-color .15s,background .15s}
 .cq__plan.is-sel{border-color:var(--green);background:#eef3f1}
 .cq__plan.feat{border-color:var(--green)}
 .cq__plan .tag{position:absolute;top:-10px;left:18px;background:var(--green);color:#fff;font-size:11px;font-weight:600;
   padding:3px 10px;border-radius:99px;letter-spacing:.02em}
 .cq__plan .name{font-family:'Lora',serif;font-size:19px;font-weight:600}
-.cq__plan .price{font-size:26px;font-weight:700;margin:4px 0 2px}
-.cq__plan .price small{font-size:14px;font-weight:600;color:var(--muted)}
+/* El importe manda: grande y solo. La unidad (/mes, /año) va pegada pero pequeña, y la linea de
+   detalle baja a su propio renglon; antes se pegaba al numero y lo dejaba dentro de un parrafo. */
+.cq__plan .price{font-size:40px;font-weight:700;line-height:1.02;letter-spacing:-.025em;margin:8px 0 2px}
+.cq__plan .price .unit{font-size:17px;font-weight:600;color:var(--muted);letter-spacing:0;margin-left:2px}
+.cq__plan .price small{display:block;font-size:13.5px;font-weight:500;color:var(--muted);letter-spacing:0;margin-top:6px;line-height:1.45}
 .cq__plan .meta{color:var(--muted);font-size:13px}
 .cq__plan .desc{font-size:14px;color:var(--ink);margin-top:8px}
 

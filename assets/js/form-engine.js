@@ -305,7 +305,9 @@
         return '<button type="button" class="cq__plan' + (p.featured ? " feat" : "") + sel + '" data-plan="' + esc(p.id) + '">' +
           (p.tag ? '<span class="tag">' + esc(p.tag) + "</span>" : "") +
           '<div class="name">' + esc(p.nombre) + "</div>" +
-          '<div class="price">' + esc(p.precio) + '€ <small>' + esc(p.meta || "") + "</small></div>" +
+          '<div class="price">' + esc(p.precio) + "€" +
+            (p.unidad ? '<span class="unit">' + esc(p.unidad) + "</span>" : "") +
+            (p.meta ? "<small>" + esc(p.meta) + "</small>" : "") + "</div>" +
           (p.desc ? '<div class="desc">' + esc(p.desc) + "</div>" : "") + "</button>";
       }).join("");
     }
