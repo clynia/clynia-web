@@ -23,7 +23,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Clynia · Salud sexual masculina online, con médicos colegiados</title>
-  <meta name="description" content="Salud sexual masculina con trato discreto en España. Te conectamos con médicos colegiados que valoran tu caso online y, si lo consideran adecuado para ti, te ofrecen acompañamiento y seguimiento médico. 100% online, con trato discreto." />
+  <meta name="description" content="Dificultades de erección: cuenta tu caso gratis y lo revisa un médico colegiado en España, normalmente en menos de 24 horas. Todo online y por escrito, sin sala de espera, y en tu banco aparece solo como CLYNIA. Si procede, receta electrónica para tu farmacia y seguimiento sin permanencia." />
   <meta name="theme-color" content="#f6f4ef" />
   <link rel="icon" type="image/png" href="assets/img/favicon.png" />
 
@@ -104,6 +104,20 @@
     .hero__assurance {
       margin-left: 0;
       margin-right: 0;
+    }
+
+    /* Cómo funciona: tres pasos numerados, en fila en escritorio y apilados en móvil. */
+    .pasos__grid { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 26px; }
+    .paso { position: relative; }
+    .paso__n {
+      display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%;
+      background: var(--green); color: #fff; font-weight: 700; font-size: 15px; margin-bottom: 13px;
+    }
+    .paso__t { font-family: 'Lora', Georgia, serif; font-size: 1.16rem; font-weight: 600; color: #1f2926; margin: 0 0 7px; line-height: 1.3; }
+    .paso__d { margin: 0; color: #4a5450; font-size: 1rem; line-height: 1.6; text-align: justify; -webkit-hyphens: auto; hyphens: auto; }
+    .pasos__cta { margin: 30px 0 0; }
+    @media (min-width: 820px) {
+      .pasos__grid { grid-template-columns: repeat(3, 1fr); gap: 34px; }
     }
 
     /* Sección única: privacidad */
@@ -214,14 +228,13 @@
 
           <div class="hero__copy">
             <h1 class="hero__title reveal d3">
-              Le pasa a más hombres de los que crees, y <em>tiene quien lo valore</em>.
+              Pregúntaselo a un médico, <em>no al grupo de WhatsApp</em>.
             </h1>
             <p class="hero__sub reveal d4">
-              Las dificultades de erección o de rendimiento son habituales y casi nunca se
-              hablan. Cuenta tu caso gratis y un médico colegiado lo revisa en privado y te
-              contacta, normalmente, en menos de 24 horas. Si lo considera adecuado para ti, te
-              ofrece acompañamiento y seguimiento médico. Todo online, desde casa y sin que se
-              entere nadie.
+              Sobre las dificultades de erección circulan muchos más consejos de barra que
+              información seria, y casi todos acaban en la pastilla que le sobró a un amigo.
+              Cuenta tu caso gratis: lo revisa un médico colegiado, con su nombre y su número de
+              colegiación, y te responde normalmente en menos de 24 horas. En privado y por escrito.
             </p>
 
             <div class="reveal d5">
@@ -246,48 +259,38 @@
       </div>
     </section>
 
-    <!-- ===================== FRANJA DE CONFIANZA ===================== -->
-    <section class="trust">
+    <!-- ===================== CÓMO FUNCIONA =====================
+         Sustituye a la franja de confianza y al bloque de normalización, que repetía el titular
+         palabra por palabra. Lo que frena al que duda no es que le digan que es frecuente: es no
+         saber qué pasa despues de pulsar el botón. Tres pasos y fuera. -->
+    <section class="section pasos" id="como-funciona">
       <div class="wrap">
-        <p class="trust__title reveal-up">Un servicio médico de verdad, discreto y privado</p>
-        <ul class="trust__grid">
-          <li class="trust__item reveal-up">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
-            Trato discreto, sin dar la cara
+        <header class="section__head reveal-up">
+          <h2 class="h2">Tres pasos y ya está.</h2>
+        </header>
+        <ol class="pasos__grid">
+          <li class="paso reveal-up">
+            <span class="paso__n">1</span>
+            <h3 class="paso__t">Cuentas tu caso</h3>
+            <p class="paso__d">Un cuestionario de dos minutos, por escrito. Sin cámara, sin sala de espera y sin dar explicaciones a nadie.</p>
           </li>
-          <li class="trust__item reveal-up">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
-            Médicos colegiados en España
+          <li class="paso reveal-up">
+            <span class="paso__n">2</span>
+            <h3 class="paso__t">Lo revisa un médico colegiado</h3>
+            <p class="paso__d">Te responde normalmente en menos de 24 horas, firmando con su nombre y su número de colegiación. Esta primera consulta es gratis.</p>
           </li>
-          <li class="trust__item reveal-up">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8"/><path d="M12 16v4"/></svg>
-            Valoración 100% online
+          <li class="paso reveal-up">
+            <span class="paso__n">3</span>
+            <h3 class="paso__t">Si procede, sigues con él</h3>
+            <p class="paso__d">Le escribes desde tu portal cuando lo necesites, sin pedir cita. Y te das de baja cuando quieras.</p>
           </li>
-          <li class="trust__item reveal-up">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
-            Datos protegidos conforme al RGPD
-          </li>
-        </ul>
-      </div>
-    </section>
-
-    <!-- ===================== REFRAME (normalización) ===================== -->
-    <section class="reframe">
-      <div class="wrap">
-        <div class="reframe__card reveal-up">
-          <h2 class="reframe__title">Le pasa a más hombres de los que crees.</h2>
-          <p class="reframe__text">
-            Las dificultades de erección o de rendimiento son mucho más frecuentes de lo que
-            parece, a cualquier edad, y casi nadie las cuenta. No es para tomárselo a broma
-            ni algo que tengas que llevar solo. Es una cuestión de salud como otra cualquiera,
-            con causas concretas que a menudo tienen abordaje médico. Lo sensato es que la
-            valore un médico, sin juicios y a tu ritmo.
-          </p>
-          <a class="btn btn--primary btn--inline" href="saludsexual">
+        </ol>
+        <p class="pasos__cta reveal-up">
+          <a class="btn btn--primary btn--inline" href="saludsexual" data-cta="salud-sexual-pasos">
             Empieza gratis
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
           </a>
-        </div>
+        </p>
       </div>
     </section>
 
@@ -295,8 +298,8 @@
     <section class="section privacy" id="privacidad">
       <div class="wrap">
         <header class="section__head reveal-up">
-          <h2 class="h2">Tu intimidad, protegida en cada paso.</h2>
-          <p class="lead">Pensado para que nadie de tu entorno tenga por qué enterarse. Desde cómo aparece el cargo hasta quién ve tus datos, todo está cuidado para que te sientas tranquilo.</p>
+          <h2 class="h2">La vía legal, y sin que se entere nadie.</h2>
+          <p class="lead">La alternativa suele ser una web rara o la caja que le sobró a un amigo: sin saber qué llevan, sin saber si encajan contigo y sin nadie a quien preguntar después. Esto es lo otro, y es igual de discreto.</p>
         </header>
 
         <div class="privacy__grid">
@@ -304,32 +307,32 @@
             <span class="privacy-card__icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/><path d="M6 15h4"/></svg>
             </span>
-            <h3 class="privacy-card__title">Facturación discreta</h3>
-            <p class="privacy-card__text">En tu extracto bancario aparecerá solo como <strong>CLYNIA</strong>. Nada que mencione salud sexual, ni el motivo de tu consulta, ni qué has contratado.</p>
+            <h3 class="privacy-card__title">En tu banco, solo CLYNIA</h3>
+            <p class="privacy-card__text">Nada que mencione salud sexual, ni el motivo de tu consulta, ni qué has contratado. Ni en el extracto ni en la app del banco.</p>
           </article>
 
           <article class="privacy-card reveal-up">
             <span class="privacy-card__icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/></svg>
             </span>
-            <h3 class="privacy-card__title">Tu receta, en tu farmacia</h3>
-            <p class="privacy-card__text">Si tu médico considera adecuado un tratamiento, te llega la receta electrónica de forma privada y la recoges en cualquier farmacia. No enviamos nada a tu casa que delate de qué se trata.</p>
+            <h3 class="privacy-card__title">Un médico con nombre y número</h3>
+            <p class="privacy-card__text">Colegiado en España, y firma lo que te dice. No un chat anónimo ni un formulario que te suelta una caja sin haber leído tu caso.</p>
           </article>
 
           <article class="privacy-card reveal-up">
             <span class="privacy-card__icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
             </span>
-            <h3 class="privacy-card__title">Tus datos, sólo tu médico</h3>
-            <p class="privacy-card__text">Lo que cuentas se trata conforme al RGPD, cifrado y visible únicamente para el médico que te atiende. Nunca para terceros.</p>
+            <h3 class="privacy-card__title">Si procede, en tu farmacia</h3>
+            <p class="privacy-card__text">Con receta electrónica, la de siempre, que recoges donde quieras. Sin paquetes en casa, sin aduanas y sin pagar de más por lo mismo.</p>
           </article>
 
           <article class="privacy-card reveal-up">
             <span class="privacy-card__icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8"/><path d="M12 16v4"/></svg>
             </span>
-            <h3 class="privacy-card__title">Sin salas de espera</h3>
-            <p class="privacy-card__text">Ni citas ni miradas incómodas. Cuentas tu caso desde el móvil, cuando quieras, sin dar la cara para empezar.</p>
+            <h3 class="privacy-card__title">Y alguien a quien volver a preguntar</h3>
+            <p class="privacy-card__text">Lo que no te da ninguna caja prestada: el mismo médico, en tu portal, para ajustar o resolver dudas después. Sin permanencia.</p>
           </article>
         </div>
       </div>
@@ -340,7 +343,7 @@
       <div class="wrap">
         <header class="section__head reveal-up">
           <h2 class="h2">Un seguimiento sencillo y sin permanencia.</h2>
-          <p class="lead">Cuentas tu caso gratis y un médico colegiado lo revisa sin coste: te contacta, normalmente, en menos de 24 horas por teléfono, email o tu portal, y si no consigue localizarte, te escribe. Si lo considera adecuado para ti, puedes seguir con un acompañamiento continuado. Tú eliges cómo pagarlo.</p>
+          <p class="lead">La primera consulta no cuesta nada. Solo pagas si el médico considera que puede ayudarte y tú decides seguir, y eliges cómo: mes a mes, el año entero o una consulta suelta. El medicamento, si te lo receta, va aparte y lo compras en tu farmacia.</p>
         </header>
 
         <div style="text-align:center">
@@ -387,24 +390,28 @@
     <section class="section" id="faq">
       <div class="wrap">
         <header class="section__head reveal-up">
-          <h2 class="h2">Resolvemos tus dudas.</h2>
+          <h2 class="h2">Lo que se pregunta todo el mundo.</h2>
         </header>
         <div class="faq">
           <details name="faq" class="faq__item reveal-up">
-            <summary>¿Es discreto de verdad?</summary>
-            <div class="faq__body"><p>Sí, está pensado para eso. Todo es online y cuentas tu caso desde el móvil. El contacto con tu médico se hace por email o por tu portal privado, en tu extracto bancario aparece solo como <strong>CLYNIA</strong>, sin ninguna referencia a salud sexual, y, si tu médico considera adecuado un tratamiento, recibes tu receta electrónica en privado para recogerla en cualquier farmacia.</p></div>
+            <summary>¿Hace falta receta?</summary>
+            <div class="faq__body"><p>Sí. En España, los medicamentos que se usan para esto están sujetos a prescripción médica, aunque circule la idea contraria. Lo que se consigue por internet sin receta no pasa ningún control: ni de qué lleva dentro, ni de la dosis, ni de si encaja con lo que ya tomas. Quién decide si procede algo, y el qué, es el médico colegiado después de valorar tu caso.</p></div>
           </details>
           <details name="faq" class="faq__item reveal-up">
-            <summary>¿Quién me valora?</summary>
-            <div class="faq__body"><p>Un médico colegiado e independiente, de medicina general o urología según el caso. Valora tu situación en privado y sólo procede con una indicación médica si lo considera adecuado para ti. Clynia es una plataforma que conecta con médicos colegiados y no presta asistencia sanitaria: la decisión clínica es siempre del médico.</p></div>
+            <summary>¿Y si es psicológico?</summary>
+            <div class="faq__body"><p>Es lo primero que asume casi todo el mundo, y es el motivo por el que mucha gente no lo consulta nunca. A veces lo es, a veces hay causas físicas que conviene descartar y muy a menudo van juntas. Eso no lo resuelve un test de internet ni un foro. Lo valora un médico, y esa primera valoración no te cuesta nada.</p></div>
           </details>
           <details name="faq" class="faq__item reveal-up">
-            <summary>¿Es seguro?</summary>
-            <div class="faq__body"><p>Cualquier indicación médica corresponde a un médico colegiado, sólo si la considera adecuada para ti, y se acompaña de seguimiento. No procede en todos los casos, por ejemplo con ciertos problemas de corazón o tratamientos en curso. Por eso lo importante es que un médico valore tu caso antes de nada, y nunca te automediques por tu cuenta.</p></div>
+            <summary>¿No soy demasiado joven para esto?</summary>
+            <div class="faq__body"><p>Pasa bastante más de lo que parece a los veintitantos y a los treinta y tantos, aunque casi nadie lo cuente. La edad por sí sola ni descarta ni condena nada: lo que hace el médico es mirar tu caso concreto y decirte qué ve.</p></div>
           </details>
           <details name="faq" class="faq__item reveal-up">
-            <summary>¿Mis datos están seguros?</summary>
-            <div class="faq__body"><p>Tus datos de salud se tratan conforme al RGPD, cifrados y visibles únicamente para el médico que te atiende. Nunca los compartimos con terceros con fines comerciales.</p></div>
+            <summary>¿Quién me valora y qué garantías tengo?</summary>
+            <div class="faq__body"><p>Un médico colegiado e independiente, de medicina general o urología según el caso, que firma con su número de colegiación. Clynia es una plataforma que conecta con médicos colegiados y no presta asistencia sanitaria: la decisión clínica es siempre suya. No procede en todos los casos, por ejemplo con ciertos problemas de corazón o con tratamientos en curso, y precisamente por eso importa que lo mire alguien antes y no automedicarse. Tus datos de salud se tratan conforme al RGPD, cifrados y visibles solo para el médico que te atiende.</p></div>
+          </details>
+          <details name="faq" class="faq__item reveal-up">
+            <summary>¿A qué me compromete?</summary>
+            <div class="faq__body"><p>A nada. La primera consulta es gratis y solo pagas si el médico considera que puede ayudarte y tú decides seguir. A partir de ahí, o el seguimiento mensual sin permanencia, que cancelas desde tu portal cuando quieras, o una consulta puntual sin suscripción. El medicamento, si te lo recetan, va aparte y lo compras en tu farmacia.</p></div>
           </details>
         </div>
       </div>
@@ -414,8 +421,8 @@
     <section class="closing" id="empezar">
       <div class="wrap">
         <div class="closing__inner reveal-up">
-          <h2 class="closing__title">Da el paso, en privado y sin prisa.</h2>
-          <p class="closing__sub">Tu consulta con un médico colegiado es gratis y te responde, normalmente, en menos de 24 horas. Cuentas tu caso desde el móvil, en privado, y decides después. Sin compromiso.</p>
+          <h2 class="closing__title">Dos minutos hoy, y sales de dudas.</h2>
+          <p class="closing__sub">La primera consulta con un médico colegiado es gratis y te responde, normalmente, en menos de 24 horas. Lo cuentas desde el móvil, en privado, y decides después. Sin compromiso.</p>
           <a class="btn btn--light" id="ctaFinal" href="saludsexual">
             Empieza gratis
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
