@@ -65,21 +65,31 @@
     .ty{min-height:100dvh;display:flex;flex-direction:column}
     .ty__main{flex:1;display:grid;place-items:center;padding:48px 20px}
     .ty__card{max-width:580px;text-align:center}
-    .ty__check{width:74px;height:74px;border-radius:50%;display:grid;place-items:center;margin:0 auto 26px;background:rgba(67,112,102,.12);color:#437066}
+    /* El halo alrededor del check da peso al momento sin necesidad de meter mas elementos. */
+    .ty__check{width:74px;height:74px;border-radius:50%;display:grid;place-items:center;margin:0 auto 28px;background:rgba(67,112,102,.12);color:#437066;box-shadow:0 0 0 9px rgba(67,112,102,.055)}
     .ty__check svg{width:36px;height:36px}
     .ty__title{font-family:'Fraunces',Georgia,serif;font-size:clamp(28px,6vw,40px);line-height:1.15;color:#1f2a25;margin:0 0 14px;letter-spacing:-.01em}
     .ty__title em{color:#437066;font-style:italic}
     .ty__sub{font-size:17px;line-height:1.65;color:#4a5650;margin:0 auto 30px;max-width:46ch}
-    .ty__steps{text-align:left;display:grid;gap:16px;max-width:430px;margin:0 auto 32px}
-    .ty__step{display:flex;gap:13px;align-items:flex-start;font-size:15.5px;line-height:1.5;color:#4a5650}
+
+    /* Los tres pasos, como tarjeta y con rail: el que toca AHORA va en verde macizo y los dos
+       siguientes en contorno, para que se vea de un vistazo por donde va uno. */
+    .ty__steps{text-align:left;display:grid;gap:0;max-width:470px;margin:0 auto 30px;
+      background:#fff;border:1px solid rgba(67,112,102,.16);border-radius:18px;padding:24px 24px 6px;
+      box-shadow:0 1px 2px rgba(31,41,38,.04), 0 14px 34px rgba(31,41,38,.05)}
+    .ty__step{position:relative;display:flex;gap:14px;align-items:flex-start;font-size:15.5px;line-height:1.55;color:#4a5650;padding:0 0 20px}
+    .ty__step:not(:last-child)::before{content:"";position:absolute;left:13px;top:32px;bottom:4px;width:2px;background:rgba(67,112,102,.18);border-radius:2px}
+    .ty__step > span:last-child{text-align:justify;-webkit-hyphens:auto;hyphens:auto}
     .ty__step b{color:#1f2a25}
-    .ty__num{flex:none;width:27px;height:27px;border-radius:50%;background:#437066;color:#fff;font-size:13px;font-weight:600;display:grid;place-items:center;font-family:'Hanken Grotesk',sans-serif;margin-top:1px}
+    .ty__num{position:relative;z-index:1;flex:none;width:28px;height:28px;border-radius:50%;background:#437066;color:#fff;font-size:13px;font-weight:600;display:grid;place-items:center;font-family:'Hanken Grotesk',sans-serif}
+    .ty__step:not(:first-child) .ty__num{background:#fff;color:#437066;border:1.6px solid rgba(67,112,102,.3);font-weight:700}
+
     .ty__note{font-size:13px;color:#8a948e;margin-top:14px}
     .ty__note a{color:#437066}
-    .ty__call{display:flex;gap:14px;align-items:center;text-align:left;max-width:440px;margin:0 auto 30px;padding:16px 18px;background:rgba(67,112,102,.08);border:1px solid rgba(67,112,102,.2);border-radius:15px}
+    .ty__call{display:flex;gap:15px;align-items:center;text-align:left;max-width:470px;margin:0 auto 30px;padding:17px 19px;background:rgba(67,112,102,.075);border:1px solid rgba(67,112,102,.18);border-radius:18px}
     .ty__call-ico{flex:none;width:42px;height:42px;border-radius:50%;background:#437066;color:#fff;display:grid;place-items:center}
     .ty__call-ico svg{width:20px;height:20px}
-    .ty__call p{margin:0;font-size:14.5px;line-height:1.55;color:#3a463f}
+    .ty__call p{margin:0;font-size:14.5px;line-height:1.6;color:#3a463f;text-align:justify;-webkit-hyphens:auto;hyphens:auto}
     .ty__call b{color:#1f2a25}
   </style>
   <script src="assets/js/ga.js?v=20260702b"></script>
