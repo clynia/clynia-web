@@ -63,6 +63,13 @@ window.CLYNIA_FORM = {
     // Email + consentimiento PRONTO: así, aunque no termines, podemos guardar tu solicitud y
     // retomarla contigo (lead parcial). El consentimiento va antes de pedirte datos de salud.
     { id: "email", section: "Sobre ti", type: "email", key: "email", q: "¿Cuál es tu correo electrónico?", help: "Aquí te enviamos la confirmación y guardamos tu solicitud, para que puedas retomarla si no la terminas ahora." },
+    // Teléfono en la PARTE 1 (2026-07-27, decisión de Alfonso): antes solo se pedía en la parte 2
+    // (REMPE), así que de las consultas gratis no quedaba ni un teléfono y no había forma de llamar
+    // a quien un médico ya había declarado apto. OPCIONAL a propósito: la parte 1 convierte al 64%
+    // y no se arriesga eso por un dato que la parte 2 vuelve a pedir si falta. Va aquí, detrás del
+    // email, para que sendPartial() lo mande con el lead parcial (ya viaja en su payload) y para que
+    // 'Upsert Paciente' (n8n · Consulta gratis) lo escriba en Pacientes > Teléfono, que ya lo mapea.
+    { id: "telefono1", section: "Sobre ti", type: "tel", key: "telefono", required: false, q: "¿Y tu teléfono?", help: "Opcional, pero ayuda: es la vía rápida si el médico necesita aclarar algo antes de valorar tu caso. Si prefieres no darlo, continúa sin rellenarlo." },
     { id: "consent", section: "Sobre ti", type: "consent", key: "consent", q: "Antes de seguir: tus datos, protegidos", help: "Con tu permiso guardamos tu solicitud para que un médico colegiado pueda valorarla, y podrás retomarla cuando quieras.", cta: "Acepto y continúo", items: [
       { key: "acepta_privacidad", required: true, label: 'He leído y acepto la <a href="privacidad" target="_blank">Política de Privacidad</a> de Clynia.' },
       { key: "acepta_datos_salud", required: true, label: "Doy mi consentimiento explícito al tratamiento de mis datos de salud con fines asistenciales." },
@@ -118,9 +125,15 @@ window.CLYNIA_FORM = {
 
     // ---------- PLANES (solo modo pago ?pay=): el apto elige plan -> finish() -> checkoutEndpoint ----------
     // La parte 1 NUNCA llega aquí: el paso 'consulta' cierra con submit (finish -> ending_ok). A este
-    // paso solo se entra por payStartId en modo pago. Sin claim de garantía de devolución (pendiente
-    // de revisión legal farma); reactivar el bloque de garantía solo con el OK del abogado.
-    { id: "plans", section: "Elige tu plan", type: "plans", key: "plan", q: "Elige tu plan para empezar tu tratamiento", help: "<span style=\"display:block;color:var(--muted);font-size:.9em;text-align:left;line-height:1.4\">No pagas el medicamento aquí; si el médico te lo receta, lo compras en tu farmacia con tu receta.<br>Médicos colegiados en España · Pago seguro con Stripe · Datos cifrados.</span>", cta: "Continuar al pago" },
+    // paso solo se entra por payStartId en modo pago.
+    // GARANTÍA VISIBLE desde 2026-07-27 (Alfonso la activa explícitamente). No es un claim nuevo ni
+    // inventado: es literalmente la cláusula 8 de terminos.html ("si el profesional sanitario
+    // considera que no resulta clínicamente adecuado iniciar el tratamiento, Clynia procederá al
+    // reembolso íntegro"). Lo único que cambia es que deja de estar escondida en los legales y se
+    // enseña donde se decide la compra. Si algún día cambia la cláusula 8, cambiar también esto.
+    // El coste del medicamento se declara SIN cifra a propósito: no hay fuente oficial de precio de
+    // venta en farmacia que citar y una horquilla inventada es justo lo que no se puede publicar.
+    { id: "plans", section: "Elige tu plan", type: "plans", key: "plan", q: "Elige tu plan para empezar tu tratamiento", help: "<span style=\"display:block;text-align:left;line-height:1.45\"><span style=\"display:block;background:rgba(67,112,102,.09);border:1px solid rgba(67,112,102,.22);border-radius:12px;padding:11px 13px;margin-bottom:10px;font-size:.92em;color:var(--ink,#16201c)\"><strong>Si tu especialista decide no iniciar el tratamiento, te devolvemos el 100%.</strong> Pagas por el seguimiento médico, no por una promesa.</span><span style=\"display:block;color:var(--muted);font-size:.88em\">El medicamento no está incluido: si te lo recetan, lo compras en tu farmacia con tu receta.<br>Médicos colegiados en España · Pago seguro con Stripe · Datos cifrados.</span></span>", cta: "Continuar al pago" },
 
     // ═══════════ PARTE 2 (post-pago: el resto del cuestionario) ═══════════
     { id: "p2_welcome", type: "statement", q: "Te damos la bienvenida a tu plan", badge: "Pago confirmado", body: "Para que tu especialista lo ajuste a ti de la mejor manera, necesita conocerte un poco mejor. Son unos 5 minutos y puedes retomarlo cuando quieras.", steps: [{ t: "Tu plan ya está activo", d: "Pago confirmado. De eso ya no tienes que preocuparte.", done: true }, { t: "Nos cuentas tu historia clínica", d: "Unos 5 minutos. Guardamos tu progreso, así que puedes parar y seguir cuando te venga bien.", icon: "ficha" }, { t: "Tu especialista prepara tu tratamiento", d: "Con tus respuestas ajusta la pauta a tu caso y, si procede, emite tu receta.", icon: "medico" }], cta: "Empezar" },
@@ -193,7 +206,11 @@ window.CLYNIA_FORM = {
     { id: "tipo_documento", section: "Para tu receta", type: "single", key: "tipo_documento", q: "¿Qué documento de identidad usarás?", help: "Lo exige el sistema de receta médica (REMPE).", options: [{ label: "DNI", value: "DNI" }, { label: "NIE", value: "NIE" }, { label: "Pasaporte", value: "Pasaporte" }] },
     { id: "num_documento", section: "Para tu receta", type: "text", key: "num_documento", q: "Número de tu documento", autocomplete: "off", placeholder: "Número de DNI/NIE/Pasaporte" },
     { id: "nacionalidad", section: "Para tu receta", type: "text", key: "nacionalidad", q: "¿Cuál es tu nacionalidad?", placeholder: "Tu nacionalidad" },
-    { id: "telefono", section: "Para tu receta", type: "tel", key: "telefono", q: "¿Y tu número de teléfono?", help: "El médico te llamará por aquí si necesita ampliar algún dato." },
+    // Solo se pregunta si NO lo dio ya en la parte 1 (paso 'telefono1', opcional). Misma key, así que
+    // en el mismo dispositivo el motor ya lo tiene y no se repite la pregunta; en otro dispositivo (o
+    // si lo saltó) se vuelve a pedir, que REMPE lo exige. Al ser condicional (showIf) el motor lo deja
+    // fuera del tracking de pasos, que es la dirección segura.
+    { id: "telefono", section: "Para tu receta", type: "tel", key: "telefono", q: "¿Y tu número de teléfono?", help: "El médico te llamará por aquí si necesita ampliar algún dato.", showIf: function (a) { return !String(a.telefono || "").trim(); } },
     { id: "direccion", section: "Para tu receta", type: "text", key: "direccion", q: "¿Cuál es tu dirección postal?", autocomplete: "address-line1", placeholder: "Tu calle y número" },
     { id: "codigo_postal", section: "Para tu receta", type: "text", key: "codigo_postal", q: "Código postal", autocomplete: "postal-code", placeholder: "Tu código postal" },
     { id: "localidad", section: "Para tu receta", type: "text", key: "localidad", q: "Localidad", autocomplete: "address-level2", placeholder: "Tu ciudad o población" },
