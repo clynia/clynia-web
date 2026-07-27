@@ -303,7 +303,11 @@
       // OJO con precioUI: `precio` es SIEMPRE el importe que se cobra de verdad y el que viaja a
       // las analiticas y al ticket de compra. `precioUI` es solo lo que se pinta grande, para poder
       // enseñar un anual como su equivalente mensual (32,50 en vez de 390) sin falsear el cobro.
-      case "plans": return F.plans.map(function (p, i) {
+      // El envoltorio .cq__plans es OBLIGATORIO: sin el, las tarjetas cuelgan de .cq__field, que
+      // solo deja 7 px de hueco, y como la etiqueta va en position:absolute con top:-10px acababa
+      // metiendose dentro de la tarjeta de arriba. Su regla existia en el CSS desde siempre, pero
+      // el motor nunca pintaba el contenedor, asi que no la aplicaba nadie.
+      case "plans": return '<div class="cq__plans">' + F.plans.map(function (p, i) {
         var sel = (v === p.id) ? " is-sel" : "";
         return (p.sep ? '<span class="cq__plansep"><span>' + esc(p.sep) + "</span></span>" : "") +
           '<button type="button" class="cq__plan' + (p.featured ? " feat" : "") + sel + '" data-plan="' + esc(p.id) + '">' +
@@ -314,7 +318,7 @@
             (p.antes ? '<span class="was">' + esc(p.antes) + "€</span>" : "") +
             (p.meta ? "<small>" + esc(p.meta) + "</small>" : "") + "</div>" +
           (p.desc ? '<div class="desc">' + esc(p.desc) + "</div>" : "") + "</button>";
-      }).join("");
+      }).join("") + "</div>";
     }
     return "";
   }

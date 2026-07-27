@@ -83,9 +83,13 @@ textarea.cq__input{min-height:120px;resize:vertical}
 .cq__trust .ti > svg{flex:none;width:20px;height:20px;stroke:var(--green);fill:none;stroke-width:1.9;margin-top:1px}
 .cq__trust .ti b{display:block;color:var(--ink);font-weight:600;font-size:14.5px;margin-bottom:1px}
 
-.cq__plans{display:flex;flex-direction:column;gap:16px}
+/* Hueco generoso a proposito: la etiqueta de cada tarjeta va en position:absolute con top:-10px,
+   o sea que asoma por encima de su borde. Con poco hueco se metia dentro de la tarjeta de arriba.
+   Los 28 px dejan 18 px libres por debajo de cada tarjeta, y el padding superior evita que la
+   primera etiqueta se pegue al texto de las garantias. */
+.cq__plans{display:flex;flex-direction:column;gap:28px;padding-top:14px}
 /* Separador con etiqueta, para despegar el pago unico de las dos suscripciones. */
-.cq__plansep{display:flex;align-items:center;gap:12px;margin:8px 2px 0;color:var(--muted);font-size:13px}
+.cq__plansep{display:flex;align-items:center;gap:12px;margin:2px 2px 0;color:var(--muted);font-size:13px}
 .cq__plansep::before,.cq__plansep::after{content:"";flex:1;height:1px;background:var(--line)}
 /* El `color` es OBLIGATORIO aqui: la tarjeta es un <button> y `font:inherit` hereda la tipografia
    pero NO el color, asi que sin esto el boton se queda con el color por defecto del sistema. En
