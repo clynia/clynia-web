@@ -59,6 +59,13 @@
     answers._caso = pc;
     PAY = true;
     try { localStorage.removeItem(F.storeKey + "_paid"); } catch (e) {} // pago NUEVO: limpia el marker de un pago anterior
+    // ?plan=<id>: en el email del apto cada tarjeta de precio enlaza aqui con SU plan, asi que si
+    // ha pulsado una en concreto llega ya marcada y solo tiene que confirmar. Se valida contra los
+    // planes del propio esquema: un id que no exista se ignora y elige como hasta ahora.
+    try {
+      var pl = new URLSearchParams(window.location.search).get("plan");
+      if (pl && (F.plans || []).some(function (p) { return p.id === pl; })) { answers.plan = pl; }
+    } catch (e) {}
     save();
   })();
   // --- Meta Pixel: evento de INICIO del cuestionario (se dispara una sola vez, al primer
