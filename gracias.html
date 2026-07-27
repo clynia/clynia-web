@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+  <!-- El charset va LO PRIMERO, siempre. El navegador solo lo busca en los primeros 1024 bytes
+       del documento: con el bloque del pixel delante, esta etiqueta caia fuera y la pagina se
+       interpretaba como windows-1252, o sea todos los acentos rotos. -->
+  <meta charset="UTF-8" />
+
   <!-- Parametros de la vuelta de Stripe. Se leen y se BORRAN de la barra de direcciones aqui
        arriba del todo, ANTES de que arranque ningun tercero (pixel de Meta, GA4, Contentsquare),
        para que ni el identificador del caso ni el producto salgan del equipo:
@@ -44,7 +49,6 @@
   src="https://www.facebook.com/tr?id=4585495085018912&ev=PageView&noscript=1"/></noscript>
   <!-- End Meta Pixel Code -->
 
-  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Clynia · Gracias, hemos recibido tu solicitud</title>
   <meta name="description" content="Hemos recibido tu solicitud. Un médico colegiado revisará tu caso y te contactará por email." />
