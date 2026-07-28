@@ -44,10 +44,18 @@ window.CLYNIA_FORM = {
   // TRES OPCIONES tras el apto. Precios verificados en Stripe LIVE el 27 jul:
   //   sub_mensual      39 €/mes   price_1TxpinRqcE5hSPKXJm4EAs4U   prod_UwVqEfp3fakjLi
   //   sub_anual       390 €/año   price_1TxqXKRqcE5hSPKXDbahsnfY   prod_UwVqEfp3fakjLi
-  //   consulta_sexual  99 € único price_1TxqUPRqcE5hSPKXwHHCTwsk   prod_UwXKHPZalnPs6x
+  //   consulta_sexual  79 € único price_1Ty7r2RqcE5hSPKXn7xhK15p   prod_UwXKHPZalnPs6x
+  // La consulta puntual BAJO de 99 a 79 el 28 jul 2026: a 99 costaba mas que dos meses de
+  // suscripcion y quedaba por encima de la mediana del urologo privado (100 €, n=160 precios de
+  // Doctoralia), asi que espantaba al que solo quiere saber si su caso tiene arreglo. Se bajo el
+  // precio en vez de anunciar un descuento sobre 99: nunca se cobro a nadie a 99, y anunciar una
+  // rebaja desde un precio que jamas se aplico choca con el art. 20 de la LOCM (reforma Omnibus).
   // El mensual subio de 29 a 39 para dejar margen a los descuentos y la consulta puntual de 39 a 99
   // para que el recurrente no pareciera peor trato. Los prices viejos (price_1TwcpF... del mensual y
-  // price_1TweFv... de la consulta) siguen activos en Stripe SOLO como vuelta atras y no los usa nadie.
+  // price_1TweFv... de la consulta) quedaron ARCHIVADOS en Stripe el 28 jul 2026 (active=false, con el
+  // motivo en su metadata) y el default_price de cada producto apunta ya al price nuevo. Antes eran el
+  // default_price, asi que cualquier integracion que tirase del precio por defecto habria cobrado de
+  // menos sin avisar. No habia ninguna suscripcion viva sobre el de 29 EUR, comprobado antes de archivar.
   // DESCRIPTOR DE BANCO "CLYNIA" en los dos, verificado el 27 jul: la suscripción lo hereda del
   // producto y el pago único lo manda por cobro el checkout (payment_intent_data). Si se cambia uno,
   // cambiar el otro Y el copy: la web PROMETE ese texto exacto en el paso de pago, y dejaría de
@@ -67,7 +75,7 @@ window.CLYNIA_FORM = {
     // que decir que es el mas elegido seria inventarse una prueba social que no existe.
     { id: "sub_anual", nombre: "Seguimiento anual", precio: 390, precioUI: "32,50", unidad: "/mes", antes: 39, meta: "Facturado una vez al año: 390 €", featured: true, tag: "2 meses gratis · ahorras 78 €", stripePrice: "price_1TxqXKRqcE5hSPKXDbahsnfY", desc: "Lo mismo que el mensual pagando el año de una vez: pagas 10 meses y tienes 12. Son 390 € en lugar de 468 €." },
     { id: "sub_mensual", nombre: "Seguimiento mensual", precio: 39, unidad: "/mes", meta: "Facturado cada mes · sin permanencia", tag: "Mes a mes", stripePrice: "price_1TxpinRqcE5hSPKXJm4EAs4U", desc: "Acceso a tu médico colegiado y seguimiento continuado, mes a mes. Cancelas cuando quieras, desde tu portal." },
-    { id: "consulta_sexual", nombre: "Consulta puntual", precio: 99, meta: "Pago único · incluye 30 días con tu médico", sep: "¿Prefieres no suscribirte?", stripePrice: "price_1TxqUPRqcE5hSPKXwHHCTwsk", desc: "Una consulta con un médico colegiado que valora tu caso y te dice qué procede. Incluye 30 días para hablar con él. Sin compromisos ni cobros recurrentes." }
+    { id: "consulta_sexual", nombre: "Consulta puntual", precio: 79, meta: "Pago único · incluye 30 días con tu médico", sep: "¿Prefieres no suscribirte?", stripePrice: "price_1Ty7r2RqcE5hSPKXn7xhK15p", desc: "Una consulta con un médico colegiado que valora tu caso y te dice qué procede. Incluye 30 días para hablar con él. Sin compromisos ni cobros recurrentes." }
   ],
 
   steps: [
