@@ -50,6 +50,68 @@
   <meta name="twitter:description" content="Te conectamos con médicos colegiados en España que valoran tu caso y, si lo consideran adecuado, te ofrecen seguimiento médico. Empieza con un cuestionario clínico online gratuito." />
   <meta name="twitter:image" content="https://clynia.es/assets/img/og-default.png" />
   <style>
+    /* Selector anual/mensual, mismo patrón que salud-sexual.html. Segmentado y con UNA tarjeta, no
+       dos: es el mismo servicio y lo único que cambia es cómo se paga, así que el ahorro del anual
+       se lee de un vistazo en vez de obligar a comparar dos columnas. */
+    .ciclo {
+      position: relative; display: inline-flex; align-items: center; gap: 2px; margin: 6px auto 24px;
+      padding: 5px; border-radius: 999px; background: #fff;
+      box-shadow: inset 0 0 0 1px var(--line), 0 10px 26px -18px rgba(40, 67, 60, .55);
+    }
+    /* Pastilla que se desliza bajo la opción activa. Posición y ancho los fija el JS con las medidas
+       reales del botón, porque las dos opciones no miden lo mismo (la anual lleva badge). */
+    .ciclo__thumb {
+      position: absolute; top: 5px; bottom: 5px; left: 0; width: 0; border-radius: 999px;
+      background: var(--green); box-shadow: 0 6px 16px -8px rgba(40, 67, 60, .7);
+      transition: transform .34s cubic-bezier(.4, 0, .2, 1), width .34s cubic-bezier(.4, 0, .2, 1);
+      pointer-events: none;
+    }
+    .ciclo__opt {
+      position: relative; z-index: 1;
+      display: inline-flex; align-items: center; gap: 9px; border: 0; cursor: pointer;
+      padding: 12px 24px; border-radius: 999px; background: transparent;
+      font: inherit; font-size: 15px; font-weight: 600; letter-spacing: -.005em; color: var(--ink-soft);
+      transition: color .26s var(--ease);
+    }
+    .ciclo__opt:hover { color: var(--ink); }
+    .ciclo__opt.is-on { color: #fff; }
+    .ciclo__save {
+      font-size: 11px; font-weight: 700; letter-spacing: .03em; text-transform: none;
+      padding: 4px 9px; border-radius: 999px;
+      background: var(--green-tint); color: var(--green-900);
+      transition: background .26s var(--ease), color .26s var(--ease);
+    }
+    .ciclo__opt.is-on .ciclo__save { background: rgba(255, 255, 255, .2); color: #fff; }
+    @media (prefers-reduced-motion: reduce) { .ciclo__thumb { transition: none; } }
+    @media (max-width: 620px) {
+      .ciclo { display: flex; width: 100%; margin-left: 0; margin-right: 0; }
+      .ciclo__opt { flex: 1 1 0; justify-content: center; flex-direction: column; gap: 3px; padding: 10px 6px; font-size: 13.5px; }
+      .ciclo__save { font-size: 10px; padding: 2px 7px; letter-spacing: .01em; }
+    }
+    .plan__price { display: flex; align-items: baseline; justify-content: center; gap: 8px; margin: 2px 0 4px; }
+    .plan__amount { font-family: "Fraunces", Georgia, serif; font-weight: 500; font-size: 46px; line-height: 1; color: var(--ink); }
+    .plan__unit { font-size: 15px; color: var(--ink-soft); }
+    .plan__ahorro { margin: 0 0 6px; font-size: 13.5px; font-weight: 600; color: var(--green); }
+    [hidden] { display: none !important; }
+
+    /* Plan único centrado. Ancho 460 y no 360: es la única tarjeta de la sección, y a 360 su texto
+       se queda en 42 caracteres por línea, demasiado estrecho para justificar sin ríos de blanco. */
+    .plans--solo { display: flex; justify-content: center; }
+    .plans--solo .plan { max-width: 460px; width: 100%; }
+    .plans--solo .plan--featured { transform: none; }
+
+    /* Justificado a ambos lados CON guiones, igual que en salud-sexual.html. Estas clases viven solo
+       en esta página, así que la regla equivalente de styles.css no las alcanzaba. Las líneas sueltas
+       del precio (plan__meta, plan__ahorro) se quedan como están: justificar una sola línea no hace
+       nada y solo abre huecos. */
+    .plans__note,
+    .plan__list li,
+    .plan__for {
+      text-align: justify;
+      -webkit-hyphens: auto;
+      hyphens: auto;
+    }
+
     /* "Qué puedes esperar": el timeline se dibuja como un journey (solo esta landing) */
     .journey .timeline__item { padding-bottom: 32px; }
     .journey .timeline__item::after {
@@ -288,57 +350,90 @@
       <div class="wrap">
         <header class="section__head reveal-up">
           <h2 class="h2">Elige cómo quieres cuidarte.</h2>
-          <p class="lead">La primera consulta médica es gratis. Solo si un médico colegiado te considera candidato eliges un plan para empezar tu tratamiento con seguimiento.</p>
+          <p class="lead">La primera consulta médica es gratis. Solo pagas si un médico colegiado te considera candidato y tú decides seguir, y eliges cómo: mes a mes o el año entero. El medicamento, si te lo receta, va aparte y lo compras en tu farmacia.</p>
         </header>
 
-        <div class="plans">
-          <article class="plan reveal-up">
-            <h3 class="plan__name">Plan 1 mes</h3>
-            <p class="plan__price">99<span class="plan__cur">€</span></p>
-            <p class="plan__meta">1 mes de tratamiento</p>
-            <ul class="plan__list">
-              <li>Un mes de tratamiento con tu médico colegiado</li>
-              <li>Indicación médica si el médico lo considera adecuado</li>
-            </ul>
-            <p class="plan__for">Para empezar tu tratamiento un mes, con el seguimiento de tu médico.</p>
-            <a class="btn btn--ghost" href="peso">Empieza gratis</a>
-          </article>
+        <div style="text-align:center">
+          <!-- Arranca en ANUAL: su equivalente mensual (74,17 €) es el número más bajo de la página
+               y es el que ancla el precio. El mes a mes sigue a un clic para quien no quiera soltar
+               890 € de golpe, que era justamente lo que frenaba con los planes viejos. -->
+          <div class="ciclo" role="group" aria-label="Elige cómo pagar">
+            <span class="ciclo__thumb" aria-hidden="true"></span>
+            <button type="button" class="ciclo__opt is-on" data-ciclo="ano" aria-pressed="true">Anual <span class="ciclo__save">2 meses gratis</span></button>
+            <button type="button" class="ciclo__opt" data-ciclo="mes" aria-pressed="false">Mensual</button>
+          </div>
+        </div>
 
+        <div class="plans plans--solo">
           <article class="plan plan--featured reveal-up">
-            <span class="plan__tag">Más popular · Ahorras 25%</span>
-            <h3 class="plan__name">Plan 4 meses</h3>
-            <p class="plan__price">299<span class="plan__cur">€</span></p>
-            <p class="plan__meta">Menos de 75&nbsp;€ al mes</p>
+            <h3 class="plan__name">Seguimiento con tu médico</h3>
+            <p class="plan__price">
+              <span class="plan__amount" data-precio="ano">74,17 €</span>
+              <span class="plan__amount" data-precio="mes" hidden>89 €</span>
+              <span class="plan__unit">al mes</span>
+            </p>
+            <p class="plan__meta" data-nota="ano">890 € al año, en un solo pago. Sin permanencia: al terminar decides si sigues.</p>
+            <p class="plan__meta" data-nota="mes" hidden>Sin permanencia, te das de baja cuando quieras desde tu portal.</p>
+            <p class="plan__ahorro" data-nota="ano">Pagas 10 meses y tienes 12: ahorras 178 €, un 17% menos que los 1.068 € del mes a mes.</p>
             <ul class="plan__list">
-              <li>Todo lo del Plan 1 mes</li>
-              <li>Comunicación directa con tu médico por el portal</li>
-              <li>Tu médico da continuidad a tu pauta durante todo el plan</li>
-              <li>Seguimiento a través de tu portal privado</li>
+              <li>Consulta gratis con un médico colegiado e independiente, respuesta normalmente en menos de 24 h</li>
+              <li>Seguimiento continuado: tu médico ve cómo te va y ajusta tu pauta mientras dure el tratamiento</li>
+              <li>Indicación médica si el médico lo considera adecuado</li>
+              <li>Tu médico a mano por el portal para tus dudas, en privado</li>
+              <li>Las decisiones clínicas son siempre de tu médico, tras valorar tu caso</li>
+              <li>Te das de baja cuando quieras desde tu portal, sin permanencia ni penalización</li>
             </ul>
-            <p class="plan__for">El equilibrio entre acompañamiento y compromiso.</p>
+            <p class="plan__for">Empiezas contando tu caso. No pagas nada hasta que un médico lo revise.</p>
             <a class="btn btn--primary" href="peso">Empieza gratis</a>
-          </article>
-
-          <article class="plan reveal-up">
-            <h3 class="plan__name">Plan 12 meses</h3>
-            <p class="plan__price">890<span class="plan__cur">€</span></p>
-            <p class="plan__meta">Menos de 75&nbsp;€ al mes · Ahorras 25%</p>
-            <ul class="plan__list">
-              <li>Todo lo del Plan 4 meses</li>
-              <li>Acompañamiento completo durante todo el año</li>
-              <li>Seguimiento y ajustes por tu portal</li>
-            </ul>
-            <p class="plan__for">El cuidado más completo, a tu ritmo.</p>
-            <a class="btn btn--ghost" href="peso">Empieza gratis</a>
           </article>
         </div>
 
         <p class="plans__note reveal-up">
-          Sin sorpresas: la consulta médica es gratis, ves el precio del plan antes de pagar y no hay
-          cuotas ocultas ni cargos raros. Solo pagas si un médico colegiado te considera candidato; si
-          no lo eres, te lo explicamos y no pagas nada.
+          Sin sorpresas: la consulta médica es gratis, ves el precio antes de pagar y no hay cuotas
+          ocultas ni cargos raros. Es una suscripción, así que se renueva sola hasta que la canceles;
+          puedes darte de baja cuando quieras desde tu portal, sin permanencia ni penalización, y
+          mantienes a tu médico hasta el final del periodo que ya has pagado. Solo pagas si un médico
+          colegiado te considera candidato; si no lo eres, te lo explicamos y no pagas nada.
         </p>
       </div>
+
+      <script>
+        // Selector anual/mensual. Sin dependencias: enseña u oculta el importe y la nota del ciclo
+        // elegido. Copiado de salud-sexual.html; si se toca allí, tocar aquí (son dos copias).
+        (function () {
+          var opts = document.querySelectorAll(".ciclo__opt");
+          var thumb = document.querySelector(".ciclo__thumb");
+          if (!opts.length) return;
+          var actual = "ano"; // arranca en ANUAL: es el equivalente mensual mas bajo y ancla el precio
+          function moverPastilla() {
+            if (!thumb) return;
+            var b = document.querySelector('.ciclo__opt[data-ciclo="' + actual + '"]');
+            if (!b) return;
+            thumb.style.width = b.offsetWidth + "px";
+            thumb.style.transform = "translateX(" + b.offsetLeft + "px)";
+          }
+          function set(ciclo) {
+            actual = ciclo;
+            opts.forEach(function (b) {
+              var on = b.getAttribute("data-ciclo") === ciclo;
+              b.classList.toggle("is-on", on);
+              b.setAttribute("aria-pressed", on ? "true" : "false");
+            });
+            document.querySelectorAll("[data-precio],[data-nota]").forEach(function (el) {
+              var k = el.getAttribute("data-precio") || el.getAttribute("data-nota") || "";
+              el.hidden = k.split(" ").indexOf(ciclo) === -1;
+            });
+            moverPastilla();
+          }
+          opts.forEach(function (b) {
+            b.addEventListener("click", function () { set(b.getAttribute("data-ciclo")); });
+          });
+          moverPastilla();
+          // Las fuentes web cambian el ancho de los botones al cargar; recolocamos cuando estén listas.
+          if (document.fonts && document.fonts.ready) { document.fonts.ready.then(moverPastilla); }
+          window.addEventListener("resize", moverPastilla);
+        })();
+      </script>
     </section>
 
     <!-- ===================== EQUIPO MÉDICO ===================== -->
@@ -377,10 +472,10 @@
           <li class="timeline__item reveal-up">
             <span class="timeline__dot"></span>
             <h3 class="timeline__title">Después</h3>
-            <p class="timeline__text">Con el Plan 1 mes empiezas con el seguimiento de tu médico; con los de 4 o 12 meses te acompaña de forma continua para consolidar lo conseguido.</p>
+            <p class="timeline__text">Tu médico te acompaña de forma continua mientras dure tu seguimiento, para consolidar lo conseguido.</p>
           </li>
         </ol>
-        <p class="timeline__note reveal-up">El Plan 1 mes incluye tu primer mes de tratamiento con el seguimiento de tu médico. El seguimiento continuo y la comunicación por el portal están incluidos en los planes de 4 y 12 meses. Cada cuerpo es distinto, y el seguimiento del médico es lo que marca la diferencia.</p>
+        <p class="timeline__note reveal-up">El seguimiento continuo y la comunicación con tu médico por el portal están incluidos desde el primer mes. Cada cuerpo es distinto, y el seguimiento del médico es lo que marca la diferencia.</p>
       </div>
     </section>
 
