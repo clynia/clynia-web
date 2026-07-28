@@ -50,8 +50,8 @@ window.CLYNIA_FORM = {
     // es cada cuánto se cobra, y eso lo dice el `meta`. OJO: `precio` es SIEMPRE el importe real
     // que se cobra y el que viaja a Meta y GA4 (890 y 89); `precioUI` es solo lo que se pinta
     // grande. Meter 74,17 en `precio` haría que las analíticas registraran 74 € por una venta de 890.
-    { id: "sub_anual", nombre: "Pagando el año entero", precio: 890, precioUI: "74,17", unidad: "/mes", antes: 89, tag: "Ahorras 178 €", featured: true, meta: "890 € una vez al año", pago: "https://buy.stripe.com/00w9AVdvXcR41q01XLfEk07" },
-    { id: "sub_mensual", nombre: "Pagando mes a mes", precio: 89, unidad: "/mes", meta: "Sin permanencia", pago: "https://buy.stripe.com/fZu8wR77zdV89WwdGtfEk06" }
+    { id: "sub_mensual", nombre: "Pagando mes a mes", precio: 89, unidad: "/mes", featured: true, meta: "Sin permanencia", pago: "https://buy.stripe.com/fZu8wR77zdV89WwdGtfEk06" },
+    { id: "sub_anual", nombre: "Pagando el año entero", precio: 890, precioUI: "74,17", unidad: "/mes", antes: 89, tag: "Ahorras 178 €", meta: "890 € una vez al año", pago: "https://buy.stripe.com/00w9AVdvXcR41q01XLfEk07" }
   ],
 
   steps: [

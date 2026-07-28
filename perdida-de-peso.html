@@ -112,6 +112,23 @@
       hyphens: auto;
     }
 
+    /* Check verde delante de cada línea de lo que incluye. Va por CSS y como data URI, no como
+       seis SVG repetidos en el HTML ni como un fichero de imagen: ni ensucia el marcado ni añade
+       una petición más. El sangrado deja el texto alineado aunque la línea ocupe dos renglones. */
+    .plan__list li {
+      position: relative;
+      padding-left: 27px;
+    }
+    .plan__list li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: .3em;
+      width: 17px;
+      height: 17px;
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23437066' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E") no-repeat center / 17px 17px;
+    }
+
     /* "Qué puedes esperar": el timeline se dibuja como un journey (solo esta landing) */
     .journey .timeline__item { padding-bottom: 32px; }
     .journey .timeline__item::after {
@@ -354,13 +371,15 @@
         </header>
 
         <div style="text-align:center">
-          <!-- Arranca en ANUAL: su equivalente mensual (74,17 €) es el número más bajo de la página
-               y es el que ancla el precio. El mes a mes sigue a un clic para quien no quiera soltar
-               890 € de golpe, que era justamente lo que frenaba con los planes viejos. -->
+          <!-- Arranca en MENSUAL, al revés que salud sexual. Peso pasó a suscripción porque 299 €
+               por adelantado frenaban a la gente: liderar con el anual les vuelve a poner delante
+               un desembolso de 890 €. El anual queda a un clic, con su ahorro bien visible.
+               Este orden tiene que ser el MISMO aquí, en peso-schema.js y en el correo del apto: si
+               el correo enseña una cosa y la web otra, el paciente cree que le han cambiado el precio. -->
           <div class="ciclo" role="group" aria-label="Elige cómo pagar">
             <span class="ciclo__thumb" aria-hidden="true"></span>
-            <button type="button" class="ciclo__opt is-on" data-ciclo="ano" aria-pressed="true">Anual <span class="ciclo__save">2 meses gratis</span></button>
-            <button type="button" class="ciclo__opt" data-ciclo="mes" aria-pressed="false">Mensual</button>
+            <button type="button" class="ciclo__opt is-on" data-ciclo="mes" aria-pressed="true">Mensual</button>
+            <button type="button" class="ciclo__opt" data-ciclo="ano" aria-pressed="false">Anual <span class="ciclo__save">2 meses gratis</span></button>
           </div>
         </div>
 
@@ -368,13 +387,13 @@
           <article class="plan plan--featured reveal-up">
             <h3 class="plan__name">Seguimiento con tu médico</h3>
             <p class="plan__price">
-              <span class="plan__amount" data-precio="ano">74,17 €</span>
-              <span class="plan__amount" data-precio="mes" hidden>89 €</span>
+              <span class="plan__amount" data-precio="mes">89 €</span>
+              <span class="plan__amount" data-precio="ano" hidden>74,17 €</span>
               <span class="plan__unit">al mes</span>
             </p>
-            <p class="plan__meta" data-nota="ano">890 € al año, en un solo pago. Sin permanencia: al terminar decides si sigues.</p>
-            <p class="plan__meta" data-nota="mes" hidden>Sin permanencia, te das de baja cuando quieras desde tu portal.</p>
-            <p class="plan__ahorro" data-nota="ano">Pagas 10 meses y tienes 12: ahorras 178 €, un 17% menos que los 1.068 € del mes a mes.</p>
+            <p class="plan__meta" data-nota="mes">Sin permanencia: te das de baja cuando quieras desde tu portal.</p>
+            <p class="plan__meta" data-nota="ano" hidden>890 € una vez al año. Sin permanencia: al terminar decides si sigues.</p>
+            <p class="plan__ahorro" data-nota="ano" hidden>Pagas 10 meses y tienes 12: ahorras 178 €, un 17% menos que los 1.068 € del mes a mes.</p>
             <ul class="plan__list">
               <li>Consulta gratis con un médico colegiado e independiente, respuesta normalmente en menos de 24 h</li>
               <li>Seguimiento continuado: tu médico ve cómo te va y ajusta tu pauta mientras dure el tratamiento</li>
@@ -404,7 +423,7 @@
           var opts = document.querySelectorAll(".ciclo__opt");
           var thumb = document.querySelector(".ciclo__thumb");
           if (!opts.length) return;
-          var actual = "ano"; // arranca en ANUAL: es el equivalente mensual mas bajo y ancla el precio
+          var actual = "mes"; // arranca en MENSUAL: es la entrada sin desembolso grande, que es lo que frenaba
           function moverPastilla() {
             if (!thumb) return;
             var b = document.querySelector('.ciclo__opt[data-ciclo="' + actual + '"]');
