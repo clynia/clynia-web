@@ -30,6 +30,9 @@ window.CLYNIA_FORM = {
   // intakeId), pasa el Tipo de Consulta a Intake y prepara la receta. Solo se entra con ?p2= (enlace del
   // email o portal del apto) o con el marker de pagado.
   part2Webhook: "https://n8n-ixwg.srv1722506.hstgr.cloud/webhook/sexual-intake-parte2",
+  // Al entrar en la parte 2 se pregunta aquí QUÉ datos de identidad ya constan en la ficha, para no
+  // volver a pedírselos. Responde solo booleanos (ver el bloque REMPE más abajo).
+  queTenemosWebhook: "https://n8n-ixwg.srv1722506.hstgr.cloud/webhook/parte2-datos-que-tenemos",
   p2StartId: "p2_welcome",
 
   // PAGO DEL APTO (modo ?pay=<casoId>): tras el OK del médico, el apto elige plan y paga ANTES de la
@@ -202,18 +205,26 @@ window.CLYNIA_FORM = {
     { id: "mensaje_equipo", section: "Casi listo", type: "longtext", key: "mensaje_equipo", q: "Cuéntanoslo", showIf: function (a) { return a.algo_mas === true; } },
 
     // ---------- DATOS PARA LA RECETA (REMPE) ----------
-    { id: "p2_identidad", type: "statement", q: "Últimos datos: para tu receta", body: "Si el médico valora que el tratamiento es adecuado, estos datos son obligatorios para poder emitir tu receta médica (sistema REMPE). Son los últimos.", cta: "Continuar" },
-    { id: "primer_apellido", section: "Para tu receta", type: "text", key: "primer_apellido", q: "¿Cuál es tu primer apellido?", autocomplete: "family-name", placeholder: "Tu primer apellido", errMsg: "Necesitamos tu primer apellido." },
-    { id: "segundo_apellido", section: "Para tu receta", type: "text", key: "segundo_apellido", q: "¿Y tu segundo apellido?", help: "Si solo tienes un apellido, deja este campo en blanco y continúa.", autocomplete: "off", placeholder: "Tu segundo apellido (opcional)", required: false },
-    { id: "tipo_documento", section: "Para tu receta", type: "single", key: "tipo_documento", q: "¿Qué documento de identidad usarás?", help: "Lo exige el sistema de receta médica (REMPE).", options: [{ label: "DNI", value: "DNI" }, { label: "NIE", value: "NIE" }, { label: "Pasaporte", value: "Pasaporte" }] },
-    { id: "num_documento", section: "Para tu receta", type: "text", key: "num_documento", q: "Número de tu documento", autocomplete: "off", placeholder: "Número de DNI/NIE/Pasaporte" },
-    { id: "nacionalidad", section: "Para tu receta", type: "text", key: "nacionalidad", q: "¿Cuál es tu nacionalidad?", placeholder: "Tu nacionalidad" },
-    // Solo si NO lo dio en la parte 1 (paso telefono1), para no pedirle dos veces lo mismo.
-    { id: "telefono", section: "Para tu receta", type: "tel", key: "telefono", q: "¿Y tu número de teléfono?", help: "El médico te llamará por aquí si necesita ampliar algún dato.", showIf: function (a) { return !String(a.telefono || "").trim(); } },
-    { id: "direccion", section: "Para tu receta", type: "text", key: "direccion", q: "¿Cuál es tu dirección postal?", autocomplete: "address-line1", placeholder: "Tu calle y número" },
-    { id: "codigo_postal", section: "Para tu receta", type: "text", key: "codigo_postal", q: "Código postal", autocomplete: "postal-code", placeholder: "Tu código postal" },
-    { id: "localidad", section: "Para tu receta", type: "text", key: "localidad", q: "Localidad", autocomplete: "address-level2", placeholder: "Tu ciudad o población" },
-    { id: "provincia", section: "Para tu receta", type: "text", key: "provincia", q: "Provincia", autocomplete: "address-level1", placeholder: "Tu provincia" },
+    // NO SE PIDE LO QUE YA TENEMOS. Al entrar en la parte 2, el motor pregunta a `queTenemosWebhook`
+    // qué datos de identidad constan ya en la ficha del paciente y los deja en `a._yaTenemos`. Un
+    // cliente de peso que contrata salud sexual ya nos dio apellidos, documento y dirección: volver a
+    // pedírselos justo después de pagar es puro abandono, y además abre la puerta a que escriba una
+    // versión distinta de un dato con el que se emite una receta. El endpoint devuelve SOLO
+    // booleanos, nunca el valor, así que con el intakeId de la URL no se puede leer el documento ni
+    // la dirección de nadie. Si el endpoint falla o tarda, `_yaTenemos` no llega y se pregunta todo,
+    // que es el comportamiento de siempre.
+    { id: "p2_identidad", type: "statement", q: "Últimos datos: para tu receta", body: "Si el médico valora que el tratamiento es adecuado, estos datos son obligatorios para poder emitir tu receta médica (sistema REMPE). Son los últimos.", cta: "Continuar", showIf: function (a) { var t = a._yaTenemos; if (!t) return true; return ["primer_apellido", "tipo_documento", "num_documento", "nacionalidad", "direccion", "codigo_postal", "localidad", "provincia"].some(function (k) { return !t[k]; }); } },
+    { id: "primer_apellido", section: "Para tu receta", type: "text", key: "primer_apellido", q: "¿Cuál es tu primer apellido?", autocomplete: "family-name", placeholder: "Tu primer apellido", errMsg: "Necesitamos tu primer apellido.", showIf: function (a) { return !(a._yaTenemos && a._yaTenemos.primer_apellido); } },
+    { id: "segundo_apellido", section: "Para tu receta", type: "text", key: "segundo_apellido", q: "¿Y tu segundo apellido?", help: "Si solo tienes un apellido, deja este campo en blanco y continúa.", autocomplete: "off", placeholder: "Tu segundo apellido (opcional)", required: false, showIf: function (a) { return !(a._yaTenemos && a._yaTenemos.segundo_apellido); } },
+    { id: "tipo_documento", section: "Para tu receta", type: "single", key: "tipo_documento", q: "¿Qué documento de identidad usarás?", help: "Lo exige el sistema de receta médica (REMPE).", options: [{ label: "DNI", value: "DNI" }, { label: "NIE", value: "NIE" }, { label: "Pasaporte", value: "Pasaporte" }], showIf: function (a) { return !(a._yaTenemos && a._yaTenemos.tipo_documento); } },
+    { id: "num_documento", section: "Para tu receta", type: "text", key: "num_documento", q: "Número de tu documento", autocomplete: "off", placeholder: "Número de DNI/NIE/Pasaporte", showIf: function (a) { return !(a._yaTenemos && a._yaTenemos.num_documento); } },
+    { id: "nacionalidad", section: "Para tu receta", type: "text", key: "nacionalidad", q: "¿Cuál es tu nacionalidad?", placeholder: "Tu nacionalidad", showIf: function (a) { return !(a._yaTenemos && a._yaTenemos.nacionalidad); } },
+    // Solo si NO lo dio en la parte 1 (paso telefono1) y no lo tenemos ya de otro producto.
+    { id: "telefono", section: "Para tu receta", type: "tel", key: "telefono", q: "¿Y tu número de teléfono?", help: "El médico te llamará por aquí si necesita ampliar algún dato.", showIf: function (a) { return !String(a.telefono || "").trim() && !(a._yaTenemos && a._yaTenemos.telefono); } },
+    { id: "direccion", section: "Para tu receta", type: "text", key: "direccion", q: "¿Cuál es tu dirección postal?", autocomplete: "address-line1", placeholder: "Tu calle y número", showIf: function (a) { return !(a._yaTenemos && a._yaTenemos.direccion); } },
+    { id: "codigo_postal", section: "Para tu receta", type: "text", key: "codigo_postal", q: "Código postal", autocomplete: "postal-code", placeholder: "Tu código postal", showIf: function (a) { return !(a._yaTenemos && a._yaTenemos.codigo_postal); } },
+    { id: "localidad", section: "Para tu receta", type: "text", key: "localidad", q: "Localidad", autocomplete: "address-level2", placeholder: "Tu ciudad o población", showIf: function (a) { return !(a._yaTenemos && a._yaTenemos.localidad); } },
+    { id: "provincia", section: "Para tu receta", type: "text", key: "provincia", q: "Provincia", autocomplete: "address-level1", placeholder: "Tu provincia", showIf: function (a) { return !(a._yaTenemos && a._yaTenemos.provincia); } },
     { id: "p2_send", type: "statement", submitP2: true, q: "Todo listo para tu médico", body: "Al enviar, tu cuestionario completo pasa a un médico colegiado para su valoración. Te escribiremos por email con los siguientes pasos.", cta: "Enviar mi cuestionario" },
 
     // ---------- FINALES ----------

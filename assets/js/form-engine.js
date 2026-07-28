@@ -229,9 +229,27 @@
 
   // Reanuda el formulario. Si volvemos del pago, aterriza en el paso guardado y reconstruye
   // el historial para que "Atrás" recorra las respuestas; si no, arranca por el principio.
+  // Parte 2: antes de pintar nada preguntamos QUÉ DATOS DE IDENTIDAD YA TENEMOS de este paciente
+  // (solo si el esquema define queTenemosWebhook), para saltarnos las preguntas que ya sabemos
+  // contestar. Es el caso de quien ya compró otro producto: sus apellidos, su documento y su
+  // dirección ya están en su ficha, y volver a pedírselos justo después de pagar es donde más gente
+  // se cae. La respuesta son solo booleanos, nunca el dato.
+  // Si el endpoint falla o tarda más de 2,5 s se arranca igual y se pregunta todo: nunca se deja al
+  // paciente mirando una pantalla en blanco por esto.
+  function arrancarP2() {
+    var lanzado = false;
+    var arranca = function () { if (lanzado) return; lanzado = true; go(byId(F.p2StartId), false); };
+    if (!F.queTenemosWebhook || !answers._intakeId) { arranca(); return; }
+    setTimeout(arranca, 2500);
+    fetch(F.queTenemosWebhook, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ intakeId: answers._intakeId }) })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (j) { if (j && j.ok && j.tenemos) { answers._yaTenemos = j.tenemos; save(); } })
+      .then(arranca, arranca);
+  }
+
   function resume() {
     // Parte 2: siempre arranca en su primer paso (nunca en los de la parte 1 ni en planes).
-    if (P2) { history = []; go(byId(F.p2StartId), false); return; }
+    if (P2) { history = []; arrancarP2(); return; }
     // Modo pago (apto desde el email): arranca directo en el paso de planes, sin repetir la parte 1.
     if (PAY) { history = []; go(byId(F.payStartId), false); return; }
     var target = null;
