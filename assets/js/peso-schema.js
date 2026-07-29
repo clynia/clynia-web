@@ -46,19 +46,24 @@ window.CLYNIA_FORM = {
   // price' (n8n · Crear Checkout Session) mapea a priceId: valoracion|plan4|plan12. No renombrar los
   // id sin tocar ese nodo. (nombre/precio/desc son solo presentación y se pueden cambiar libremente.)
   plans: [
-    // Las DOS se enseñan en euros al mes, que es lo único comparable de un vistazo; lo que cambia
-    // es cada cuánto se cobra, y eso lo dice el `meta`. OJO: `precio` es SIEMPRE el importe real
-    // que se cobra y el que viaja a Meta y GA4 (890 y 89); `precioUI` es solo lo que se pinta
-    // grande. Meter 74,17 en `precio` haría que las analíticas registraran 74 € por una venta de 890.
-    // MISMOS nombres, mismos importes y mismo orden que el correo del apto (planesPeso de
+    // Las DOS se enseñan como precio MENSUAL, que es lo único comparable de un vistazo: 89 al mes,
+    // y 74,17 al mes con los 89 tachados al lado. El servicio no es "anual": es el mismo mes de
+    // seguimiento, pagado de una vez. El importe total del año (890 € en un solo pago) va en su
+    // `desc`, que es donde tiene que estar para que nadie llegue a Stripe sin haber visto lo que se
+    // le va a cargar. Mismo criterio que el selector mensual/anual de perdida-de-peso.html, que es
+    // la página de la que viene el paciente.
+    // OJO: `precio` es SIEMPRE el importe real que se cobra y el que viaja a Meta y GA4 (89 y 890);
+    // `precioUI` es solo lo que se pinta grande. Meter 74,17 en `precio` haría que las analíticas
+    // registraran 74 € por una venta de 890.
+    // MISMOS nombres, misma forma del precio y mismo orden que el correo del apto (planesPeso de
     // clynia-portal/lib/email.ts) y que el drip (filasPlan de api/recuperar-valoracion). El
     // paciente llega aquí desde esos correos: si allí lee 89 y 890 y aquí ve otra cosa, cree que
     // le han cambiado el precio al pinchar. Se cambian los tres a la vez o ninguno.
     // `icono` es SVG en crudo (fichero nuestro, no entrada de usuario) y es OPCIONAL en el motor:
     // calendario simple para el mes a mes, y el mismo calendario con un check para el año entero.
     // Mismo trazo y grosor que el resto del sitio.
-    { id: "sub_mensual", nombre: "Pagando mes a mes", precio: 89, tag: "Más popular", featured: true, meta: "Facturado cada mes, sin permanencia", icono: '<svg viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="16.5" rx="2.5"/><path d="M8 2.5v4M16 2.5v4M3 10h18"/></svg>', pago: "https://buy.stripe.com/fZu8wR77zdV89WwdGtfEk06" },
-    { id: "sub_anual", nombre: "Pagando el año entero", precio: 890, meta: "Equivale a 74,17 € al mes. Ahorras 178 €", icono: '<svg viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="16.5" rx="2.5"/><path d="M8 2.5v4M16 2.5v4M3 10h18"/><path d="M8.8 15.4l2.1 2.1 4.3-4.3"/></svg>', pago: "https://buy.stripe.com/00w9AVdvXcR41q01XLfEk07" }
+    { id: "sub_mensual", nombre: "Pagando mes a mes", precio: 89, unidad: "al mes", tag: "Más popular", featured: true, desc: "Se cobra cada mes. Sin permanencia.", icono: '<svg viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="16.5" rx="2.5"/><path d="M8 2.5v4M16 2.5v4M3 10h18"/></svg>', pago: "https://buy.stripe.com/fZu8wR77zdV89WwdGtfEk06" },
+    { id: "sub_anual", nombre: "Pagando el año entero", precio: 890, precioUI: "74,17", unidad: "al mes", antes: 89, desc: "890 € en un solo pago. Ahorras 178 € al año.", icono: '<svg viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="16.5" rx="2.5"/><path d="M8 2.5v4M16 2.5v4M3 10h18"/><path d="M8.8 15.4l2.1 2.1 4.3-4.3"/></svg>', pago: "https://buy.stripe.com/00w9AVdvXcR41q01XLfEk07" }
   ],
 
   steps: [
@@ -138,14 +143,17 @@ window.CLYNIA_FORM = {
     // ---------- PLANES (solo modo pago ?pay=): el apto elige plan -> finish() -> checkoutEndpoint ----------
     // La parte 1 NUNCA llega aquí: el paso 'consulta' cierra con submit (finish -> ending_ok). A este
     // paso solo se entra por payStartId en modo pago.
-    // GARANTÍA VISIBLE desde 2026-07-27 (Alfonso la activa explícitamente). No es un claim nuevo ni
-    // inventado: es literalmente la cláusula 8 de terminos.html ("si el profesional sanitario
-    // considera que no resulta clínicamente adecuado iniciar el tratamiento, Clynia procederá al
-    // reembolso íntegro"). Lo único que cambia es que deja de estar escondida en los legales y se
-    // enseña donde se decide la compra. Si algún día cambia la cláusula 8, cambiar también esto.
+    // La GARANTÍA deja de ir en un recuadro destacado (29 jul 2026). Alfonso la quitó ese día de
+    // TODOS los correos por un motivo que vale igual aquí: a este paso solo se llega si un médico YA
+    // ha dicho que la persona es candidata, y anunciar en grande una devolución del 100% se lee como
+    // que queda otra criba por delante, justo en el momento de pagar. La promesa NO desaparece (es
+    // la cláusula 8 de terminos.html y hay que sostenerla): baja a la letra pequeña, pegada a la
+    // frase de que la decisión clínica es siempre del médico colegiado, que es lo que impide leer
+    // todo esto como una promesa de tratamiento. Si cambia la cláusula 8, cambiar también esto.
     // El coste del medicamento se declara SIN cifra a propósito: no hay fuente oficial de precio de
     // venta en farmacia que citar y una horquilla inventada es justo lo que no se puede publicar.
-    { id: "plans", section: "Cómo quieres pagar", type: "plans", key: "plan", q: "El seguimiento es el mismo. Elige cómo lo pagas", help: "<span style=\"display:block;text-align:left;line-height:1.45\"><span style=\"display:block;background:rgba(67,112,102,.09);border:1px solid rgba(67,112,102,.22);border-radius:12px;padding:11px 13px;margin-bottom:10px;font-size:.92em;color:var(--ink,#16201c)\"><span style=\"display:flex;align-items:center;gap:7px;margin-bottom:6px;font-weight:700;color:var(--green,#437066)\"><svg viewBox=\"0 0 24 24\" width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M20 6 9 17l-5-5\"/></svg>Nuestra garantía</span><strong>Si tu especialista decide no iniciar el tratamiento, te devolvemos el 100%.</strong> Pagas por el seguimiento médico, no por una promesa.</span><span style=\"display:block;color:var(--muted);font-size:.88em\">Se renueva automáticamente hasta que la canceles. Te das de baja desde tu portal cuando quieras, sin permanencia.<br>El medicamento no está incluido: lo compras en tu farmacia con tu receta.<br>Médicos colegiados en España · Pago seguro con Stripe.</span></span>", cta: "Continuar al pago" },
+    // section:false = sin pretítulo en mayúsculas. El paso ya tiene titular, tarjetas y botón.
+    { id: "plans", section: false, type: "plans", key: "plan", q: "Ya puedes empezar. Elige cómo prefieres pagarlo", help: "El seguimiento médico es el mismo. Solo cambia cada cuánto se te cobra.", note: "Se renueva automáticamente hasta que la canceles: te das de baja desde tu portal cuando quieras, sin permanencia ni penalización. El medicamento no está incluido en la cuota; si tu médico te lo receta, lo compras en tu farmacia. Las decisiones clínicas son siempre del médico colegiado que valora tu caso: si finalmente no procede iniciar el tratamiento, te devolvemos el importe íntegro. Médicos colegiados en España. Pago seguro con Stripe.", cta: "Continuar al pago" },
 
     // ═══════════ PARTE 2 (post-pago: el resto del cuestionario) ═══════════
     { id: "p2_welcome", type: "statement", q: "Te damos la bienvenida a tu plan", badge: "Pago confirmado", body: "Para que tu especialista lo ajuste a ti de la mejor manera, necesita conocerte un poco mejor. Son unos 5 minutos y puedes retomarlo cuando quieras.", steps: [{ t: "Tu plan ya está activo", d: "Pago confirmado. De eso ya no tienes que preocuparte.", done: true }, { t: "Nos cuentas tu historia clínica", d: "Unos 5 minutos. Guardamos tu progreso, así que puedes parar y seguir cuando te venga bien.", icon: "ficha" }, { t: "Tu especialista prepara tu tratamiento", d: "Con tus respuestas ajusta la pauta a tu caso y, si procede, emite tu receta.", icon: "medico" }], cta: "Empezar" },

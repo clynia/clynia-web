@@ -298,11 +298,17 @@
     h += '<div class="cq__progress"><i style="width:' + progress() + '%"></i></div>';
     h += '<img class="cq__brand" src="assets/logos/clynia-wordmark.png" alt="Clynia"></header>';
     h += '<main class="cq__stage"><div class="cq__step">';
-    h += '<p class="cq__eyebrow">' + esc(s.section || "Tu valoración") + "</p>";
+    // section:false quita el pretitulo en mayusculas SOLO en ese paso. Lo usa el paso de planes, que
+    // ya tiene titular, tarjetas y boton: un "COMO QUIERES PAGAR" encima no aporta y es justo el tipo
+    // de etiqueta que no queremos. Un paso que no lo pida sigue pintandolo igual que siempre.
+    if (s.section !== false) h += '<p class="cq__eyebrow">' + esc(s.section || "Tu valoración") + "</p>";
     h += '<h1 class="cq__q">' + interp(s.q) + "</h1>";
     if (s.help) h += '<p class="cq__help">' + interp(s.help) + "</p>";
     if (s.visual) h += s.visual(answers, vars);
     h += '<div class="cq__field" id="cqField">' + fieldHTML(s) + "</div>";
+    // `note` = letra pequena DESPUES del campo. Existe para que lo legal no tenga que viajar en el
+    // `help`, que se pinta ENCIMA y empujaba las tarjetas de plan fuera de la primera pantalla.
+    if (s.note) h += '<p class="cq__note">' + interp(s.note) + "</p>";
     h += '<div class="cq__err" id="cqErr" style="display:none"></div>';
     h += "</div></main>";
     h += '<footer class="cq__foot"><div class="in"><button class="cq__next" type="button" id="cqNext">' + esc(s.cta || "Continuar") + "</button>" + (history.length ? '<button class="cq__backlow" type="button" id="cqBackLow">&#8592; Atrás</button>' : "") + "</div></footer>";
@@ -345,14 +351,22 @@
         return (p.sep ? '<span class="cq__plansep"><span>' + esc(p.sep) + "</span></span>" : "") +
           '<button type="button" class="cq__plan' + (p.featured ? " feat" : "") + sel + '" data-plan="' + esc(p.id) + '">' +
           (p.tag ? '<span class="tag">' + esc(p.tag) + "</span>" : "") +
+          // Marca de elegido. Se pinta SIEMPRE y el CSS solo la enseña en .is-sel: elegir plan no
+          // avanza de paso (hay que pulsar el boton de abajo), asi que sin una marca clara el
+          // paciente no sabe si su clic ha contado. Antes solo cambiaba el color del borde.
+          '<span class="pick" aria-hidden="true"></span>' +
           // `icono` es SVG que viene del propio esquema (fichero nuestro, no entrada de usuario),
           // por eso va sin escapar. Es OPCIONAL: si un plan no lo trae no se pinta nada, así que
           // los esquemas que no lo usan (salud sexual) siguen exactamente igual.
           (p.icono ? '<span class="ico" aria-hidden="true">' + p.icono + "</span>" : "") +
           '<div class="name">' + esc(p.nombre) + "</div>" +
-          '<div class="price">' + esc(p.precioUI != null ? p.precioUI : p.precio) + "€" +
-            (p.unidad ? '<span class="unit">' + esc(p.unidad) + "</span>" : "") +
-            (p.antes ? '<span class="was">' + esc(p.antes) + "€</span>" : "") +
+          // Espacio duro antes del simbolo: en español el importe va "89 €", nunca "89€", y el duro
+          // impide que el € se quede solo al final de una linea.
+          '<div class="price">' + esc(p.precioUI != null ? p.precioUI : p.precio) + " €" +
+            // El espacio va FUERA del span a proposito: sin el, el nombre accesible del boton
+            // concatena los textos y un lector de pantalla dice "89 euroal mes".
+            (p.unidad ? ' <span class="unit">' + esc(p.unidad) + "</span>" : "") +
+            (p.antes ? ' <span class="was">' + esc(p.antes) +" €</span>" : "") +
             (p.meta ? "<small>" + esc(p.meta) + "</small>" : "") + "</div>" +
           (p.desc ? '<div class="desc">' + esc(p.desc) + "</div>" : "") + "</button>";
       }).join("") + "</div>";

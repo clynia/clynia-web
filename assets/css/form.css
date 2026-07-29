@@ -1,14 +1,21 @@
 /* Clynia — cuestionario multipaso (móvil primero). Prefijo .cq = Clynia Questionnaire */
 :root{
-  --bg:#f6f4ef; --surface:#fff; --ink:#2c2c2c; --muted:#6f6f68;
-  --green:#437066; --green-d:#365a52; --line:#e4e1d8; --soft:#efece4;
+  --bg:#f6f4ef; --surface:#fff; --ink:#1c2421; --muted:#586460;
+  --green:#437066; --green-d:#365b52; --line:#e6e1d7; --soft:#efece4;
   --red:#b3261e; --radius:16px; --maxw:560px;
+  /* Las MISMAS caras y los MISMOS colores que el resto de clynia.es (styles.css). Las cinco paginas
+     que cargan este CSS ya piden Fraunces y Hanken Grotesk en su <head>, asi que no se anade ni una
+     peticion. Aqui ponia 'Lora' y 'Raleway', que no las carga ninguna de las cinco: los titulares
+     caian a Georgia y el cuerpo a la letra del sistema, y el cuestionario parecia de otra empresa
+     distinta de la landing de la que acaba de venir el paciente. Raleway ademas esta prohibida. */
+  --display:"Fraunces",Georgia,serif;
+  --text:"Hanken Grotesk",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
 }
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
 body.cq-body{
   background:var(--bg); color:var(--ink);
-  font-family:'Raleway',system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+  font-family:var(--text);
   -webkit-font-smoothing:antialiased;line-height:1.5;
 }
 .cq{min-height:100vh;min-height:100dvh;display:flex;flex-direction:column}
@@ -30,8 +37,14 @@ body.cq-body{
 .cq__step{animation:cqin .35s ease both}
 @keyframes cqin{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 .cq__eyebrow{color:var(--green);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.07em;margin:6px 0 8px}
-.cq__q{font-family:'Lora',Georgia,serif;font-weight:600;font-size:25px;line-height:1.25;margin:0 0 8px;letter-spacing:-.2px}
+.cq__q{font-family:var(--display);font-weight:500;font-size:25px;line-height:1.25;margin:0 0 8px;letter-spacing:-.2px}
 .cq__help{color:var(--muted);margin:0 0 18px;font-size:15px}
+/* Letra pequena DEBAJO del campo (la pinta el motor si el paso trae `note`). Justificada y con
+   guiones, como el resto de textos largos de la casa: en una columna de movil sin partir palabras
+   quedan rios de espacio. */
+.cq__note{margin:18px 0 0;font-size:12.5px;line-height:1.6;color:var(--muted);
+  text-align:justify;hyphens:auto;-webkit-hyphens:auto}
+.cq__note strong{color:var(--ink);font-weight:600}
 .cq__field{display:flex;flex-direction:column;gap:10px;margin-top:4px}
 
 /* Inputs */
@@ -85,9 +98,9 @@ textarea.cq__input{min-height:120px;resize:vertical}
 
 /* Hueco generoso a proposito: la etiqueta de cada tarjeta va en position:absolute con top:-10px,
    o sea que asoma por encima de su borde. Con poco hueco se metia dentro de la tarjeta de arriba.
-   Los 28 px dejan 18 px libres por debajo de cada tarjeta, y el padding superior evita que la
-   primera etiqueta se pegue al texto de las garantias. */
-.cq__plans{display:flex;flex-direction:column;gap:28px;padding-top:14px}
+   Los 24 px dejan 14 px libres por debajo de cada tarjeta, y el padding superior evita que la
+   primera etiqueta se pegue al texto de encima. */
+.cq__plans{display:flex;flex-direction:column;gap:22px;padding-top:16px}
 /* Separador con etiqueta, para despegar el pago unico de las dos suscripciones. */
 .cq__plansep{display:flex;align-items:center;gap:12px;margin:2px 2px 0;color:var(--muted);font-size:13px}
 .cq__plansep::before,.cq__plansep::after{content:"";flex:1;height:1px;background:var(--line)}
@@ -96,28 +109,45 @@ textarea.cq__input{min-height:120px;resize:vertical}
    escritorio eso es negro y no se nota, pero en iOS es el azul de Apple: el nombre del plan y el
    precio salian azules en el movil (la descripcion no, porque tiene color propio). */
 .cq__plan{position:relative;text-align:left;width:100%;font:inherit;color:var(--ink);cursor:pointer;background:var(--surface);
-  border:1.5px solid var(--line);border-radius:var(--radius);padding:18px;transition:border-color .15s,background .15s}
-.cq__plan.is-sel{border-color:var(--green);background:#eef3f1}
-.cq__plan.feat{border-color:var(--green)}
+  border:1.5px solid var(--line);border-radius:var(--radius);padding:15px 18px 15px;
+  transition:border-color .18s,box-shadow .18s,background .18s}
+/* Elegida: aro verde y sombra baja, sin tinte de fondo. El fondo tenido hundia la tarjeta justo
+   cuando el paciente acaba de elegirla; el aro la levanta y ademas no ensucia el numero grande. */
+.cq__plan.is-sel{border-color:var(--green);box-shadow:0 0 0 1.5px var(--green),0 16px 34px -24px rgba(28,36,33,.6)}
+.cq__plan.feat{border-color:rgba(67,112,102,.45)}
 .cq__plan .tag{position:absolute;top:-10px;left:18px;background:var(--green);color:#fff;font-size:11px;font-weight:600;
   padding:3px 10px;border-radius:99px;letter-spacing:.02em}
-/* Icono del plan. Opcional: solo se pinta si el esquema trae `icono`. En la tarjeta destacada y en
-   la seleccionada se invierte (fondo verde, trazo blanco) para que el ojo caiga primero ahi. */
-.cq__plan .ico{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:12px;
-  background:rgba(67,112,102,.10);color:var(--green);margin-bottom:12px}
-.cq__plan .ico svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+/* Marca de elegido, arriba a la derecha. Se pinta siempre en hueco y solo se rellena en .is-sel:
+   elegir plan NO avanza de paso, asi que hace falta una senal inequivoca de que el clic conto. */
+.cq__plan .pick{position:absolute;top:16px;right:16px;width:22px;height:22px;border-radius:50%;
+  border:1.5px solid var(--line);background:var(--surface);transition:.18s}
+.cq__plan.is-sel .pick{border-color:var(--green);background:var(--green)}
+.cq__plan.is-sel .pick::after{content:"";position:absolute;left:5px;top:6px;width:9px;height:5px;
+  border:2px solid #fff;border-top:0;border-right:0;transform:rotate(-45deg)}
+/* Icono del plan. Opcional: solo se pinta si el esquema trae `icono`. Va FLOTADO para que el nombre
+   se le ponga al lado en la misma linea: apilado se comia 48 px de alto por tarjeta y en un movil
+   pequeno empujaba la segunda opcion por debajo del boton fijo, de modo que solo se veia una.
+   En la destacada y en la elegida se invierte (fondo verde, trazo blanco). */
+.cq__plan .ico{float:left;display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;
+  border-radius:11px;background:rgba(67,112,102,.10);color:var(--green);margin:0 11px 0 0}
+.cq__plan .ico svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 .cq__plan.feat .ico,.cq__plan.is-sel .ico{background:var(--green);color:#fff}
-.cq__plan .name{font-family:'Lora',serif;font-size:19px;font-weight:600}
-/* El importe manda: grande y solo. La unidad (/mes, /año) va pegada pero pequeña, y la linea de
-   detalle baja a su propio renglon; antes se pegaba al numero y lo dejaba dentro de un parrafo. */
-.cq__plan .price{font-size:40px;font-weight:700;line-height:1.02;letter-spacing:-.025em;margin:8px 0 2px}
-.cq__plan .price .unit{font-size:17px;font-weight:600;color:var(--muted);letter-spacing:0;margin-left:2px}
+/* display:flex crea contexto propio, asi que el nombre se coloca AL LADO del icono flotado y nunca
+   por debajo. El hueco de la derecha deja sitio a la marca de elegido. */
+.cq__plan .name{display:flex;align-items:center;min-height:34px;padding-right:28px;
+  font-family:var(--display);font-size:18px;font-weight:500;line-height:1.25}
+/* El importe manda: en la cara de titulares de la casa, con cifras de ancho fijo para que 89 y
+   74,17 caigan en la misma rejilla. clear:left lo baja por debajo del icono flotado. */
+.cq__plan .price{clear:left;font-family:var(--display);font-size:36px;font-weight:500;line-height:1.05;
+  letter-spacing:-.02em;margin:10px 0 0;font-variant-numeric:tabular-nums}
+.cq__plan .price .unit{font-family:var(--text);font-size:15px;font-weight:500;color:var(--muted);letter-spacing:0;margin-left:2px}
 /* Precio de referencia tachado, al lado del grande: es lo que hace que el anual se lea como MAS
    barato y no como un importe mayor. */
-.cq__plan .price .was{font-size:16px;font-weight:600;color:var(--muted);text-decoration:line-through;letter-spacing:0;margin-left:9px}
-.cq__plan .price small{display:block;font-size:13.5px;font-weight:500;color:var(--muted);letter-spacing:0;margin-top:6px;line-height:1.45}
-.cq__plan .meta{color:var(--muted);font-size:13px}
-.cq__plan .desc{font-size:14px;color:var(--ink);margin-top:8px}
+.cq__plan .price .was{font-family:var(--text);font-size:15px;font-weight:500;color:var(--muted);
+  text-decoration:line-through;letter-spacing:0;margin-left:5px}
+.cq__plan .price small{display:block;font-family:var(--text);font-size:13px;font-weight:400;color:var(--muted);
+  letter-spacing:0;margin-top:7px;line-height:1.5}
+.cq__plan .desc{font-size:13.5px;line-height:1.5;color:var(--muted);margin-top:8px}
 
 /* Pantalla de ritmo / IMC (visual comercial) */
 .cq__viz{display:flex;flex-direction:column;gap:14px;margin:4px 0 20px}
@@ -125,13 +155,13 @@ textarea.cq__input{min-height:120px;resize:vertical}
 .cq__imc-label{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.06em}
 .cq__imc-top{display:flex;align-items:center;justify-content:space-between}
 .cq__badge{font-size:12.5px;font-weight:600;padding:4px 11px;border-radius:99px}
-.cq__imc-num{font-family:'Lora',serif;font-size:42px;font-weight:600;color:var(--green);line-height:1.05;margin:8px 0 2px}
+.cq__imc-num{font-family:var(--display);font-size:42px;font-weight:500;color:var(--green);line-height:1.05;margin:8px 0 2px}
 .cq__gauge{position:relative;height:10px;border-radius:99px;margin:14px 0 7px;background:linear-gradient(90deg,#9cc9b6 0%,#e9d27a 45%,#e0a35e 70%,#d98080 100%)}
 .cq__gauge i{position:absolute;top:50%;width:18px;height:18px;border-radius:50%;background:#fff;border:3px solid var(--ink);transform:translate(-50%,-50%);box-shadow:0 2px 6px rgba(0,0,0,.18)}
 .cq__gauge-scale{display:flex;justify-content:space-between;font-size:11px;color:var(--muted)}
 .cq__proj{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .cq__proj .from,.cq__proj .to{text-align:center}
-.cq__proj .kg{font-family:'Lora',serif;font-size:24px;font-weight:600;margin-top:2px}
+.cq__proj .kg{font-family:var(--display);font-size:24px;font-weight:500;margin-top:2px}
 .cq__proj .kg small{font-size:13px;font-weight:600;color:var(--muted)}
 .cq__proj-arrow{flex:1;text-align:center;position:relative}
 .cq__proj-arrow span{display:inline-block;font-size:13px;font-weight:600;color:var(--green);background:#eef3f1;padding:3px 11px;border-radius:99px;position:relative;z-index:1}
@@ -141,9 +171,12 @@ textarea.cq__input{min-height:120px;resize:vertical}
 .cq__ratehead{font-weight:600;font-size:16px;margin:14px 0 2px;text-align:center}
 
 /* Pie / botón continuar */
+/* El degradado tiene que ser OPACO donde pasa el contenido: con el corte al 72% se transparentaba
+   justo encima del boton y el borde de la tarjeta de plan asomaba por debajo, como si estuviera
+   cortada. Ahora el tramo opaco llega mas arriba y solo se difumina el ultimo tercio. */
 .cq__foot{position:sticky;bottom:0;z-index:5;
-  background:linear-gradient(to top,var(--bg) 72%,rgba(246,244,239,0));
-  padding:10px 20px calc(16px + env(safe-area-inset-bottom))}
+  background:linear-gradient(to top,var(--bg) 62%,rgba(246,244,239,.94) 84%,rgba(246,244,239,0));
+  padding:14px 20px calc(16px + env(safe-area-inset-bottom))}
 .cq__foot .in{max-width:var(--maxw);margin:0 auto}
 .cq__next{width:100%;font:inherit;font-weight:600;font-size:17px;padding:16px;border:0;border-radius:14px;
   background:var(--green);color:#fff;cursor:pointer;transition:background .15s,opacity .15s}
@@ -158,7 +191,7 @@ textarea.cq__input{min-height:120px;resize:vertical}
   max-width:var(--maxw);margin:0 auto;padding:24px 24px calc(24px + env(safe-area-inset-bottom))}
 .cq__center .ico{width:58px;height:58px;margin:0 auto 18px;border-radius:50%;display:grid;place-items:center;background:#eef3f1;color:var(--green)}
 .cq__center.stop .ico{background:#fbeae8;color:var(--red)}
-.cq__center h1{font-family:'Lora',serif;font-weight:600;font-size:27px;line-height:1.25;margin:0 0 12px}
+.cq__center h1{font-family:var(--display);font-weight:500;font-size:27px;line-height:1.25;margin:0 0 12px}
 .cq__center p{color:var(--muted);font-size:16px;margin:0 0 14px}
 .cq__center .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;margin-top:8px;
   padding:15px 22px;border-radius:14px;background:var(--green);color:#fff;font-weight:600;text-decoration:none}
