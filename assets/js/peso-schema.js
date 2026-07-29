@@ -54,8 +54,11 @@ window.CLYNIA_FORM = {
     // clynia-portal/lib/email.ts) y que el drip (filasPlan de api/recuperar-valoracion). El
     // paciente llega aquí desde esos correos: si allí lee 89 y 890 y aquí ve otra cosa, cree que
     // le han cambiado el precio al pinchar. Se cambian los tres a la vez o ninguno.
-    { id: "sub_mensual", nombre: "Pagando mes a mes", precio: 89, tag: "Más popular", featured: true, meta: "Facturado cada mes, sin permanencia", pago: "https://buy.stripe.com/fZu8wR77zdV89WwdGtfEk06" },
-    { id: "sub_anual", nombre: "Pagando el año entero", precio: 890, meta: "Equivale a 74,17 € al mes. Ahorras 178 €", pago: "https://buy.stripe.com/00w9AVdvXcR41q01XLfEk07" }
+    // `icono` es SVG en crudo (fichero nuestro, no entrada de usuario) y es OPCIONAL en el motor:
+    // calendario simple para el mes a mes, y el mismo calendario con un check para el año entero.
+    // Mismo trazo y grosor que el resto del sitio.
+    { id: "sub_mensual", nombre: "Pagando mes a mes", precio: 89, tag: "Más popular", featured: true, meta: "Facturado cada mes, sin permanencia", icono: '<svg viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="16.5" rx="2.5"/><path d="M8 2.5v4M16 2.5v4M3 10h18"/></svg>', pago: "https://buy.stripe.com/fZu8wR77zdV89WwdGtfEk06" },
+    { id: "sub_anual", nombre: "Pagando el año entero", precio: 890, meta: "Equivale a 74,17 € al mes. Ahorras 178 €", icono: '<svg viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="16.5" rx="2.5"/><path d="M8 2.5v4M16 2.5v4M3 10h18"/><path d="M8.8 15.4l2.1 2.1 4.3-4.3"/></svg>', pago: "https://buy.stripe.com/00w9AVdvXcR41q01XLfEk07" }
   ],
 
   steps: [

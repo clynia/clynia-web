@@ -101,6 +101,12 @@ textarea.cq__input{min-height:120px;resize:vertical}
 .cq__plan.feat{border-color:var(--green)}
 .cq__plan .tag{position:absolute;top:-10px;left:18px;background:var(--green);color:#fff;font-size:11px;font-weight:600;
   padding:3px 10px;border-radius:99px;letter-spacing:.02em}
+/* Icono del plan. Opcional: solo se pinta si el esquema trae `icono`. En la tarjeta destacada y en
+   la seleccionada se invierte (fondo verde, trazo blanco) para que el ojo caiga primero ahi. */
+.cq__plan .ico{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:12px;
+  background:rgba(67,112,102,.10);color:var(--green);margin-bottom:12px}
+.cq__plan .ico svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.cq__plan.feat .ico,.cq__plan.is-sel .ico{background:var(--green);color:#fff}
 .cq__plan .name{font-family:'Lora',serif;font-size:19px;font-weight:600}
 /* El importe manda: grande y solo. La unidad (/mes, /año) va pegada pero pequeña, y la linea de
    detalle baja a su propio renglon; antes se pegaba al numero y lo dejaba dentro de un parrafo. */

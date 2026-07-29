@@ -337,6 +337,10 @@
         return (p.sep ? '<span class="cq__plansep"><span>' + esc(p.sep) + "</span></span>" : "") +
           '<button type="button" class="cq__plan' + (p.featured ? " feat" : "") + sel + '" data-plan="' + esc(p.id) + '">' +
           (p.tag ? '<span class="tag">' + esc(p.tag) + "</span>" : "") +
+          // `icono` es SVG que viene del propio esquema (fichero nuestro, no entrada de usuario),
+          // por eso va sin escapar. Es OPCIONAL: si un plan no lo trae no se pinta nada, así que
+          // los esquemas que no lo usan (salud sexual) siguen exactamente igual.
+          (p.icono ? '<span class="ico" aria-hidden="true">' + p.icono + "</span>" : "") +
           '<div class="name">' + esc(p.nombre) + "</div>" +
           '<div class="price">' + esc(p.precioUI != null ? p.precioUI : p.precio) + "€" +
             (p.unidad ? '<span class="unit">' + esc(p.unidad) + "</span>" : "") +
