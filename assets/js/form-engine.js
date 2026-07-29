@@ -63,8 +63,16 @@
     // ha pulsado una en concreto llega ya marcada y solo tiene que confirmar. Se valida contra los
     // planes del propio esquema: un id que no exista se ignora y elige como hasta ahora.
     try {
-      var pl = new URLSearchParams(window.location.search).get("plan");
+      var qs = new URLSearchParams(window.location.search);
+      var pl = qs.get("plan");
       if (pl && (F.plans || []).some(function (p) { return p.id === pl; })) { answers.plan = pl; }
+      // ?code=<CODIGO>: el correo del descuento lo trae en el enlace para que la sesion de Stripe
+      // se abra YA con el precio rebajado. Sin esto el correo titula 71,20 y la pantalla de pago
+      // enseña 89 hasta que ella escriba el codigo a mano, que es lo que hace cerrar la pestaña.
+      // Aqui NO se valida: quien decide si un codigo existe es Stripe, via la lista blanca del
+      // nodo 'Mapear plan a price' de n8n. Se guarda en answers para que sobreviva a una recarga.
+      var cd = (qs.get("code") || "").trim().toUpperCase();
+      if (/^[A-Z0-9-]{3,32}$/.test(cd)) { answers._code = cd; }
     } catch (e) {}
     save();
   })();
@@ -616,7 +624,7 @@
       if (!F.checkoutEndpoint || !casoId || !plan) { payViaLink(casoId); return; }
       var settled = false;
       var t = setTimeout(function () { if (settled) return; settled = true; payViaLink(casoId); }, 6000);
-      fetch(F.checkoutEndpoint, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ casoId: casoId, email: answers.email || "", tipo_caso: answers.plan }) })
+      fetch(F.checkoutEndpoint, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ casoId: casoId, email: answers.email || "", tipo_caso: answers.plan, codigo: answers._code || "" }) })
         .then(function (r) { return r.json().catch(function () { return {}; }); })
         .then(function (d) {
           if (settled) return; settled = true; clearTimeout(t);
