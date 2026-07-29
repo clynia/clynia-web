@@ -369,7 +369,15 @@
             (p.antes ? ' <span class="was">' + esc(p.antes) +" €</span>" : "") +
             (p.meta ? "<small>" + esc(p.meta) + "</small>" : "") + "</div>" +
           (p.desc ? '<div class="desc">' + esc(p.desc) + "</div>" : "") + "</button>";
-      }).join("") + "</div>";
+      }).join("") + "</div>" +
+        // Metodos de pago aceptados, bajo las tarjetas. Solo aparece en pasos type:"plans" (peso y
+        // salud sexual), que es "donde hay que pagar". Cada logo es un SVG autocontenido servido de
+        // /assets; `alt=""` porque el aria-label del contenedor ya los enumera y si no un lector de
+        // pantalla leeria las cinco marcas de corrido. Es el MISMO set del pie de pagina.
+        '<div class="cq__pay" role="img" aria-label="Métodos de pago aceptados: Visa, Mastercard, American Express, Apple Pay y Google Pay">' +
+        ["visa", "mastercard", "amex", "apple-pay", "google-pay"].map(function (n) {
+          return '<img src="/assets/img/pay/' + n + '.svg" alt="" width="40" height="25" loading="lazy">';
+        }).join("") + "</div>";
     }
     return "";
   }

@@ -101,6 +101,10 @@ textarea.cq__input{min-height:120px;resize:vertical}
    Los 24 px dejan 14 px libres por debajo de cada tarjeta, y el padding superior evita que la
    primera etiqueta se pegue al texto de encima. */
 .cq__plans{display:flex;flex-direction:column;gap:22px;padding-top:16px}
+/* Fila de metodos de pago aceptados, bajo las tarjetas del paso de pago. Cada logo es un SVG
+   autocontenido (pastilla blanca + marca), el mismo set que el pie de la web. */
+.cq__pay{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:7px;margin:18px 0 2px}
+.cq__pay img{height:24px;width:auto;display:block}
 /* Separador con etiqueta, para despegar el pago unico de las dos suscripciones. */
 .cq__plansep{display:flex;align-items:center;gap:12px;margin:2px 2px 0;color:var(--muted);font-size:13px}
 .cq__plansep::before,.cq__plansep::after{content:"";flex:1;height:1px;background:var(--line)}
