@@ -230,7 +230,7 @@ window.CLYNIA_FORM = {
     // en el mismo dispositivo el motor ya lo tiene y no se repite la pregunta; en otro dispositivo (o
     // si lo saltó) se vuelve a pedir, que REMPE lo exige. Al ser condicional (showIf) el motor lo deja
     // fuera del tracking de pasos, que es la dirección segura.
-    { id: "telefono", section: "Para tu receta", type: "tel", key: "telefono", q: "¿Y tu número de teléfono?", help: "El médico te llamará por aquí si necesita ampliar algún dato.", showIf: function (a) { return !String(a.telefono || "").trim(); } },
+    { id: "telefono", section: "Para tu receta", type: "tel", key: "telefono", q: "¿Y tu número de teléfono?", help: "El médico puede llamarte aquí si necesita ampliar algún dato.", showIf: function (a) { return !String(a.telefono || "").trim(); } },
     { id: "direccion", section: "Para tu receta", type: "text", key: "direccion", q: "¿Cuál es tu dirección postal?", autocomplete: "address-line1", placeholder: "Tu calle y número" },
     { id: "codigo_postal", section: "Para tu receta", type: "text", key: "codigo_postal", q: "Código postal", autocomplete: "postal-code", placeholder: "Tu código postal" },
     { id: "localidad", section: "Para tu receta", type: "text", key: "localidad", q: "Localidad", autocomplete: "address-level2", placeholder: "Tu ciudad o población" },
@@ -239,7 +239,14 @@ window.CLYNIA_FORM = {
 
     // ---------- FINALES ----------
     { id: "ending_ok", type: "ending", variant: "ok", q: "¡Gracias! Tu consulta ya está con un médico", marca: true, icono: false, badge: "No tienes que hacer nada más", body: "Te contactamos nosotros. Esto es lo que pasa a partir de ahora:", steps: [{ t: "Consulta recibida", d: "Ya la tenemos guardada y en la cola de revisión médica.", done: true }, { t: "Un médico colegiado la revisa", d: "Mira tu caso con calma, sin cita previa y sin salas de espera.", icon: "medico" }, { t: "Te escribe por email", d: "Normalmente en menos de 24 horas. Si un tratamiento es adecuado para ti, te lo indicará y decides entonces si quieres continuar.", icon: "email" }], ctaNote: "Mientras tanto, en nuestro blog contamos cómo cuidar tu peso con criterio médico.", cta: "Ver artículos del blog", href: "/blog" },
-    { id: "ending_p2_ok", type: "ending", variant: "ok", q: "Cuestionario enviado. Ya está todo en marcha", body: "Un médico colegiado revisará tu caso y te contactará por email. Es muy probable que te llame por teléfono para conocerte mejor: mantén el móvil a mano estos días. Puedes seguir tu caso desde tu portal.", cta: "Ir a mi portal", href: "https://portal.clynia.es" },
+    // PROMESA DE CANAL (canónica, 1 ago 2026). El sistema solo garantiza EMAIL: el médico resuelve en
+    // el portal y eso dispara sendConsultaAptoEmail/sendConsultaNoAptoEmail; no hay telefonía en
+    // ningún repo (ni Twilio ni SMS ni click-to-call), así que la llamada es un extra que el médico
+    // PUEDE hacer, nunca una promesa. Antes esto decía "es muy probable que te llame" y contradecía
+    // al resto de la web. Sin build no hay constante compartida: las copias de esta promesa viven en
+    // saludsexual-schema.js (ending_p2_ok), gracias.html, index.html, perdida-de-peso.html,
+    // menopausia.html, salud-capilar.html y longevidad.html. Si cambia, cambiarlas TODAS.
+    { id: "ending_p2_ok", type: "ending", variant: "ok", q: "Cuestionario enviado. Ya está todo en marcha", body: "Un médico colegiado revisará tu caso y te responderá por email, así que lo tendrás todo por escrito. Si necesita aclarar algún dato, puede llamarte. Puedes seguir tu caso desde tu portal.", cta: "Ir a mi portal", href: "https://portal.clynia.es" },
     { id: "ending_menor", type: "ending", variant: "stop", q: "Este servicio es solo para mayores de 18 años", body: "Por ahora solo podemos atender a personas mayores de edad. Si te has equivocado con la fecha, vuelve atrás y corrígela.", href: "perdida-de-peso" },
     { id: "ending_rojo", type: "ending", variant: "stop", q: "Por tu seguridad, esto debe valorarlo un médico en persona", body: "Según lo que nos has contado, el tratamiento online no es lo más adecuado para ti ahora mismo. Te recomendamos acudir a tu médico de cabecera o a un centro de forma presencial para una valoración. Hemos guardado tus respuestas: si quieres que te orientemos, escríbenos a clynia@clynia.es.", cta: "Volver a Clynia", href: "perdida-de-peso" }
   ],

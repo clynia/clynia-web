@@ -24,7 +24,7 @@ window.CLYNIA_FORM = {
     { id: "num_documento", section: "Sobre ti", type: "text", key: "num_documento", q: "Número de tu documento", autocomplete: "off", placeholder: "Número de DNI/NIE/Pasaporte" },
     { id: "nacionalidad", section: "Sobre ti", type: "text", key: "nacionalidad", q: "¿Cuál es tu nacionalidad?", placeholder: "Tu nacionalidad" },
     { id: "email", section: "Sobre ti", type: "email", key: "email", q: "¿Cuál es tu correo electrónico?", help: "Te enviaremos aquí la confirmación y las indicaciones." },
-    { id: "telefono", section: "Sobre ti", type: "tel", key: "telefono", q: "¿Y tu número de teléfono?", help: "El médico te llamará por aquí si necesita ampliar algún dato." },
+    { id: "telefono", section: "Sobre ti", type: "tel", key: "telefono", q: "¿Y tu número de teléfono?", help: "El médico puede llamarte aquí si necesita ampliar algún dato." },
     { id: "direccion", section: "Sobre ti", type: "text", key: "direccion", q: "¿Cuál es tu dirección postal?", help: "La necesitamos para poder emitir la receta médica, si el médico lo considera oportuno.", autocomplete: "address-line1", placeholder: "Tu calle y número" },
     { id: "codigo_postal", section: "Sobre ti", type: "text", key: "codigo_postal", q: "Código postal", autocomplete: "postal-code", placeholder: "Tu código postal" },
     { id: "localidad", section: "Sobre ti", type: "text", key: "localidad", q: "Localidad", autocomplete: "address-level2", placeholder: "Tu ciudad o población" },
