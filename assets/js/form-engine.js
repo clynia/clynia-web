@@ -12,6 +12,14 @@
   var vars = {};
   var history = [];
   var current = null;
+  // Ficheros elegidos en pasos type:"file", SOLO en memoria: un File no puede persistirse en
+  // localStorage, así que una recarga lo pierde (y el paso limpia answers[key] al repintarse
+  // para no prometer un adjunto que ya no tenemos). En answers viaja solo {name, size}; el
+  // contenido real se lee como base64 en el envío (collectFiles) y va en payload.files.
+  var pendingFiles = {};
+  // Mismo límite de 3,5 MB que los adjuntos del portal, y por debajo del tope de 5 MB de la
+  // API de adjuntos de Airtable, que es donde acaba el fichero vía n8n.
+  var MAX_FILE_BYTES = 3670016;
   // ── Modo PARTE 2 (flujo en 2 partes): tras el pago, el cuestionario continúa aquí. ──
   // Se entra desde gracias.html o desde el enlace del email (?p2=<intakeId>). Si el intakeId
   // del enlace no coincide con el guardado (otro dispositivo), la parte 2 arranca en blanco y
@@ -331,7 +339,11 @@
       case "tel": return '<input class="cq__input" id="cqIn" type="tel" inputmode="tel" autocomplete="tel" value="' + esc(v || "") + '" placeholder="600 000 000">';
       case "number": return '<div class="cq__suffix"><input class="cq__input" id="cqIn" type="number" inputmode="decimal" value="' + esc(v == null ? "" : v) + '" placeholder="' + esc(s.placeholder || "") + '"' + (s.min != null ? ' min="' + s.min + '"' : "") + (s.max != null ? ' max="' + s.max + '"' : "") + ">" + (s.unit ? "<span>" + esc(s.unit) + "</span>" : "") + "</div>";
       case "date": return '<input class="cq__input" id="cqIn" type="date" value="' + esc(v || "") + '">';
-      case "file": return '<div class="cq__file"><label for="cqIn">&#128206; ' + esc(s.cta2 || "Subir archivo") + '</label><input id="cqIn" type="file" accept="' + esc(s.accept || "image/*,.pdf") + '"><span class="name" id="cqFileName">' + esc(v ? v.name || "Archivo adjunto" : "Opcional") + "</span></div>";
+      case "file":
+        // Respuesta guardada sin File en memoria = el fichero se perdió en una recarga: se
+        // limpia para que el paso vuelva a "Opcional" en vez de pintar un adjunto que no existe.
+        if (v && !pendingFiles[s.key]) { v = null; delete answers[s.key]; save(); }
+        return '<div class="cq__file"><label for="cqIn">&#128206; ' + esc(s.cta2 || "Subir archivo") + '</label><input id="cqIn" type="file" accept="' + esc(s.accept || "image/*,.pdf") + '"><span class="name" id="cqFileName">' + esc(v ? v.name || "Archivo adjunto" : "Opcional") + "</span></div>";
       case "yesno": return optBtns(s, [{ label: "Sí", value: true }, { label: "No", value: false }], false);
       case "single": return optBtns(s, s.options, false);
       case "multi": return optBtns(s, s.options, true);
@@ -422,7 +434,22 @@
       });
     } else if (s.type === "file") {
       var inp = document.getElementById("cqIn");
-      inp.onchange = function () { var f = inp.files[0]; if (f) { answers[s.key] = { name: f.name, size: f.size }; save(); document.getElementById("cqFileName").textContent = f.name; } };
+      inp.onchange = function () {
+        var f = inp.files[0];
+        if (!f) return;
+        if (f.size > MAX_FILE_BYTES) {
+          delete pendingFiles[s.key]; delete answers[s.key]; save();
+          inp.value = "";
+          document.getElementById("cqFileName").textContent = "Opcional";
+          err("El archivo supera 3,5 MB. Elige uno más pequeño (por ejemplo, una foto con menos calidad).");
+          return;
+        }
+        pendingFiles[s.key] = f;
+        answers[s.key] = { name: f.name, size: f.size };
+        save();
+        document.getElementById("cqFileName").textContent = f.name;
+        var e = document.getElementById("cqErr"); if (e) e.style.display = "none";
+      };
     } else if (s.type === "consent") {
       field.querySelectorAll("input[data-ck]").forEach(function (c) {
         c.onchange = function () { answers[c.getAttribute("data-ck")] = c.checked; save(); sendPartial(); };
@@ -608,6 +635,32 @@
     } catch (e) { fin(""); }
   }
 
+  // Lee los ficheros elegidos (pendingFiles) como base64 y llama a cb con un mapa
+  // { key: { name, type, base64 } }, o con null si no hay ninguno. Va FUERA de `answers` a
+  // propósito: el nodo "Validar P2" de n8n recorta toda cadena de answers a 1000 caracteres
+  // y destrozaría el base64. cb se llama SIEMPRE (también si la lectura falla): un problema
+  // con el adjunto nunca bloquea el envío del cuestionario, que es lo prioritario.
+  function collectFiles(cb) {
+    var keys = Object.keys(pendingFiles).filter(function (k) { return pendingFiles[k] && answers[k]; });
+    if (!keys.length) { cb(null); return; }
+    var out = {}, left = keys.length, any = false;
+    function one() { left--; if (left === 0) cb(any ? out : null); }
+    keys.forEach(function (k) {
+      try {
+        var f = pendingFiles[k];
+        var r = new FileReader();
+        r.onload = function () {
+          var s = String(r.result || "");
+          var i = s.indexOf(",");
+          if (i > -1 && s.length > i + 1) { out[k] = { name: f.name, type: f.type || "application/octet-stream", base64: s.slice(i + 1) }; any = true; }
+          one();
+        };
+        r.onerror = function () { one(); };
+        r.readAsDataURL(f);
+      } catch (e) { one(); }
+    });
+  }
+
   function finish() {
     vars = F.computeVars ? F.computeVars(answers) : {};
     root.innerHTML = '<div class="cq__center"><div class="cq__loading"><span class="cq__spin"></span> Enviando tu información de forma segura...</div><div id="cq-ts" style="margin-top:18px;min-height:1px;display:flex;justify-content:center"></div></div>';
@@ -676,10 +729,19 @@
     var failsafe = setTimeout(function () { afterIntake(null); }, 14000);
     turnstileToken(function (cfToken) {
       payload.cf_token = cfToken;
-      fetch(F.webhook, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) })
-        .then(function (r) { return r.json().catch(function () { return {}; }); })
-        .then(function (data) { clearTimeout(failsafe); var cid = data && data.casoId ? data.casoId : null; if (cid) { answers._caso = cid; save(); } afterIntake(cid); })
-        .catch(function () { clearTimeout(failsafe); try { localStorage.setItem(F.storeKey + "_pending", JSON.stringify(payload)); } catch (e) {} afterIntake(null); });
+      collectFiles(function (files) {
+        if (files) payload.files = files;
+        fetch(F.webhook, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) })
+          .then(function (r) { return r.json().catch(function () { return {}; }); })
+          .then(function (data) { clearTimeout(failsafe); var cid = data && data.casoId ? data.casoId : null; if (cid) { answers._caso = cid; save(); } afterIntake(cid); })
+          .catch(function () {
+            clearTimeout(failsafe);
+            // El respaldo _pending va SIN los ficheros: un base64 de varios MB no cabe en la
+            // cuota de localStorage y tiraría también las respuestas.
+            try { var pcopy = {}; Object.keys(payload).forEach(function (k) { if (k !== "files") pcopy[k] = payload[k]; }); localStorage.setItem(F.storeKey + "_pending", JSON.stringify(pcopy)); } catch (e) {}
+            afterIntake(null);
+          });
+      });
     });
   }
 
@@ -698,21 +760,26 @@
       root.innerHTML = '<div class="cq__center stop"><h1>No se ha podido enviar</h1><p>Comprueba tu conexión y vuelve a intentarlo en un momento. Tus respuestas siguen guardadas en este dispositivo y tienes el enlace en tu correo.</p><button class="btn" type="button" id="cqRetryP2">Reintentar</button></div>';
       var b = document.getElementById("cqRetryP2"); if (b) b.onclick = function () { finishP2(); };
     }
-    var t = setTimeout(fail, 15000);
-    fetch(F.part2Webhook, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) })
-      .then(function (r) { return r.json().catch(function () { return {}; }); })
-      .then(function (d) {
-        clearTimeout(t);
-        if (done) return;
-        if (d && d.ok) {
-          done = true;
-          px("P2Complete", { content_name: F.product, content_category: F.category || F.product });
-          ga("p2_complete", { product: F.product });
-          clearStore();
-          go(byId("ending_p2_ok"), false);
-        } else { fail(); }
-      })
-      .catch(function () { clearTimeout(t); fail(); });
+    collectFiles(function (files) {
+      if (files) payload.files = files;
+      // Con adjunto (la analítica puede rondar los 3,5 MB) se da más margen antes de enseñar
+      // el reintento: en una conexión móvil lenta la subida legítima puede pasar de 15 s.
+      var t = setTimeout(fail, files ? 30000 : 15000);
+      fetch(F.part2Webhook, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) })
+        .then(function (r) { return r.json().catch(function () { return {}; }); })
+        .then(function (d) {
+          clearTimeout(t);
+          if (done) return;
+          if (d && d.ok) {
+            done = true;
+            px("P2Complete", { content_name: F.product, content_category: F.category || F.product });
+            ga("p2_complete", { product: F.product });
+            clearStore();
+            go(byId("ending_p2_ok"), false);
+          } else { fail(); }
+        })
+        .catch(function () { clearTimeout(t); fail(); });
+    });
   }
 
   document.body.classList.add("cq-body");
