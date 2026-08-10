@@ -329,6 +329,11 @@
     var bl = document.getElementById("cqBackLow"); if (bl) bl.onclick = back;
   }
 
+  // El mes se elige por NOMBRE a propósito: elimina de raíz la duda día/mes y no se puede
+  // teclear mal. Los tres campos de la fecha componen siempre un ISO (AAAA-MM-DD), el mismo
+  // formato que producía el input date, así que esquemas, n8n y Airtable no notan el cambio.
+  var MESES = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+
   function fieldHTML(s) {
     var v = answers[s.key];
     switch (s.type) {
@@ -338,7 +343,20 @@
       case "email": return '<input class="cq__input" id="cqIn" type="email" inputmode="email" autocomplete="email" value="' + esc(v || "") + '" placeholder="tucorreo@email.com">';
       case "tel": return '<input class="cq__input" id="cqIn" type="tel" inputmode="tel" autocomplete="tel" value="' + esc(v || "") + '" placeholder="600 000 000">';
       case "number": return '<div class="cq__suffix"><input class="cq__input" id="cqIn" type="number" inputmode="decimal" value="' + esc(v == null ? "" : v) + '" placeholder="' + esc(s.placeholder || "") + '"' + (s.min != null ? ' min="' + s.min + '"' : "") + (s.max != null ? ' max="' + s.max + '"' : "") + ">" + (s.unit ? "<span>" + esc(s.unit) + "</span>" : "") + "</div>";
-      case "date": return '<input class="cq__input" id="cqIn" type="date" value="' + esc(v || "") + '">';
+      // Fecha por partes (día / mes / año) en vez de <input type="date">: el input nativo se
+      // degrada a texto libre en los webviews de Instagram/Facebook (de donde viene el tráfico de
+      // Meta) y en navegadores viejos, y hubo pacientes que no conseguían rellenarlo (3 quejas,
+      // ago 2026). Tres campos simples funcionan en TODO: numérico para día y año, y el mes por
+      // nombre. Un valor guardado que no sea ISO (basura de un webview) se descarta y se reescribe.
+      case "date": {
+        var dP = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(v || ""));
+        var dD = dP ? String(+dP[3]) : "", dM = dP ? String(+dP[2]) : "", dY = dP ? dP[1] : "";
+        return '<div class="cq__date">' +
+          '<label><span>Día</span><input class="cq__input" id="cqDay" type="text" inputmode="numeric" autocomplete="bday-day" maxlength="2" placeholder="14" value="' + esc(dD) + '"></label>' +
+          '<label><span>Mes</span><select class="cq__input" id="cqMonth" autocomplete="bday-month"><option value="" disabled' + (dM ? "" : " selected") + '>Mes</option>' + MESES.map(function (n, i) { var mv = String(i + 1); return '<option value="' + mv + '"' + (dM === mv ? " selected" : "") + '>' + n + "</option>"; }).join("") + "</select></label>" +
+          '<label><span>Año</span><input class="cq__input" id="cqYear" type="text" inputmode="numeric" autocomplete="bday-year" maxlength="4" placeholder="1975" value="' + esc(dY) + '"></label>' +
+          "</div>";
+      }
       case "file":
         // Respuesta guardada sin File en memoria = el fichero se perdió en una recarga: se
         // limpia para que el paso vuelva a "Opcional" en vez de pintar un adjunto que no existe.
@@ -454,6 +472,25 @@
       field.querySelectorAll("input[data-ck]").forEach(function (c) {
         c.onchange = function () { answers[c.getAttribute("data-ck")] = c.checked; save(); sendPartial(); };
       });
+    } else if (s.type === "date") {
+      var dEl = document.getElementById("cqDay"), mEl = document.getElementById("cqMonth"), yEl = document.getElementById("cqYear");
+      // Solo se guarda el ISO cuando las tres partes están; a medias queda "" (falsy), que es lo
+      // que esperan los next() de los esquemas y el lead parcial. Se filtra todo lo que no sea
+      // dígito porque en móvil el teclado numérico aún deja pegar texto.
+      var setDate = function () {
+        var dd = dEl.value.replace(/\D/g, ""), yy = yEl.value.replace(/\D/g, "");
+        if (dEl.value !== dd) dEl.value = dd;
+        if (yEl.value !== yy) yEl.value = yy;
+        var mm = mEl.value;
+        answers[s.key] = (dd && mm && yy.length === 4) ? (yy + "-" + ("0" + mm).slice(-2) + "-" + ("0" + dd).slice(-2)) : "";
+        save();
+      };
+      dEl.oninput = function () { setDate(); if (dEl.value.length === 2) { try { mEl.focus(); } catch (e) {} } };
+      mEl.onchange = function () { setDate(); try { yEl.focus(); } catch (e) {} };
+      yEl.oninput = setDate;
+      var dEnter = function (e) { if (e.key === "Enter") { e.preventDefault(); setDate(); submitStep(s); } };
+      dEl.onkeydown = dEnter; yEl.onkeydown = dEnter;
+      setTimeout(function () { try { dEl.focus(); } catch (e) {} }, 40);
     } else {
       var el = document.getElementById("cqIn");
       if (el) {
@@ -486,12 +523,23 @@
       // justo lo que no queremos si el plan es llamar.
       case "tel": return v != null && (String(v).match(/\d/g) || []).length >= 9;
       case "number": return v != null && v !== "" && !isNaN(v);
+      // Antes el date pasaba por el default (cualquier texto no vacío colaba). Ahora: ISO completo,
+      // fecha real del calendario (rechaza el 31 de febrero), año desde 1900 y nunca en el futuro.
+      // Todos los pasos date de los esquemas son fechas de nacimiento; si algún día un producto
+      // necesita fechas futuras, esto tendrá que parametrizarse.
+      case "date": {
+        var dm = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(v || ""));
+        if (!dm) return false;
+        var yy = +dm[1], mm = +dm[2], dd = +dm[3];
+        var dt = new Date(yy, mm - 1, dd);
+        return dt.getFullYear() === yy && dt.getMonth() === mm - 1 && dt.getDate() === dd && yy >= 1900 && dt <= new Date();
+      }
       default: return v != null && String(v).trim() !== "";
     }
   }
 
   function submitStep(s) {
-    if (!validate(s)) { err(s.errMsg || "Responde para continuar."); return; }
+    if (!validate(s)) { err(s.errMsg || (s.type === "date" ? "Revisa la fecha: necesitamos día, mes y año (el año con sus cuatro cifras, por ejemplo 1975)." : "Responde para continuar.")); return; }
     // Rango de los números (min/max del schema). Los atributos min y max del input SOLO los aplica
     // el navegador al enviar un formulario nativo, y aquí se avanza por JS, así que no se estaban
     // comprobando: se colaba la altura en metros (1,63 en vez de 163) y el IMC salía por las nubes
