@@ -507,6 +507,65 @@
 
   function err(msg) { var e = document.getElementById("cqErr"); if (e) { e.textContent = msg; e.style.display = "block"; } }
 
+  // ── Dominios de correo mal escritos ──
+  // Un typo en el dominio NO rebota: gmai.com, gemail.com y compañía existen (typosquatting) y
+  // ACEPTAN el correo, así que el envío sale "entregado" y nadie se entera de que la persona nunca
+  // lo vio. Pasó el 10 ago 2026: una paciente apta se quedó ilocalizable, con el correo del médico
+  // yéndose a un buzón ajeno. Por eso se corrige AQUÍ, antes de guardar, que es el único momento en
+  // que la persona sigue delante de la pantalla.
+  // Solo typos inequívocos: cada entrada es un dominio que no da servicio de correo a nadie. Ante
+  // la duda no se añade, porque un falso positivo estorba a quien tiene el correo bien.
+  var EMAIL_TYPOS = {
+    "gmai.com": "gmail.com", "gmial.com": "gmail.com", "gamil.com": "gmail.com",
+    "gmaill.com": "gmail.com", "gemail.com": "gmail.com", "gnail.com": "gmail.com",
+    "gmail.om": "gmail.com", "gmail.cm": "gmail.com", "gmail.co": "gmail.com",
+    "hotmial.com": "hotmail.com", "hotmai.com": "hotmail.com", "hotmal.com": "hotmail.com",
+    "homtail.com": "hotmail.com", "hotmail.co": "hotmail.com", "hotmail.om": "hotmail.com",
+    "outlok.com": "outlook.com", "outloo.com": "outlook.com", "oulook.com": "outlook.com",
+    "yaho.es": "yahoo.es", "yahooo.es": "yahoo.es", "yaho.com": "yahoo.com",
+    "iclod.com": "icloud.com", "icoud.com": "icloud.com", "icloud.co": "icloud.com"
+  };
+  // Terminaciones que solo salen de resbalar en el teclado: .con y .cmo por .com, .ess por .es.
+  var TLD_TYPOS = [[/\.con$/, ".com"], [/\.cmo$/, ".com"], [/\.comm$/, ".com"], [/\.ess$/, ".es"]];
+
+  // Devuelve el correo corregido, o null si no hay nada que sugerir.
+  function emailSuggestion(v) {
+    var at = String(v || "").lastIndexOf("@");
+    if (at < 1) return null;
+    var user = String(v).slice(0, at), dom = String(v).slice(at + 1).toLowerCase();
+    if (EMAIL_TYPOS[dom]) return user + "@" + EMAIL_TYPOS[dom];
+    for (var i = 0; i < TLD_TYPOS.length; i++) {
+      if (TLD_TYPOS[i][0].test(dom)) return user + "@" + dom.replace(TLD_TYPOS[i][0], TLD_TYPOS[i][1]);
+    }
+    return null;
+  }
+
+  // Correo que la persona ha dado por bueno pese al aviso. Sin esto, quien de verdad tenga un
+  // dominio raro se quedaría atrapado en el paso: esto avisa, no prohíbe.
+  var emailOk = null;
+
+  function askEmailTypo(s, valor, sug) {
+    var e = document.getElementById("cqErr");
+    if (!e) return;
+    e.innerHTML = "¿Querías decir <strong>" + esc(sug) + "</strong>? Si el correo no es correcto, el médico no podrá responderte." +
+      '<div class="cq__fix"><button type="button" id="cqFixYes">Sí, corrígelo</button>' +
+      '<button type="button" id="cqFixNo">Está bien así</button></div>';
+    e.style.display = "block";
+    document.getElementById("cqFixYes").onclick = function () {
+      answers[s.key] = sug;
+      var inp = document.getElementById("cqIn");
+      if (inp) inp.value = sug;
+      save();
+      e.style.display = "none";
+      submitStep(s);
+    };
+    document.getElementById("cqFixNo").onclick = function () {
+      emailOk = valor;
+      e.style.display = "none";
+      submitStep(s);
+    };
+  }
+
   function validate(s) {
     var v = answers[s.key];
     if (s.required === false) return true;
@@ -551,6 +610,14 @@
         err("Escríbelo" + (s.unit ? " en " + s.unit : "") + (s.min != null && s.max != null ? ", entre " + s.min + " y " + s.max : "") + ".");
         return;
       }
+    }
+    // Dominio del correo mal escrito: se ofrece la corrección y no se avanza hasta que la persona
+    // decide. Va aquí, junto al resto de validaciones de submitStep, y no en validate(), porque no
+    // es un error: es una duda que hay que preguntar, y la respuesta puede ser que el correo esté
+    // bien. Se comprueba antes de sendPartial() para no llegar a guardar el dominio malo.
+    if (s.type === "email" && emailOk !== answers[s.key]) {
+      var sugerido = emailSuggestion(answers[s.key]);
+      if (sugerido) { askEmailTypo(s, answers[s.key], sugerido); return; }
     }
     // Validación suave del número de documento contra el tipo elegido (DNI/NIE/Pasaporte).
     if (s.key === "num_documento" && F.validarDocumento && !F.validarDocumento(answers.tipo_documento, answers.num_documento).ok) {
