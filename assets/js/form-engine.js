@@ -521,6 +521,7 @@
     "gmail.om": "gmail.com", "gmail.cm": "gmail.com", "gmail.co": "gmail.com",
     "hotmial.com": "hotmail.com", "hotmai.com": "hotmail.com", "hotmal.com": "hotmail.com",
     "homtail.com": "hotmail.com", "hotmail.co": "hotmail.com", "hotmail.om": "hotmail.com",
+    "homail.com": "hotmail.com", "hotmails.com": "hotmail.com", "hotmil.com": "hotmail.com",
     "outlok.com": "outlook.com", "outloo.com": "outlook.com", "oulook.com": "outlook.com",
     "yaho.es": "yahoo.es", "yahooo.es": "yahoo.es", "yaho.com": "yahoo.com",
     "iclod.com": "icloud.com", "icoud.com": "icloud.com", "icloud.co": "icloud.com"
@@ -543,6 +544,33 @@
   // Correo que la persona ha dado por bueno pese al aviso. Sin esto, quien de verdad tenga un
   // dominio raro se quedaría atrapado en el paso: esto avisa, no prohíbe.
   var emailOk = null;
+  // Igual, para el correo escrito donde no toca (ver la comprobación de los pasos de texto).
+  var textoOk = null;
+
+  // Alguien que escribe su correo en un paso de texto. El 11 ago 2026 una paciente puso su correo
+  // (y encima con el dominio mal) en el paso del NOMBRE: su campo de email iba aparte y estaba bien,
+  // así que la comprobación de dominios no la salvaba, y el médico y todos los correos la llamaban
+  // "consueloaste@homail.com". Es el mismo despiste de rellenar el formulario en piloto automático.
+  function askTextoConCorreo(s, valor) {
+    var e = document.getElementById("cqErr");
+    if (!e) return;
+    e.innerHTML = "Eso parece un correo electrónico. Aquí te pedimos otra cosa, y el correo te lo pedimos en su propio paso." +
+      '<div class="cq__fix"><button type="button" id="cqFixYes">Lo corrijo</button>' +
+      '<button type="button" id="cqFixNo">Está bien así</button></div>';
+    e.style.display = "block";
+    document.getElementById("cqFixYes").onclick = function () {
+      answers[s.key] = "";
+      var inp = document.getElementById("cqIn");
+      if (inp) { inp.value = ""; try { inp.focus(); } catch (er) {} }
+      save();
+      e.style.display = "none";
+    };
+    document.getElementById("cqFixNo").onclick = function () {
+      textoOk = valor;
+      e.style.display = "none";
+      submitStep(s);
+    };
+  }
 
   function askEmailTypo(s, valor, sug) {
     var e = document.getElementById("cqErr");
@@ -618,6 +646,11 @@
     if (s.type === "email" && emailOk !== answers[s.key]) {
       var sugerido = emailSuggestion(answers[s.key]);
       if (sugerido) { askEmailTypo(s, answers[s.key], sugerido); return; }
+    }
+    // Y el reverso: un correo escrito en un paso que no es el del correo.
+    if (s.type === "text" && textoOk !== answers[s.key] && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(answers[s.key] || "").trim())) {
+      askTextoConCorreo(s, answers[s.key]);
+      return;
     }
     // Validación suave del número de documento contra el tipo elegido (DNI/NIE/Pasaporte).
     if (s.key === "num_documento" && F.validarDocumento && !F.validarDocumento(answers.tipo_documento, answers.num_documento).ok) {
