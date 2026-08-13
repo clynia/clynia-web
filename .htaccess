@@ -46,4 +46,21 @@ RewriteRule ^(.+?)/?$ $1.html [L]
   # Reduce la huella informativa que añade el hosting (best-effort).
   Header always unset X-Powered-By
   Header unset X-Powered-By
+
+  # ── Política de caché ──────────────────────────────────────────────────
+  # Antes NO había Cache-Control y cada navegador cacheaba el HTML por heurística: el webview
+  # de Instagram sirvió durante semanas cuestionarios viejos, y el 12 ago 2026 una paciente
+  # rellenó una versión anterior al 16 jul que pedía el DNI ANTES del pago.
+  # HTML: no-cache = se puede guardar pero se revalida SIEMPRE antes de usarse; con el ETag
+  # la revalidación es un 304 barato. JS y CSS llevan ?v= (regla 16 de la guía de formularios:
+  # subir el ?v= al cambiarlos), así que pueden cachearse un mes sin riesgo.
+  <FilesMatch "\.html$">
+    Header always set Cache-Control "no-cache"
+  </FilesMatch>
+  <FilesMatch "\.(js|css)$">
+    Header always set Cache-Control "public, max-age=2592000"
+  </FilesMatch>
+  <FilesMatch "\.(png|jpe?g|webp|svg|gif|ico|woff2?)$">
+    Header always set Cache-Control "public, max-age=2592000"
+  </FilesMatch>
 </IfModule>

@@ -191,6 +191,15 @@
     try { p = JSON.parse(localStorage.getItem("clynia_pending_purchase") || "null"); } catch (e) { return; }
     if (!p || !p.value) return;
     try { localStorage.removeItem("clynia_pending_purchase"); } catch (e) {}
+    // Solo cuenta como compra si venimos del success_url de Stripe, que SIEMPRE trae ?p2=.
+    // Antes bastaba el ticket del checkout: quien pulsaba "Continuar al pago", se arrepentia
+    // en Stripe y luego entraba en /gracias quedaba marcado como pagado (con Purchase falso
+    // al pixel incluido) y el cuestionario le abria la parte 2 sin haber pagado. El unico
+    // camino legitimo sin ?p2= es el Payment Link de respaldo, y ese paciente entra a la
+    // parte 2 por el enlace de su email, asi que no pierde nada.
+    var esPago = false;
+    try { esPago = !!new URLSearchParams(window.location.search).get("p2"); } catch (e) {}
+    if (!esPago) return;
     // Flujo en 2 partes: ya NO se borra el store del formulario (la parte 2 lo necesita para
     // continuar en este dispositivo); se marca "pagado" y el propio formulario lo limpia al
     // enviar la parte 2 (o el TTL de 24h lo purga).
