@@ -23,13 +23,14 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <!-- Página en modo vista previa: sin indexar y sin enlaces entrantes a propósito (decisión de Alfonso, 13 ago 2026).
-       La mención explícita a análogos del GLP-1 (condicionada a indicación clínica) es decisión de Alfonso de esta
-       misma fecha, alineada con la práctica de mercado (Yazen, Holvia, ZAVA); PENDIENTE de revisión del abogado
-       farma antes de recibir tráfico de pago. Si algún día se apunta publicidad de Meta aquí, revisar antes la
-       política de fármacos Rx de Meta: la mención en la landing puede requerir certificación LegitScript. -->
+       v2 (misma fecha): la página vende directamente el tratamiento con análogos del GLP-1 (receta privada +
+       seguimiento) enfocado a composición corporal para deportistas, por decisión explícita de Alfonso y en línea
+       con la práctica de mercado (Holvia, ZAVA, Yazen). Siempre condicionado a indicación clínica y decisión del
+       médico, sin marcas comerciales. PENDIENTE de revisión del abogado farma antes de recibir tráfico. Si algún
+       día se apunta publicidad de Meta aquí, revisar antes la política de fármacos Rx de Meta (LegitScript). -->
   <meta name="robots" content="noindex, nofollow" />
-  <title>Médico online para gente que entrena en serio · Clynia</title>
-  <meta name="description" content="Entrenas y lo mides todo. Un médico colegiado valora tu caso online y responde por email, normalmente en menos de 24 horas. Empezar es gratis." />
+  <title>Tratamiento GLP-1 online para deportistas · Clynia</title>
+  <meta name="description" content="Análogos del GLP-1 con receta privada y seguimiento médico online, para el peso y la composición corporal. Un médico valora tu caso gratis, normalmente en menos de 24 horas." />
   <meta name="theme-color" content="#f6f4ef" />
   <link rel="icon" type="image/png" href="assets/img/favicon.png" />
 
@@ -39,35 +40,30 @@
 
   <link rel="stylesheet" href="assets/css/styles.css?v=20260729pay" />
   <style>
-    /* El hero comparte figura con el resto de landings (marco vertical), pero la foto nueva es
-       cuadrada: se recorta a 3:4 con object-fit para no deformar el componente. */
+    /* La foto del hero es cuadrada: se recorta a 3:4 para no deformar el componente del sitio. */
     .hero__media img { aspect-ratio: 3 / 4; object-fit: cover; }
 
-    /* Fotos de ambiente entre secciones. Esquinas del sistema, dentro del wrap. */
+    /* Fotos de ambiente entre secciones. */
     .fotoband { padding: 8px 0 40px; }
     .fotoband img { width: 100%; height: auto; border-radius: 22px; display: block; }
 
-    /* Dos listas enfrentadas (es para ti / no lo es), con el lenguaje visual del sitio. */
+    /* Tarjetas de esta página: heredan la alineación del sitio (izquierda), sin justificados
+       propios, para que todo el texto de la página quede alineado igual. */
     .duo { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-top: 26px; }
     @media (max-width: 760px) { .duo { grid-template-columns: 1fr; } }
     .duo__card { background: #fff; border-radius: 22px; padding: 30px 32px; box-shadow: 0 18px 44px -30px rgba(40, 67, 60, .45); }
     .duo__card h3 { font-family: "Fraunces", Georgia, serif; font-weight: 500; font-size: 24px; margin: 0 0 14px; color: var(--ink); }
     .duo__card ul { list-style: none; margin: 0; padding: 0; }
-    .duo__card li { position: relative; padding: 7px 0 7px 30px; font-size: 15.5px; line-height: 1.55; color: var(--ink-soft); text-align: justify; -webkit-hyphens: auto; hyphens: auto; }
+    .duo__card li { position: relative; padding: 7px 0 7px 30px; font-size: 15.5px; line-height: 1.55; color: var(--ink-soft); }
     .duo__card li::before { position: absolute; left: 0; top: 7px; font-weight: 700; }
     .duo__card--si li::before { content: "\2713"; color: var(--green); }
     .duo__card--no li::before { content: "\2717"; color: #b0575e; }
 
-    /* Bloque "qué puede incluir": tarjeta destacada, con la mención farmacológica en su propio
-       párrafo y su letra pequeña pegada, para que nunca viaje separada de sus condiciones. */
-    .incluye { background: #fff; border-radius: 22px; padding: 34px 36px; box-shadow: 0 18px 44px -30px rgba(40, 67, 60, .45); margin-top: 26px; }
-    .incluye ul { list-style: none; margin: 0 0 18px; padding: 0; }
-    .incluye li { position: relative; padding: 8px 0 8px 30px; font-size: 15.5px; line-height: 1.6; color: var(--ink-soft); text-align: justify; -webkit-hyphens: auto; hyphens: auto; }
-    .incluye li::before { content: "\2713"; position: absolute; left: 0; top: 8px; font-weight: 700; color: var(--green); }
-    .incluye__fine { font-size: 13px; line-height: 1.6; color: var(--ink-soft); text-align: justify; -webkit-hyphens: auto; hyphens: auto; margin: 0; }
-
-    /* Justificado con guiones en el texto corrido de esta página, igual que en el resto. */
-    .reframe__text, .lead, .step__text, .faq__body p, .closing__sub, .hero__sub { text-align: justify; -webkit-hyphens: auto; hyphens: auto; }
+    .trat { background: #fff; border-radius: 22px; padding: 34px 36px; box-shadow: 0 18px 44px -30px rgba(40, 67, 60, .45); margin-top: 26px; }
+    .trat h3 { font-family: "Fraunces", Georgia, serif; font-weight: 500; font-size: 22px; margin: 18px 0 8px; color: var(--ink); }
+    .trat h3:first-child { margin-top: 0; }
+    .trat p { font-size: 15.5px; line-height: 1.65; color: var(--ink-soft); margin: 0 0 10px; }
+    .trat__fine { font-size: 13px; line-height: 1.6; color: var(--ink-soft); margin: 14px 0 0; }
   </style>
   <script src="assets/js/ga.js?v=20260702b"></script>
 </head>
@@ -110,18 +106,19 @@
             />
             <span class="hero__badge">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
-              Médicos colegiados
+              Con receta y seguimiento médico
             </span>
           </figure>
 
           <div class="hero__copy">
             <h1 class="hero__title reveal d3">
-              Tus datos merecen algo <em>mejor que un foro</em>.
+              Tratamiento GLP-1, <em>llevado por un médico</em>.
             </h1>
             <p class="hero__sub reveal d4">
-              Un médico colegiado revisa tu caso (entreno, descanso, hábitos, historial) y te dice
-              por escrito qué opciones tienen sentido para ti, incluido el tratamiento con receta
-              si está clínicamente indicado. Te responde por email, normalmente en menos de 24 horas.
+              Entrenas, comes bien y lo mides todo, pero hay cosas que el entreno solo no mueve.
+              Los análogos del GLP-1 son tratamiento médico para el peso y la composición corporal:
+              con receta privada, con seguimiento y solo si estás dentro de la indicación. Un médico
+              valora tu caso gratis y te responde, normalmente, en menos de 24 horas.
             </p>
 
             <div class="reveal d5">
@@ -129,15 +126,15 @@
                 Empieza tu consulta gratis
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
               </a>
-              <p class="hero__assurance">Cuestionario de unos minutos, gratis y sin compromiso. Tu primera consulta con un médico colegiado es gratis y te responde, normalmente, en menos de 24 h. Solo pagas si decides empezar un plan.</p>
+              <p class="hero__assurance">Cuestionario de unos minutos, gratis y sin compromiso. Un médico revisa tu caso sin coste y te dice si el tratamiento tiene sentido para ti. Solo pagas si decides empezar un plan.</p>
             </div>
           </div>
 
         </div>
 
         <p class="hero__pencaption reveal d5">
-          Cualquier indicación médica corresponde siempre a un médico colegiado, si lo
-          considera adecuado tras valorarte, y con el seguimiento oportuno.
+          La decisión de prescribir es siempre del médico, únicamente si el tratamiento está
+          clínicamente indicado en tu caso y con el seguimiento oportuno.
         </p>
       </div>
     </section>
@@ -145,23 +142,23 @@
     <!-- ===================== FRANJA DE CONFIANZA ===================== -->
     <section class="trust">
       <div class="wrap">
-        <p class="trust__title reveal-up">Serio donde tiene que serlo</p>
+        <p class="trust__title reveal-up">En serio, con médicos y sin atajos</p>
         <ul class="trust__grid">
           <li class="trust__item reveal-up">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
-            Médicos colegiados en España e independientes
+            Médicos en España, independientes
           </li>
           <li class="trust__item reveal-up">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8"/><path d="M12 16v4"/></svg>
-            Consulta 100% online y privada
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.5 20.5 3.5 13.5a5 5 0 0 1 7-7l7 7a5 5 0 0 1-7 7z"/><path d="m8.5 8.5 7 7"/></svg>
+            Receta privada solo si el médico la indica
           </li>
           <li class="trust__item reveal-up">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
             Respuesta normalmente en menos de 24 h
           </li>
           <li class="trust__item reveal-up">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.5 20.5 3.5 13.5a5 5 0 0 1 7-7l7 7a5 5 0 0 1-7 7z"/><path d="m8.5 8.5 7 7"/></svg>
-            Receta privada solo si el médico la indica
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9h18"/><path d="M5 9V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v4"/><path d="M4 9h16l-1 11a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1Z"/></svg>
+            El medicamento, en la farmacia que tú prefieras
           </li>
           <li class="trust__item reveal-up">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
@@ -171,18 +168,18 @@
       </div>
     </section>
 
-    <!-- ===================== REFRAME: EL HUECO ===================== -->
+    <!-- ===================== REFRAME ===================== -->
     <section class="reframe">
       <div class="wrap">
         <div class="reframe__card reveal-up">
-          <h2 class="reframe__title">Lo tienes todo medido. Y nadie que lo mire.</h2>
+          <h2 class="reframe__title">Hay cosas que el entreno solo no mueve.</h2>
           <p class="reframe__text">
-            Duermes con un anillo, entrenas con un reloj y sabes tus macros de memoria. Datos
-            no te faltan. Lo que falta es alguien con la carrera de Medicina que mire el conjunto.
-            Porque hoy tu fuente de criterio es un hilo de Reddit, un podcast o el más mazado de
-            tu gimnasio. Gente estupenda. Ninguno responde por ti si se equivoca. Ese es el hueco:
-            te conectamos con un médico colegiado que valora tu caso con tus datos. Sin humo, sin
-            bata de atrezzo y sin venderte nada por el camino.
+            Duermes con un anillo, entrenas con un reloj y sabes tus macros de memoria. Aun así,
+            el apetito y el metabolismo van por libre: los regula una biología que no elegiste,
+            y contra eso la fuerza de voluntad tiene un límite. Para eso existe el tratamiento
+            médico. La diferencia entre hacerlo bien y hacerlo a lo loco no es el fármaco: es
+            quién lo lleva. Aquí lo lleva un médico, con receta, con seguimiento y con tus datos
+            delante.
           </p>
           <a class="btn btn--primary btn--inline" href="peso">
             Empieza gratis
@@ -196,55 +193,55 @@
       <img src="assets/img/rendimiento-gym.webp" alt="Rincón de entrenamiento en casa al amanecer, con banco de madera, toalla y una kettlebell" loading="lazy" width="2688" height="1536" />
     </div>
 
+    <!-- ===================== EL TRATAMIENTO ===================== -->
+    <section class="section section--tint" id="tratamiento">
+      <div class="wrap">
+        <header class="section__head reveal-up">
+          <h2 class="h2">El tratamiento, hablando claro.</h2>
+          <p class="lead">Sin rodeos: esto es lo que hacen nuestros médicos y lo que puedes esperar si tu caso está dentro de la indicación.</p>
+        </header>
+        <div class="trat reveal-up">
+          <h3>Qué es</h3>
+          <p>Los análogos del GLP-1 son medicamentos de prescripción que actúan sobre el apetito y el metabolismo. Se usan, bajo indicación y control médico, para el tratamiento del peso y la mejora de la composición corporal, siempre como complemento a la alimentación y a la actividad física que ya haces.</p>
+          <h3>Qué hacen nuestros médicos</h3>
+          <p>Llevan tu tratamiento de principio a fin: valoran tu caso con tus datos (entreno, hábitos, historial), deciden si estás dentro de la indicación, emiten la receta privada si procede, ajustan la pauta a tu ritmo y te acompañan con seguimiento continuo por el portal, en privado y por escrito.</p>
+          <h3>Qué pasa si no estás dentro de la indicación</h3>
+          <p>Te lo decimos igual de claro. Estos medicamentos tienen criterios clínicos concretos y la decisión es siempre del médico: si tu caso no los cumple, te explicará por qué y no habrás pagado nada. Aquí nadie sale con una receta que no le toca.</p>
+          <p class="trat__fine">Clynia es una plataforma que te conecta con médicos independientes: no vende ni dispensa medicamentos ni promociona ninguna marca concreta. Si tu médico emite una receta privada, el medicamento lo compras tú en la farmacia que prefieras y su coste no está incluido en la cuota del plan.</p>
+        </div>
+      </div>
+    </section>
+
     <!-- ===================== CÓMO FUNCIONA ===================== -->
     <section class="section" id="como-funciona">
       <div class="wrap">
         <header class="section__head reveal-up">
           <h2 class="h2">Tres pasos y cero salas de espera.</h2>
-          <p class="lead">Sin cita y sin desplazarte: empiezas con un cuestionario gratuito y un médico colegiado te responde por email cuando ha valorado tu caso, nunca un algoritmo.</p>
+          <p class="lead">Sin cita y sin desplazarte: empiezas con un cuestionario gratuito y un médico te responde por email cuando ha valorado tu caso, nunca un algoritmo.</p>
         </header>
 
         <ol class="steps">
           <li class="step reveal-up">
             <span class="step__num">1</span>
             <h3 class="step__title">Cuéntanos tu caso</h3>
-            <p class="step__text">Un cuestionario online gratuito de unos minutos: entreno, descanso, hábitos, historial. El cuestionario solo descarta por seguridad; todo lo demás lo valora un médico real.</p>
+            <p class="step__text">Un cuestionario online gratuito de unos minutos: entreno, hábitos, historial, objetivo. El cuestionario solo descarta por seguridad; todo lo demás lo valora un médico real.</p>
           </li>
           <li class="step reveal-up">
             <span class="step__num">2</span>
-            <h3 class="step__title">Un médico de verdad lo revisa</h3>
-            <p class="step__text">Un médico colegiado estudia tu caso y te responde por email, normalmente en menos de 24 horas. Con criterio propio, no con plantillas. Te dice qué opciones ve para ti y cuáles no, y por qué.</p>
+            <h3 class="step__title">Un médico decide contigo</h3>
+            <p class="step__text">Estudia tu caso y te responde por email, normalmente en menos de 24 horas: si el tratamiento está indicado para ti, te lo propone; si no, te explica por qué y qué alternativas ve.</p>
           </li>
           <li class="step reveal-up">
             <span class="step__num">3</span>
-            <h3 class="step__title">Tú decides</h3>
-            <p class="step__text">Si el médico ve sentido a un seguimiento y tú quieres, empiezas un plan con comunicación por el portal. Verás el precio antes de decidir nada. Si no, tan amigos.</p>
+            <h3 class="step__title">Tratamiento con seguimiento</h3>
+            <p class="step__text">Si decides empezar, tu médico emite la receta privada, ajusta la pauta a tu ritmo y te acompaña por el portal. Verás el precio del plan antes de decidir nada.</p>
           </li>
         </ol>
       </div>
     </section>
 
-    <!-- ===================== QUÉ PUEDE INCLUIR ===================== -->
-    <section class="section section--tint" id="que-incluye">
-      <div class="wrap">
-        <header class="section__head reveal-up">
-          <h2 class="h2">Qué puede incluir tu plan, hablando claro.</h2>
-          <p class="lead">Sin rodeos: esto es lo que un médico colegiado puede hacer por tu caso dentro de Clynia. Qué te aplica a ti, lo decide él tras valorarte; nunca un comercial ni un algoritmo.</p>
-        </header>
-        <div class="incluye reveal-up">
-          <ul>
-            <li>Una valoración completa de tu caso con los datos que tú aportas: entreno, descanso, hábitos, historial y objetivos.</li>
-            <li>Seguimiento continuado con tu médico por el portal, en privado y por escrito, con ajustes de pauta cuando toca.</li>
-            <li>Tratamiento farmacológico con receta privada, incluidos los análogos del GLP-1, únicamente si el médico lo considera clínicamente indicado en tu caso. Estos medicamentos tienen criterios clínicos de indicación concretos: si tu caso no los cumple, el médico te lo dirá igual de claro y te explicará por qué. La consulta inicial no te cuesta nada y no te obliga a nada.</li>
-            <li>Una respuesta honesta también cuando la respuesta es "esto no te hace falta".</li>
-          </ul>
-          <p class="incluye__fine">Clynia no vende ni dispensa medicamentos y no promociona ningún medicamento concreto. La decisión de prescribir corresponde siempre y únicamente al médico colegiado que valora tu caso, conforme a la indicación clínica de cada medicamento. Si tu médico emite una receta privada, el medicamento lo compras tú en la farmacia que prefieras y su coste no está incluido en la cuota.</p>
-        </div>
-      </div>
-    </section>
-
     <!-- ===================== PARA QUIÉN ES / PARA QUIÉN NO ===================== -->
-    <section class="section">
+    <section class="section section--tint">
       <div class="wrap">
         <header class="section__head reveal-up">
           <h2 class="h2">Esto no es para todo el mundo.</h2>
@@ -253,19 +250,19 @@
           <div class="duo__card duo__card--si reveal-up">
             <h3>Es para ti si...</h3>
             <ul>
-              <li>Entrenas varios días por semana y te tomas el descanso tan en serio como la sesión.</li>
-              <li>Llevas años acumulando datos y quieres que alguien con criterio médico los mire en conjunto.</li>
-              <li>Prefieres saber qué opciones médicas existen para tu caso de boca de un médico, no de un hilo de Reddit.</li>
-              <li>Tienes claro que un médico de verdad suma más que otra pestaña abierta.</li>
+              <li>Entrenas y te cuidas, pero el peso o la composición corporal llevan tiempo sin responder como esperas.</li>
+              <li>Quieres saber de boca de un médico si este tratamiento está indicado en tu caso, con un sí o un no claros.</li>
+              <li>Si lo empiezas, quieres llevarlo bien: con receta, con pauta ajustada y con alguien al otro lado.</li>
+              <li>Prefieres pagar por hacerlo con cabeza antes que jugártela con lo que llega por un grupo de WhatsApp.</li>
             </ul>
           </div>
           <div class="duo__card duo__card--no reveal-up">
             <h3>No es para ti si...</h3>
             <ul>
-              <li>Buscas que alguien te dé la razón. Un médico colegiado no funciona así.</li>
-              <li>Quieres una receta sí o sí, la diga quien la diga. Aquí la única opinión que cuenta es la del médico.</li>
-              <li>Crees que el mazado de tu gimnasio ya cubre esa vacante.</li>
-              <li>Te parece mucho esfuerzo un cuestionario de unos minutos. Con la pereza no podemos ayudar.</li>
+              <li>Buscas la receta sí o sí, la diga quien la diga. Aquí la única opinión que cuenta es la del médico.</li>
+              <li>Estás embarazada o dando el pecho: el cuestionario te descartará por seguridad.</li>
+              <li>Quieres comprar el medicamento sin médico detrás. De eso ya hay demasiado por ahí, y no somos eso.</li>
+              <li>Esperas un milagro sin tocar la alimentación ni moverte. El tratamiento acompaña; no sustituye.</li>
             </ul>
           </div>
         </div>
@@ -277,39 +274,39 @@
     </div>
 
     <!-- ===================== FAQ ===================== -->
-    <section class="section section--tint" id="faq">
+    <section class="section" id="faq">
       <div class="wrap">
         <header class="section__head reveal-up">
           <h2 class="h2">Resolvemos tus dudas.</h2>
         </header>
         <div class="faq">
           <details name="faq" class="faq__item reveal-up">
-            <summary>¿Esto qué es exactamente?</summary>
-            <div class="faq__body"><p>Una forma de que un médico colegiado mire tu caso sin pasar por una sala de espera. Rellenas un cuestionario online gratuito, el médico lo revisa y te responde por email, normalmente en menos de 24 horas. Si él ve sentido a un seguimiento y tú quieres, sigues en contacto con él por el portal.</p></div>
+            <summary>¿Qué es un análogo del GLP-1?</summary>
+            <div class="faq__body"><p>Un medicamento de prescripción que imita una hormona propia del cuerpo implicada en el apetito y el metabolismo. Se usa bajo indicación y control médico para el tratamiento del peso y la composición corporal. No es un suplemento ni se compra sin receta: por eso aquí siempre hay un médico delante y detrás.</p></div>
           </details>
           <details name="faq" class="faq__item reveal-up">
-            <summary>¿El médico puede recetarme medicación?</summary>
-            <div class="faq__body"><p>Puede, si tu caso lo justifica clínicamente. Los médicos a los que te conectamos valoran cada caso y, cuando está indicado, prescriben tratamiento con receta privada, incluidos los análogos del GLP-1. No todos los casos entran en la indicación clínica de estos medicamentos, y la decisión es siempre del médico, nunca tuya ni nuestra. Si el tuyo no entra, te lo dirá igual de claro, y la consulta seguirá sin costarte nada. La receta, si procede, la usas en la farmacia que prefieras: Clynia no vende ni dispensa medicamentos.</p></div>
+            <summary>¿Me lo van a recetar seguro?</summary>
+            <div class="faq__body"><p>No. Y desconfía de quien te lo garantice. Estos medicamentos tienen criterios clínicos de indicación y la decisión es siempre del médico que valora tu caso. Si estás dentro, te lo propone con su pauta; si no, te explica por qué y no pagas nada.</p></div>
           </details>
           <details name="faq" class="faq__item reveal-up">
-            <summary>¿Para qué quiero un médico si estoy sano?</summary>
-            <div class="faq__body"><p>Justo para eso. Cuando algo duele, cualquiera va al médico; la gracia está en tener a alguien con carrera mirando tus datos y tus hábitos antes de que un foro decida por ti. El médico valora tu caso y te dice lo que ve, con criterio y sin humo.</p></div>
+            <summary>Soy deportista y no tengo mucho sobrepeso. ¿Tiene sentido para mí?</summary>
+            <div class="faq__body"><p>Depende de tu caso, y esa es exactamente la pregunta que responde el médico en la consulta gratuita. La indicación de estos tratamientos no va de etiquetas sino de criterios clínicos: cuéntale tu situación y tu objetivo, y te dirá con claridad si tiene sentido o no. Sin humo en ninguna de las dos direcciones.</p></div>
           </details>
           <details name="faq" class="faq__item reveal-up">
             <summary>¿Cuánto cuesta?</summary>
-            <div class="faq__body"><p>Empezar es gratis: el cuestionario y la primera consulta médica no tienen coste. Solo pagas si un médico colegiado considera que un seguimiento tiene sentido para tu caso y tú eliges un plan; verás el precio antes de decidir nada. Sin letra pequeña. El medicamento, si tu médico lo receta, va aparte y lo compras en tu farmacia.</p></div>
+            <div class="faq__body"><p>Empezar es gratis: el cuestionario y la primera consulta médica no tienen coste. Solo pagas si el médico te propone el tratamiento y tú eliges un plan; verás el precio antes de decidir nada. El medicamento va aparte y lo compras en tu farmacia, como cualquier otro medicamento con receta.</p></div>
           </details>
           <details name="faq" class="faq__item reveal-up">
             <summary>¿Es legal y serio hacer esto online?</summary>
-            <div class="faq__body"><p>Sí. La telemedicina es un acto médico reconocido en España y los médicos a los que te conectamos son médicos colegiados e independientes. Cambia el canal, no el rigor: la decisión clínica es siempre del médico, igual que en una consulta presencial.</p></div>
+            <div class="faq__body"><p>Sí. La telemedicina es un acto médico reconocido en España y los médicos a los que te conectamos están colegiados y actúan con criterio propio. Cambia el canal, no el rigor: valoración individual, receta solo si procede y seguimiento de verdad.</p></div>
           </details>
           <details name="faq" class="faq__item reveal-up">
             <summary>¿Qué pasa con mis datos?</summary>
-            <div class="faq__body"><p>Tus datos de salud se tratan conforme al RGPD, cifrados y visibles únicamente para el médico que te atiende. Sirven para una sola cosa: que el médico valore tu caso. Nunca los compartimos con terceros con fines comerciales.</p></div>
+            <div class="faq__body"><p>Tus datos de salud se tratan conforme al RGPD, cifrados y visibles únicamente para el médico que te atiende. Sirven para una sola cosa: que valore tu caso y lleve tu tratamiento. Nunca los compartimos con terceros con fines comerciales.</p></div>
           </details>
           <details name="faq" class="faq__item reveal-up">
-            <summary>¿En qué se diferencia esto de preguntar en Reddit?</summary>
-            <div class="faq__body"><p>En que aquí responde un médico colegiado que ha leído tu caso concreto, no un avatar que opina para el usuario medio. El foro está muy bien para elegir zapatillas. Para tu salud, mejor alguien que firma con su número de colegiado.</p></div>
+            <summary>¿En qué se diferencia esto de conseguirlo por mi cuenta?</summary>
+            <div class="faq__body"><p>En todo lo que importa: valoración real de tu caso antes de empezar, receta legal de un médico que responde con su colegiación, pauta ajustada a ti y alguien a quien escribir cuando surgen dudas o molestias. El mercado gris te da un bolígrafo; esto es un tratamiento.</p></div>
           </details>
         </div>
       </div>
@@ -319,8 +316,8 @@
     <section class="closing" id="empezar">
       <div class="wrap">
         <div class="closing__inner reveal-up">
-          <h2 class="closing__title">Tu caso, mirado por un médico de verdad.</h2>
-          <p class="closing__sub">Ya mides todo lo demás; que el criterio no sea lo único que dejas al azar. Cuestionario gratuito, sin compromiso y sin tarjeta.</p>
+          <h2 class="closing__title">Si te lo estás pensando, que te lo diga un médico.</h2>
+          <p class="closing__sub">Cuestionario gratuito, sin compromiso y sin tarjeta. En menos de un día, normalmente, sabrás si este tratamiento es para ti.</p>
           <a class="btn btn--light" id="ctaFinal" href="peso">
             Empieza gratis
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
@@ -379,14 +376,12 @@
       <p class="site-footer__legal">
         Clynia es una plataforma que conecta pacientes con médicos colegiados independientes en
         España. No es un centro sanitario ni una clínica. Cada decisión clínica corresponde al
-        médico colegiado responsable, que actúa con su propio criterio e independencia. La
-        información de esta web tiene carácter general y no sustituye una consulta médica ni
-        constituye consejo médico. Los tratamientos solo se facilitan cuando un médico colegiado
-        los considera adecuados tras valorar cada caso de forma individual. Esta página no
-        promociona ningún medicamento: las menciones a clases de medicamentos tienen carácter
-        informativo sobre el servicio médico y cualquier prescripción depende exclusivamente del
-        criterio del médico conforme a la indicación clínica. Tratamos tus datos conforme al RGPD
-        y a la normativa española de protección de datos.
+        médico responsable, que actúa con su propio criterio e independencia. La información de
+        esta web tiene carácter general y no sustituye una consulta médica ni constituye consejo
+        médico. Los tratamientos solo se facilitan cuando un médico los considera adecuados tras
+        valorar cada caso de forma individual, conforme a la indicación clínica de cada
+        medicamento; esta página no promociona ninguna marca de medicamento. Tratamos tus datos
+        conforme al RGPD y a la normativa española de protección de datos.
       </p>
       <p class="site-footer__copy">© Clynia. Todos los derechos reservados.</p>
     </div>
