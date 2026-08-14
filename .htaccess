@@ -25,6 +25,12 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{DOCUMENT_ROOT}/$1.html -f
 RewriteRule ^(.+?)/?$ $1.html [L]
 
+# 4) Pagina de error propia. Sin esto, una URL rota devolvia el 404 pelado de LiteSpeed,
+#    sin marca ni salida. La ruta es absoluta desde la raiz del dominio, asi que sirve
+#    igual para /loquesea que para /blog/loquesea, y el estado sigue siendo 404 de verdad.
+#    Por eso 404.html enlaza y carga TODO con rutas absolutas (/assets/...).
+ErrorDocument 404 /404.html
+
 # ── Cabeceras de seguridad ──────────────────────────────────────────────
 # Blindaje del sitio estático: fuerza HTTPS (HSTS), impide el clickjacking,
 # evita el sniffing de tipo MIME, limita el referrer y aplica una CSP a medida

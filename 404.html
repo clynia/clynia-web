@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <!-- El charset va LO PRIMERO, siempre (el navegador solo lo busca en los primeros 1024 bytes). -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Clynia · Esta página no existe (404)</title>
+  <meta name="description" content="No hemos encontrado la página que buscabas. Vuelve al inicio de Clynia, mira los tratamientos o escríbenos." />
+  <meta name="robots" content="noindex, follow" />
+  <meta name="theme-color" content="#f6f4ef" />
+  <link rel="icon" type="image/png" href="/assets/img/favicon.png" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Hanken+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- OJO: esta página la sirve el ErrorDocument del .htaccess desde CUALQUIER ruta rota
+       (/loquesea, /blog/loquesea, /a/b/c...), así que todas las rutas de assets y enlaces
+       van absolutas. Con rutas relativas, un 404 en /blog/ pediría /blog/assets/... -->
+  <link rel="stylesheet" href="/assets/css/styles.css?v=20260729pay" />
+  <style>
+    .nf{min-height:100dvh;display:flex;flex-direction:column}
+    .nf__main{flex:1;display:grid;place-items:center;padding:52px 20px 60px}
+    .nf__card{max-width:620px;width:100%;text-align:center}
+
+    /* El número, en Fraunces y con el punto verde de la "i" del logotipo como remate.
+       Es el guiño de marca de la página: nada de ilustraciones ni mascotas. */
+    .nf__code{font-family:'Fraunces',Georgia,serif;font-size:clamp(84px,21vw,138px);line-height:.86;
+      letter-spacing:-.045em;color:#437066;margin:0 0 22px;display:flex;align-items:flex-end;
+      justify-content:center;gap:.08em;user-select:none}
+    .nf__code span{opacity:.22}
+    .nf__dot{width:.13em;height:.13em;border-radius:50%;background:#437066;margin-bottom:.14em;flex:none}
+
+    .nf__title{font-family:'Fraunces',Georgia,serif;font-size:clamp(27px,5.6vw,38px);line-height:1.16;
+      color:#1f2a25;margin:0 0 14px;letter-spacing:-.01em}
+    .nf__title em{color:#437066;font-style:italic}
+    .nf__sub{font-size:17px;line-height:1.65;color:#4a5650;margin:0 auto 30px;max-width:44ch}
+
+    .nf__cta{margin:0 0 38px}
+    .nf__cta .btn{width:auto;padding:15px 30px}
+
+    /* Salidas: lo que de verdad quiere quien aterriza aquí es irse a otro sitio con un clic. */
+    .nf__links{display:grid;gap:12px;text-align:left;margin:0 auto;max-width:560px}
+    @media (min-width:640px){ .nf__links{grid-template-columns:1fr 1fr} }
+    .nf__link{display:flex;gap:13px;align-items:flex-start;padding:17px 18px;background:#fff;
+      border:1px solid rgba(67,112,102,.16);border-radius:18px;
+      box-shadow:0 1px 2px rgba(31,41,38,.04), 0 14px 34px rgba(31,41,38,.045);
+      transition:transform .25s cubic-bezier(.22,1,.36,1), border-color .25s, box-shadow .25s}
+    .nf__link:hover{transform:translateY(-2px);border-color:rgba(67,112,102,.34);
+      box-shadow:0 1px 2px rgba(31,41,38,.05), 0 18px 40px rgba(31,41,38,.075)}
+    .nf__link-ico{flex:none;width:36px;height:36px;border-radius:50%;background:rgba(67,112,102,.1);
+      color:#437066;display:grid;place-items:center}
+    .nf__link-ico svg{width:18px;height:18px}
+    .nf__link b{display:block;color:#1f2a25;font-size:15.5px;font-weight:600;margin-bottom:2px}
+    .nf__link small{display:block;font-size:13.5px;line-height:1.55;color:#6b7570;
+      text-align:justify;-webkit-hyphens:auto;hyphens:auto}
+
+    .nf__note{font-size:13.5px;color:#8a948e;margin:26px 0 0}
+    .nf__note a{color:#437066;text-decoration:underline;text-underline-offset:3px}
+  </style>
+  <script src="/assets/js/ga.js?v=20260702b"></script>
+  <script src="/assets/js/cookies.js?v=20260724" defer></script>
+</head>
+<body>
+  <div class="nf">
+  <header class="topnav" id="topnav">
+    <div class="topnav__inner">
+      <a class="topnav__brand" href="/" aria-label="Clynia, inicio">
+        <img src="/assets/logos/clynia-wordmark.png" alt="Clynia" />
+      </a>
+      <nav class="topnav__links" aria-label="Navegación">
+        <a href="/#categorias">Tratamientos</a>
+        <a href="/blog">Blog</a>
+        <a href="/mision">Misión</a>
+        <a href="/contacto">Contacto</a>
+      </nav>
+      <div class="topnav__actions">
+        <a class="topnav__join" href="/colaborar"><span class="topnav__join-full">Colabora con Clynia</span><span class="topnav__join-short">Colabora</span></a>
+        <a class="topnav__login" href="https://portal.clynia.es" aria-label="Acceso a tu portal de Clynia">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" x2="3" y1="12" y2="12"/></svg>
+          <span class="topnav__login-full">Acceso a tu portal</span>
+          <span class="topnav__login-short">Portal</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+    <main class="nf__main">
+      <div class="nf__card">
+        <p class="nf__code" aria-hidden="true">4<span>0</span>4<i class="nf__dot"></i></p>
+        <h1 class="nf__title">Esta página <em>no existe</em></h1>
+        <p class="nf__sub">O el enlace está mal escrito, o la hemos cambiado de sitio. Tu caso y tus datos no tienen nada que ver con esto: siguen donde estaban.</p>
+
+        <p class="nf__cta"><a class="btn btn--primary" href="/">Volver al inicio</a></p>
+
+        <div class="nf__links">
+          <a class="nf__link" href="/#categorias">
+            <span class="nf__link-ico" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg>
+            </span>
+            <span><b>Tratamientos</b><small>Peso, menopausia, salud sexual, cabello y longevidad, siempre con un médico colegiado detrás.</small></span>
+          </a>
+          <a class="nf__link" href="/blog">
+            <span class="nf__link-ico" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h11a2 2 0 0 1 2 2v14H6a2 2 0 0 1-2-2z"/><path d="M17 8h1a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2"/><path d="M8 8h5"/><path d="M8 12h5"/></svg>
+            </span>
+            <span><b>Blog</b><small>Lo que preguntan los pacientes, respondido sin humo: efectos, hábitos y seguimiento.</small></span>
+          </a>
+          <a class="nf__link" href="https://portal.clynia.es">
+            <span class="nf__link-ico" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" x2="3" y1="12" y2="12"/></svg>
+            </span>
+            <span><b>Tu portal</b><small>Si ya eres paciente, entra aquí para hablar con tu médico y ver tu seguimiento.</small></span>
+          </a>
+          <a class="nf__link" href="/contacto">
+            <span class="nf__link-ico" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z"/><path d="m2.4 7.1 9.6 6.4 9.6-6.4"/></svg>
+            </span>
+            <span><b>Contacto</b><small>Si buscabas algo concreto y no lo encuentras, dínoslo y te lo mandamos.</small></span>
+          </a>
+        </div>
+
+        <p class="nf__note">También puedes escribirnos a <a href="mailto:clynia@clynia.es">clynia@clynia.es</a></p>
+      </div>
+    </main>
+  </div>
+
+  <!-- Marca el 404 en GA4 (ga.js respeta el consentimiento y encola si aún no hay). Se manda la
+       ruta rota y el referente para poder arreglar los enlaces que llevan a ninguna parte. -->
+  <script>
+  (function () {
+    try {
+      if (window.clyniaGA) {
+        clyniaGA("page_not_found", { ruta: location.pathname, referente: document.referrer || "(directo)" });
+      }
+    } catch (e) {}
+  })();
+  </script>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <div class="site-footer__top">
+        <a class="site-footer__home" href="/" aria-label="Clynia, inicio">
+          <img src="/assets/logos/clynia-wordmark.png" alt="Clynia" />
+        </a>
+        <a class="site-footer__docs" href="/colaborar">
+          Colabora con Clynia
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
+        </a>
+      </div>
+      <div class="site-footer__cols">
+        <div>
+          <h4>Tratamientos</h4>
+          <ul>
+            <li><a href="/perdida-de-peso">Pérdida de peso</a></li>
+            <li><a href="/#categorias">Menopausia</a></li>
+            <li><a href="/#categorias">Salud sexual</a></li>
+            <li><a href="/#categorias">Cabello</a></li>
+            <li><a href="/#categorias">Longevidad</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Clynia</h4>
+          <ul>
+            <li><a href="/mision">Misión</a></li>
+            <li><a href="/#como-funciona">Cómo funciona</a></li>
+            <li><a href="/#categorias">Tratamientos</a></li>
+            <li><a href="/blog">Blog</a></li>
+            <li><a href="/informacion">Información</a></li>
+            <li><a href="/contacto">Contacto</a></li>
+            <li><a href="/colaborar">Colabora con Clynia</a></li>
+            <li><a href="/medicos">Trabaja como médico</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Legal</h4>
+          <ul>
+            <li><a href="/avisolegal">Aviso legal</a></li>
+            <li><a href="/privacidad">Privacidad (RGPD)</a></li>
+            <li><a href="/cookies">Cookies</a></li>
+            <li><a href="/terminos">Términos</a></li>
+          </ul>
+        </div>
+      </div>
+      <p class="site-footer__legal">
+        Clynia es una plataforma que conecta pacientes con médicos colegiados independientes en
+        España. No es un centro sanitario ni una clínica. Cada decisión clínica corresponde al
+        médico colegiado responsable, que actúa con su propio criterio e independencia. La
+        información de esta web tiene carácter general y no sustituye una consulta médica ni
+        constituye consejo médico. Los tratamientos sólo se facilitan cuando un médico colegiado
+        los considera adecuados tras valorar cada caso de forma individual. Tratamos tus datos
+        conforme al RGPD y a la normativa española de protección de datos.
+      </p>
+      <p class="site-footer__copy">© Clynia. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+</body>
+</html>
