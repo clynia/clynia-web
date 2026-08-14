@@ -64,6 +64,14 @@
     .trat h3:first-child { margin-top: 0; }
     .trat p { font-size: 15.5px; line-height: 1.65; color: var(--ink-soft); margin: 0 0 10px; }
     .trat__fine { font-size: 13px; line-height: 1.6; color: var(--ink-soft); margin: 14px 0 0; }
+
+    /* Alineación ÚNICA en toda la página: todo el texto corrido va justificado a ambos lados y
+       con guiones, sin excepciones por sección (regla de la casa). Titulares y botones, como el
+       resto del sitio. Se excluye la franja de confianza, que son etiquetas cortas con icono. */
+    main p, .duo__card li {
+      text-align: justify; text-justify: inter-word;
+      -webkit-hyphens: auto; hyphens: auto;
+    }
   </style>
   <script src="assets/js/ga.js?v=20260702b"></script>
 </head>
