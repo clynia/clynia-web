@@ -84,6 +84,24 @@
     } catch (e) {}
     save();
   })();
+  // --- UTM de campaña: de qué anuncio y ángulo viene la persona. Lo trae la URL (la landing
+  // lo pega al enlace, ver assets/js/utm.js) o, si no, sessionStorage de esa misma pestaña. Se
+  // guarda en answers._utm como UNA cadena "source|medium|campaign|content" (máx. 200) y viaja
+  // dentro del payload de la consulta y del lead parcial; n8n lo escribe en el campo UTM de
+  // Airtable. Sin esto el test de ángulos (ago 2026) no se puede leer. Solo se pisa si la URL
+  // trae uno nuevo: una recarga sin parámetros conserva el original. ---
+  (function () {
+    var KEYS = ["utm_source", "utm_medium", "utm_campaign", "utm_content"];
+    var found = null;
+    try {
+      var qs = new URLSearchParams(window.location.search);
+      var o = {}, any = false;
+      KEYS.forEach(function (k) { var v = (qs.get(k) || "").trim().slice(0, 80); if (v) { o[k] = v; any = true; } });
+      if (!any) { try { o = JSON.parse(sessionStorage.getItem("clynia_utm") || "null"); any = !!(o && Object.keys(o).length); } catch (e) { o = null; any = false; } }
+      if (any) { found = KEYS.map(function (k) { return String((o && o[k]) || "").replace(/[|]/g, "-"); }).join("|").slice(0, 200); }
+    } catch (e) {}
+    if (found && found.replace(/\|/g, "")) { answers._utm = found; save(); }
+  })();
   // --- Meta Pixel: evento de INICIO del cuestionario (se dispara una sola vez, al primer
   // avance). Sirve para etiquetar a quien empieza y no termina (retargeting) y medir el embudo. ---
   var started = false;
@@ -156,6 +174,7 @@
         comercial: answers.acepta_comercial === true,
         intakeId: answers._intakeId || "",
         origen: "web-peso-form",
+        utm: answers._utm || "",
         ts: new Date().toISOString()
       });
       var sent = false;

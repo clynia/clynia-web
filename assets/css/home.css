@@ -140,17 +140,25 @@
   line-height: 1.6;
   color: var(--ink-soft);
 }
+/* Chips de confianza del hero. Antes iban en gris claro a 13 px y no se veían (Alfonso, 15 ago):
+   ahora son pastillas blancas con borde, texto oscuro a 14,5 px y el icono en verde. */
 .home-hero__trust {
-  margin: 20px auto 0;
+  margin: 22px auto 0;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 8px 16px;
-  font-size: 13px;
-  color: var(--ink-faint);
+  gap: 10px 10px;
+  font-size: 14.5px;
+  font-weight: 500;
+  color: var(--ink);
 }
-.home-hero__trust span { display: inline-flex; align-items: center; gap: 7px; }
-.home-hero__trust svg { width: 15px; height: 15px; color: var(--green); }
+.home-hero__trust span {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 9px 14px; border-radius: 999px;
+  background: var(--surface); border: 1px solid var(--line);
+  box-shadow: 0 8px 20px -16px rgba(40, 67, 60, 0.45);
+}
+.home-hero__trust svg { width: 17px; height: 17px; color: var(--green); flex: none; }
 
 /* ---------- Rejilla de categorías ---------- */
 .cats { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
@@ -187,6 +195,138 @@
 .cat__body { display: flex; flex-direction: column; gap: 7px; padding: 16px 16px 18px; flex: 1; }
 .cat__title { margin: 0; font-family: "Fraunces", Georgia, serif; font-weight: 500; font-size: 19px; color: var(--ink); }
 .cat__desc { margin: 0; font-size: 13px; line-height: 1.5; color: var(--ink-soft); flex: 1; }
+/* Precio en la tarjeta: el reposicionamiento premium (ago 2026) exige que el coste se vea sin
+   entrar en la ficha. Serif como el importe del paso de pago, para que se lea como precio y no
+   como etiqueta. */
+.cat__price { margin: 0; font-family: "Fraunces", Georgia, serif; font-weight: 500; font-size: 17px; color: var(--green-700); }
+.cat__price small { font-family: "Hanken Grotesk", system-ui, sans-serif; font-weight: 500; font-size: 12.5px; color: var(--ink-faint); margin-left: 4px; }
+/* Lo que aún no está abierto vive en una línea, no en tarjetas: cinco tarjetas con tres vacías
+   decían "recién abiertos". */
+.cats__soon { margin: 18px auto 0; max-width: 60ch; text-align: center; font-size: 14px; line-height: 1.6; color: var(--ink-soft); }
+.cats__soon a { color: var(--green-700); text-decoration: underline; text-underline-offset: 3px; }
+/* ---------- Reseñas (social proof, bajo el hero) ----------
+   Una sola reseña real, grande y elegante: estrellas doradas, la nota en serif y la cita en
+   Fraunces. Sobre fondo verde suave para que se vea sin gritar. */
+.proof { padding: 6px 0 10px; }
+.proof__inner {
+  background: linear-gradient(135deg, #eaf1ed 0%, #f3f6f2 100%);
+  border: 1px solid var(--green-tint-2);
+  border-radius: 28px;
+  padding: 26px 22px 24px;
+  display: grid; gap: 18px;
+  box-shadow: 0 24px 50px -40px rgba(40, 67, 60, 0.45);
+}
+.proof__score { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; }
+.proof__stars { display: inline-flex; gap: 3px; }
+.proof__stars svg { width: 26px; height: 26px; fill: #d9a441; filter: drop-shadow(0 1px 0 rgba(0,0,0,0.06)); }
+.proof__num { font-family: "Fraunces", Georgia, serif; font-weight: 500; font-size: 34px; line-height: 1; color: var(--ink); }
+.proof__src { font-size: 14px; color: var(--ink-soft); }
+.proof__quotes { display: grid; gap: 14px; }
+/* Tarjeta al estilo Google: avatar en círculo con el nombre al lado, estrellas y origen debajo,
+   y el texto después. Toda la tarjeta es el enlace a la reseña. */
+.proof__quote {
+  display: flex; flex-direction: column; gap: 12px; margin: 0;
+  background: #fff; border: 1px solid rgba(67, 112, 102, 0.14); border-radius: 20px; padding: 18px 20px 18px;
+  color: inherit; text-decoration: none;
+  transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease), border-color 0.3s var(--ease);
+}
+.proof__quote:hover { transform: translateY(-3px); box-shadow: 0 22px 40px -30px rgba(40, 67, 60, 0.5); border-color: var(--green-tint-2); }
+.proof__head { display: flex; align-items: center; gap: 12px; }
+.proof__av {
+  width: 44px; height: 44px; border-radius: 50%; flex: none; object-fit: cover;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--green); color: #fff; font-family: "Hanken Grotesk", system-ui, sans-serif; font-size: 19px; font-weight: 600;
+}
+.proof__who { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.proof__name { font-weight: 600; font-size: 15px; color: var(--ink); line-height: 1.2; }
+.proof__meta { display: inline-flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--ink-faint); }
+.proof__mini { color: #f4b400; letter-spacing: 1px; font-size: 14px; line-height: 1; }
+.proof__text {
+  margin: 0; font-size: 15px; line-height: 1.55; color: var(--ink);
+  text-align: justify; -webkit-hyphens: auto; hyphens: auto; text-wrap: pretty;
+}
+/* Frase censurada (resultado de tratamiento) y su nota, igual que en clyniareviews.com. */
+.proof__hidden { display: inline-block; white-space: nowrap; font-size: 12.5px; color: var(--ink-faint); background: var(--green-tint); border-radius: 6px; padding: 1px 6px; vertical-align: 1px; }
+.proof__note { display: block; margin-top: -2px; font-size: 12px; line-height: 1.45; color: var(--ink-faint); }
+.proof__more { margin-top: auto; padding-top: 4px; font-size: 13px; font-weight: 600; color: var(--green-700); }
+.proof__more::after { content: " \2192"; }
+.proof__quote:hover .proof__more { text-decoration: underline; text-underline-offset: 3px; }
+@media (min-width: 880px) {
+  .proof { padding: 10px 0 14px; }
+  .proof__inner { gap: 20px; padding: 26px 30px 28px; }
+  .proof__score { gap: 10px 16px; }
+  .proof__stars svg { width: 28px; height: 28px; }
+  .proof__num { font-size: 40px; }
+  .proof__quotes { grid-template-columns: repeat(3, 1fr); gap: 16px; }
+}
+
+/* ---------- Beneficios (lo que se nota desde el primer día) ----------
+   Tarjetas con icono, en 1 / 2 / 4 columnas. El movimiento es fino a propósito: entrada
+   escalonada (reveal-up con retardo por posición), y al pasar el ratón la tarjeta sube 4 px y el
+   icono gira un poco. Nada de brillos ni loops: premium es que se mueva poco y bien. */
+.benefits { list-style: none; margin: 0; padding: 0; display: grid; gap: 16px; }
+.benefit {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(180deg, #fff 0%, #fbfaf7 100%);
+  border: 1px solid var(--line);
+  border-radius: 26px;
+  padding: 30px 26px 30px;
+  box-shadow: 0 18px 40px -34px rgba(40, 67, 60, 0.35);
+  /* La ENTRADA (opacity/transform, del reveal-up) lleva el retardo escalonado --d; el HOVER usa la
+     propiedad translate, independiente, para que no herede ese retardo. */
+  transition: opacity 0.7s var(--ease) var(--d, 0s), transform 0.7s var(--ease) var(--d, 0s), translate 0.4s var(--ease), box-shadow 0.4s var(--ease), border-color 0.4s var(--ease);
+}
+/* Filo superior verde que se despliega de centro a bordes al pasar el ratón. */
+.benefit::before {
+  content: ""; position: absolute; left: 50%; top: 0; height: 3px; width: 0;
+  background: linear-gradient(90deg, var(--green-tint-2), var(--green), var(--green-tint-2));
+  transform: translateX(-50%); border-radius: 0 0 6px 6px;
+  transition: width 0.55s var(--ease);
+}
+.benefit:hover { translate: 0 -5px; box-shadow: 0 30px 50px -30px rgba(40, 67, 60, 0.45); border-color: var(--green-tint-2); }
+.benefit:hover::before { width: 100%; }
+/* Icono: baldosa verde suave con un anillo exterior más tenue, que respira al pasar el ratón. */
+.benefit__icon {
+  position: relative;
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 54px; height: 54px; border-radius: 17px;
+  background: var(--green-tint); color: var(--green-700);
+  margin-bottom: 18px;
+  transition: transform 0.5s var(--ease), background-color 0.4s var(--ease), color 0.4s var(--ease);
+}
+.benefit__icon::after {
+  content: ""; position: absolute; inset: -6px; border-radius: 22px;
+  border: 1px solid var(--green-tint-2); opacity: 0.7;
+  transition: inset 0.5s var(--ease), opacity 0.5s var(--ease);
+}
+.benefit__icon svg { width: 25px; height: 25px; }
+.benefit:hover .benefit__icon { transform: translateY(-2px) scale(1.04); background: var(--green); color: #fff; }
+.benefit:hover .benefit__icon::after { inset: -9px; opacity: 0.35; }
+.benefit__title { margin: 0 0 10px; font-family: "Fraunces", Georgia, serif; font-weight: 500; font-size: 20px; line-height: 1.22; letter-spacing: -0.005em; color: var(--ink); }
+.benefit__text { margin: 0; font-size: 14.5px; line-height: 1.62; color: var(--ink-soft); text-align: justify; -webkit-hyphens: auto; hyphens: auto; }
+/* Entrada escalonada: cada tarjeta llega 90 ms después que la anterior. */
+.benefits .benefit:nth-child(2) { --d: 0.09s; }
+.benefits .benefit:nth-child(3) { --d: 0.18s; }
+.benefits .benefit:nth-child(4) { --d: 0.27s; }
+@media (min-width: 680px) { .benefits { grid-template-columns: 1fr 1fr; gap: 16px; } }
+@media (min-width: 1040px) { .benefits { grid-template-columns: repeat(4, 1fr); gap: 18px; } .benefit { padding: 26px 22px 28px; } }
+@media (prefers-reduced-motion: reduce) { .benefit, .benefit__icon { transition: none; } .benefit:hover { transform: none; } }
+
+/* ---------- Así de sencillo (pasos, solo en la home) ----------
+   Misma familia visual que los beneficios: tarjeta con degradado, número verde con anillo, entrada
+   escalonada, hover que sube 5 px y, en escritorio, una línea punteada que une los tres pasos y se
+   dibuja de izquierda a derecha cuando la sección entra en pantalla. */
+/* El estilo editorial de los pasos (.steps--flow) vive en styles.css: lo usan tambien las landings. */
+
+/* La figura del chat (.chat-figure) vive en styles.css porque la usan también las landings. */
+@media (min-width: 880px) {
+  #portal .program { grid-template-columns: 1.1fr 0.9fr; align-items: center; gap: 48px; }
+}
+
+/* Enlace discreto para médicos, sustituye al bloque verde de la mitad de la home. */
+.home-docs-line { text-align: center; font-size: 14px; color: var(--ink-soft); padding: 8px 20px 34px; }
+.home-docs-line a { color: var(--green-700); text-decoration: underline; text-underline-offset: 3px; }
 .cat__cta {
   margin-top: 10px;
   display: inline-flex;
