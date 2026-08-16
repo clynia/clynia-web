@@ -1006,17 +1006,30 @@ a { color: inherit; text-decoration: none; }
    fino y la misma sombra suave, sobre el crema de la web.
    =========================================================== */
 .video__figure { margin: 0; }
+/* El marco cambia de forma con la pantalla: 9:16 en móvil, porque ahí se sirve la versión
+   vertical del vídeo, y 16/9 de 720 px para arriba. Va en CSS y no en JS a propósito: el
+   atributo poster del HTML es el horizontal y assets/js/video.js lleva defer, así que sin
+   esto el hueco se dibujaría apaisado y pegaría un salto al entrar el vídeo vertical.
+   El corte coincide con el que usa el script (720 px). */
 .video__frame {
   position: relative;
   max-width: 980px;
   margin-inline: auto;
+  aspect-ratio: 9 / 16;
   border-radius: 20px;
   overflow: hidden;
   border: 1px solid var(--line);
   background: var(--bg);
   box-shadow: 0 30px 60px -30px rgba(40, 67, 60, 0.45), 0 12px 28px -18px rgba(40, 67, 60, 0.35);
 }
-.video__frame video { display: block; width: 100%; height: auto; background: var(--bg); }
+/* contain y no cover: cada vídeo llena su marco al milímetro (el vertical es 9:16 exacto y el
+   horizontal 16:9 exacto), así que aquí contain no deja banda ninguna. Donde sí actúa es en el
+   instante previo al script, con el póster apaisado dentro del marco vertical: ahí preferimos
+   verlo entero y encajado sobre el crema a que cover lo amplíe y se coma el texto del vídeo. */
+.video__frame video { display: block; width: 100%; height: 100%; object-fit: contain; background: var(--bg); }
+@media (min-width: 720px) {
+  .video__frame { aspect-ratio: 16 / 9; }
+}
 /* Botón de play propio sobre el póster: círculo verde con triángulo blanco. Desaparece al
    arrancar el vídeo y en ese momento aparecen los controles nativos (assets/js/video.js): el
    póster se ve limpio, sin la barra negra de Chrome encima. 56 px en móvil y 72 px de 720 px
@@ -1051,13 +1064,6 @@ a { color: inherit; text-decoration: none; }
   .video__play { width: 72px; height: 72px; }
   .video__play svg { width: 26px; height: 26px; margin-left: 4px; }
 }
-.video__caption {
-  margin: 14px auto 0;
-  max-width: 980px;
-  text-align: center;
-  font-size: 12.5px;
-  color: var(--ink-faint);
-}
 /* Enlace discreto del hero de las landings hacia la sección del vídeo: texto con un triángulo
    de play en trazo fino. Es un enlace, no un segundo botón: no compite con el CTA. */
 .hero__watch {
@@ -1079,3 +1085,9 @@ a { color: inherit; text-decoration: none; }
 @media (max-width: 879px) {
   .section--video .wrap { padding-inline: 16px; }
 }
+/* CTA debajo del marco: 30 px de aire y el botón verde de siempre. Va con btn--inline, el
+   mismo modificador que el hero y el cierre de la home, porque .btn--primary es width: 100%
+   y sin él el botón se estiraría a los 980 px del marco en escritorio. Al ir a ancho de
+   contenido y centrado, en móvil tampoco llega a tocar los bordes. */
+.video__cta { margin-top: 30px; text-align: center; }
+.video__cta-line { margin: 0 0 14px; font-size: 15.5px; color: var(--ink-soft); }
