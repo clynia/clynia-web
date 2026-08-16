@@ -876,7 +876,7 @@ a { color: inherit; text-decoration: none; }
 
 /* clynia-unified-nav v1 */
 /* ===========================================================
-   Cabecera y pie unificados — idénticos en todas las páginas.
+   Cabecera y pie unificados, idénticos en todas las páginas.
    En home/medicos/mision, home.css redefine .topnav como
    transparente sobre el hero (con JS is-scrolled); aquí queda
    sólida por defecto para el resto de páginas.
@@ -997,4 +997,85 @@ a { color: inherit; text-decoration: none; }
   .topnav__login-full { display: inline; }
   .topnav__login-short { display: none; }
   .site-footer__cols { grid-template-columns: repeat(3, 1fr); gap: 40px; }
+}
+
+/* ===========================================================
+   Sección de vídeo (tutorial "Así funciona Clynia")
+   La usan la home y las landings de peso. El marco hereda el
+   lenguaje de la imagen del portal: esquinas redondeadas, borde
+   fino y la misma sombra suave, sobre el crema de la web.
+   =========================================================== */
+.video__figure { margin: 0; }
+.video__frame {
+  position: relative;
+  max-width: 980px;
+  margin-inline: auto;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  box-shadow: 0 30px 60px -30px rgba(40, 67, 60, 0.45), 0 12px 28px -18px rgba(40, 67, 60, 0.35);
+}
+.video__frame video { display: block; width: 100%; height: auto; background: var(--bg); }
+/* Botón de play propio sobre el póster: círculo verde con triángulo blanco. Desaparece al
+   arrancar el vídeo y en ese momento aparecen los controles nativos (assets/js/video.js): el
+   póster se ve limpio, sin la barra negra de Chrome encima. 56 px en móvil y 72 px de 720 px
+   para arriba, porque a 72 px se comía el marco pequeño. */
+.video__play {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 56px;
+  height: 56px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--green);
+  color: #fff;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 14px 30px -10px rgba(40, 67, 60, 0.55), 0 4px 10px -4px rgba(40, 67, 60, 0.4);
+  transition: background-color 0.2s var(--ease), transform 0.25s var(--ease), opacity 0.3s var(--ease), box-shadow 0.25s var(--ease);
+}
+.video__play:hover {
+  background: var(--green-700);
+  transform: translate(-50%, -50%) scale(1.05);
+  box-shadow: 0 20px 38px -12px rgba(40, 67, 60, 0.6), 0 5px 12px -4px rgba(40, 67, 60, 0.45);
+}
+.video__play:focus-visible { outline: 3px solid var(--green-tint-2); outline-offset: 3px; }
+.video__play svg { width: 20px; height: 20px; margin-left: 3px; }
+.video__play.is-hidden { opacity: 0; pointer-events: none; }
+@media (min-width: 720px) {
+  .video__play { width: 72px; height: 72px; }
+  .video__play svg { width: 26px; height: 26px; margin-left: 4px; }
+}
+.video__caption {
+  margin: 14px auto 0;
+  max-width: 980px;
+  text-align: center;
+  font-size: 12.5px;
+  color: var(--ink-faint);
+}
+/* Enlace discreto del hero de las landings hacia la sección del vídeo: texto con un triángulo
+   de play en trazo fino. Es un enlace, no un segundo botón: no compite con el CTA. */
+.hero__watch {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--green-700);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+  transition: color 0.2s var(--ease);
+}
+.hero__watch:hover { color: var(--green); }
+.hero__watch svg { width: 16px; height: 16px; flex: none; }
+/* En móvil el marco ocupa el ancho de la sección con 16 px de margen a cada lado. */
+@media (max-width: 879px) {
+  .section--video .wrap { padding-inline: 16px; }
 }

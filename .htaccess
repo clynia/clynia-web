@@ -1,4 +1,4 @@
-# Clynia — URLs limpias (sin .html) y canónicas
+# Clynia: URLs limpias (sin .html) y canónicas
 # Hostinger usa LiteSpeed (compatible con .htaccess de Apache)
 
 Options -MultiViews
@@ -48,7 +48,7 @@ ErrorDocument 404 /404.html
   Header always set Referrer-Policy "strict-origin-when-cross-origin"
   Header always set Permissions-Policy "geolocation=(), camera=(), microphone=(), interest-cohort=()"
   Header always set X-Permitted-Cross-Domain-Policies "none"
-  Header always set Content-Security-Policy "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; script-src 'self' 'unsafe-inline' blob: https://connect.facebook.net https://challenges.cloudflare.com https://www.googletagmanager.com https://*.contentsquare.net https://app.contentsquare.com; worker-src blob:; child-src blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://www.facebook.com https://*.google-analytics.com https://www.googletagmanager.com https://*.contentsquare.net; connect-src 'self' https://n8n-ixwg.srv1722506.hstgr.cloud https://www.facebook.com https://challenges.cloudflare.com https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com https://*.contentsquare.net https://*.contentsquare.com; frame-src https://www.facebook.com https://challenges.cloudflare.com; upgrade-insecure-requests"
+  Header always set Content-Security-Policy "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; media-src 'self'; script-src 'self' 'unsafe-inline' blob: https://connect.facebook.net https://challenges.cloudflare.com https://www.googletagmanager.com https://*.contentsquare.net https://app.contentsquare.com; worker-src blob:; child-src blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://www.facebook.com https://*.google-analytics.com https://www.googletagmanager.com https://*.contentsquare.net; connect-src 'self' https://n8n-ixwg.srv1722506.hstgr.cloud https://www.facebook.com https://challenges.cloudflare.com https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com https://*.contentsquare.net https://*.contentsquare.com; frame-src https://www.facebook.com https://challenges.cloudflare.com; upgrade-insecure-requests"
   # Reduce la huella informativa que añade el hosting (best-effort).
   Header always unset X-Powered-By
   Header unset X-Powered-By
