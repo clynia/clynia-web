@@ -23,7 +23,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Clynia · Salud sexual masculina online, con médicos colegiados</title>
-  <meta name="description" content="Dificultades de erección: cuenta tu caso gratis y lo revisa un médico colegiado en España, normalmente en menos de 24 horas. Todo online y por escrito, sin sala de espera, y en tu banco aparece solo como CLYNIA. Si procede, receta electrónica para tu farmacia y seguimiento sin permanencia." />
+  <meta name="description" content="Dificultades de erección: cuentas tu caso y lo revisa un médico colegiado en España, normalmente en menos de 24 horas. La valoración no se cobra: solo pagas si decides seguir. Todo online y por escrito, sin sala de espera, y en tu banco aparece solo como CLYNIA." />
   <meta name="theme-color" content="#f6f4ef" />
   <link rel="icon" type="image/png" href="assets/img/favicon.png" />
 
@@ -88,7 +88,7 @@
        tarjeta de precio) se ensanchan más abajo en vez de dejarlas justificadas a 23 caracteres.
        Se quedan centradas solo las líneas sueltas del precio (plan__meta, plan__ahorro): justificar
        una línea única no hace nada. */
-    .privacy-card__text,
+    .via__d,
     .plans__note,
     .plan__list li,
     .plan__for,
@@ -114,71 +114,64 @@
       margin-right: 0;
     }
 
-    /* Cómo funciona: tres pasos numerados, en fila en escritorio y apilados en móvil. */
-    .pasos__grid { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 26px; }
-    .paso { position: relative; }
-    .paso__n {
-      display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%;
-      background: var(--green); color: #fff; font-weight: 700; font-size: 15px; margin-bottom: 13px;
-    }
-    .paso__t { font-family: 'Lora', Georgia, serif; font-size: 1.16rem; font-weight: 600; color: #1f2926; margin: 0 0 7px; line-height: 1.3; }
-    .paso__d { margin: 0; color: #4a5450; font-size: 1rem; line-height: 1.6; text-align: justify; -webkit-hyphens: auto; hyphens: auto; }
+    /* Cómo funciona usa los pasos editoriales compartidos (.steps--flow de styles.css), los mismos
+       que las landings de peso: filete que se dibuja al entrar, numeral grande en Fraunces y cero
+       cajas. Antes esta página tenía sus propios .paso con círculo verde y títulos en 'Lora', una
+       fuente que esta página NO carga, así que caían a Georgia y desentonaban con el resto. */
     .pasos__cta { margin: 30px 0 0; }
-    @media (min-width: 820px) {
-      .pasos__grid { grid-template-columns: repeat(3, 1fr); gap: 34px; }
-    }
 
-    /* Sección única: privacidad */
-    .privacy__grid {
+    /* "La vía legal": las cuatro garantías dentro de UNA pieza, como un documento sellado, en vez
+       de cuatro tarjetas sueltas flotando. Hairlines para separar, icono en verde y titulares en
+       Fraunces, que es la tipografía real de la marca. */
+    .vias {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-card);
+      box-shadow: var(--shadow-soft);
+      padding: 4px 24px;
       display: grid;
-      grid-template-columns: 1fr;
-      gap: 16px;
       margin-top: 8px;
     }
-    .privacy-card {
-      background: #fff;
-      border: 1px solid rgba(67, 112, 102, 0.16);
-      border-radius: 16px;
-      padding: 28px 26px;
-      box-shadow: 0 1px 2px rgba(31, 41, 38, 0.04), 0 12px 30px rgba(31, 41, 38, 0.05);
-      transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
-    }
-    .privacy-card:hover {
-      transform: translateY(-3px);
-      border-color: rgba(67, 112, 102, 0.34);
-      box-shadow: 0 1px 2px rgba(31, 41, 38, 0.05), 0 18px 40px rgba(31, 41, 38, 0.08);
-    }
-    .privacy-card__icon {
-      display: inline-flex;
+    /* Icono y titular en la misma línea, y el texto debajo ocupando todo el ancho. Si el texto
+       arranca a la derecha del icono se queda en 30 caracteres por línea en móvil, y justificado
+       eso son ríos de blanco; así llega a la medida en la que justificar se lee bien. */
+    .via {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      grid-template-areas: "ico titulo" "texto texto";
+      column-gap: 14px; row-gap: 9px;
       align-items: center;
-      justify-content: center;
-      width: 46px;
-      height: 46px;
-      border-radius: 12px;
-      background: rgba(67, 112, 102, 0.10);
-      color: #437066;
-      margin-bottom: 16px;
+      padding: 26px 0;
+      border-top: 1px solid var(--line);
     }
-    .privacy-card__icon svg { width: 23px; height: 23px; }
-    .privacy-card__title {
-      font-family: 'Lora', Georgia, serif;
-      font-size: 1.15rem;
-      font-weight: 600;
-      color: #1f2926;
-      margin: 0 0 8px;
-      line-height: 1.3;
+    .via__ico { grid-area: ico; }
+    .via__t { grid-area: titulo; }
+    .via__d { grid-area: texto; }
+    .via:first-child { border-top: 0; }
+    .via__ico {
+      display: grid; place-items: center;
+      width: 44px; height: 44px; border-radius: 14px;
+      background: var(--green-tint); color: var(--green);
+      transition: background .3s var(--ease), color .3s var(--ease);
     }
-    .privacy-card__text {
-      margin: 0;
-      color: #4a5450;
-      font-size: 1rem;
-      line-height: 1.6;
+    .via__ico svg { width: 22px; height: 22px; }
+    .via:hover .via__ico { background: var(--green); color: #fff; }
+    .via__t {
+      font-family: "Fraunces", Georgia, serif; font-weight: 500;
+      font-size: 20px; line-height: 1.2; letter-spacing: -0.005em;
+      color: var(--ink); margin: 0;
     }
-    /* Dos columnas como máximo, nunca cuatro: a cuatro, cada tarjeta se queda en 23 caracteres por
-       línea y el texto justificado se abre en ríos de blanco. A dos salen unos 60 y justifica bien.
-       Hasta 760px va en una sola columna, que a esos anchos dos tampoco dan medida suficiente. */
+    .via__d { margin: 0; color: var(--ink-soft); font-size: 15.5px; line-height: 1.6; }
+    /* Dos columnas a partir de 760: cada texto se queda en unos 55 caracteres por línea, medida
+       suficiente para justificar sin ríos de blanco. La primera fila (items 1 y 2) no lleva filete
+       superior, y el filete vertical separa las dos columnas. */
     @media (min-width: 760px) {
-      .privacy__grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+      .vias { grid-template-columns: 1fr 1fr; column-gap: 44px; padding: 8px 34px; }
+      .via { padding: 30px 0; }
+      .via:nth-child(2) { border-top: 0; }
+      /* El margen negativo es la mitad del padding para que el filete vertical caiga en el centro
+         del hueco entre columnas, no pegado a la columna de la derecha. */
+      .via:nth-child(odd) { padding-right: 44px; margin-right: -22px; border-right: 1px solid var(--line); }
     }
 
     /* Plan único centrado. Ancho 460 y no 360: es la única tarjeta de la sección, y a 360 su texto
@@ -241,16 +234,16 @@
             <p class="hero__sub reveal d4">
               Sobre las dificultades de erección circulan muchos más consejos de barra que
               información seria, y casi todos acaban en la pastilla que le sobró a un amigo.
-              Cuenta tu caso gratis: lo revisa un médico colegiado, con su nombre y su número de
+              Cuenta el tuyo: lo revisa un médico colegiado, con su nombre y su número de
               colegiación, y te responde normalmente en menos de 24 horas. En privado y por escrito.
             </p>
 
             <div class="reveal d5">
               <a class="btn btn--primary" href="saludsexual" data-cta="salud-sexual">
-                Empieza gratis
+                Empieza tu consulta
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
               </a>
-              <p class="hero__assurance">Tu primera consulta con un médico colegiado es gratis y te responde, normalmente, en menos de 24 h. Solo pagas si lo considera adecuado para ti y decides seguir.</p>
+              <p class="hero__assurance">Un médico colegiado lee tu caso y te responde, normalmente, en menos de 24 h. Esa primera valoración no se cobra: solo pagas si considera que puede ayudarte y decides seguir.</p>
             </div>
 
             <!-- Dentro de .hero__copy, no colgando del .wrap: así hereda la columna de texto en
@@ -276,26 +269,26 @@
         <header class="section__head reveal-up">
           <h2 class="h2">Tres pasos y ya está.</h2>
         </header>
-        <ol class="pasos__grid">
-          <li class="paso reveal-up">
-            <span class="paso__n">1</span>
-            <h3 class="paso__t">Cuentas tu caso</h3>
-            <p class="paso__d">Un cuestionario de dos minutos, por escrito. Sin cámara, sin sala de espera y sin dar explicaciones a nadie.</p>
+        <ol class="steps steps--flow reveal-up">
+          <li class="step reveal-up">
+            <span class="step__num">1</span>
+            <h3 class="step__title">Cuentas tu caso</h3>
+            <p class="step__text">Un cuestionario de dos minutos, por escrito. Sin cámara, sin sala de espera y sin dar explicaciones a nadie.</p>
           </li>
-          <li class="paso reveal-up">
-            <span class="paso__n">2</span>
-            <h3 class="paso__t">Lo revisa un médico colegiado</h3>
-            <p class="paso__d">Te responde normalmente en menos de 24 horas, firmando con su nombre y su número de colegiación. Esta primera consulta es gratis.</p>
+          <li class="step reveal-up">
+            <span class="step__num">2</span>
+            <h3 class="step__title">Lo revisa un médico colegiado</h3>
+            <p class="step__text">Te responde normalmente en menos de 24 horas, firmando con su nombre y su número de colegiación. Esta primera valoración no se cobra.</p>
           </li>
-          <li class="paso reveal-up">
-            <span class="paso__n">3</span>
-            <h3 class="paso__t">Si procede, sigues con él</h3>
-            <p class="paso__d">Le escribes desde tu portal cuando lo necesites, sin pedir cita. Y te das de baja cuando quieras.</p>
+          <li class="step reveal-up">
+            <span class="step__num">3</span>
+            <h3 class="step__title">Si procede, sigues con él</h3>
+            <p class="step__text">Le escribes desde tu portal cuando lo necesites, sin pedir cita. Y te das de baja cuando quieras.</p>
           </li>
         </ol>
         <p class="pasos__cta reveal-up">
           <a class="btn btn--primary btn--inline" href="saludsexual" data-cta="salud-sexual-pasos">
-            Empieza gratis
+            Empieza tu consulta
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
           </a>
         </p>
@@ -310,37 +303,37 @@
           <p class="lead">La alternativa suele ser una web rara o la caja que le sobró a un amigo: sin saber qué llevan, sin saber si encajan contigo y sin nadie a quien preguntar después. Esto es lo otro, y es igual de discreto.</p>
         </header>
 
-        <div class="privacy__grid">
-          <article class="privacy-card reveal-up">
-            <span class="privacy-card__icon">
+        <div class="vias reveal-up">
+          <article class="via">
+            <span class="via__ico">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/><path d="M6 15h4"/></svg>
             </span>
-            <h3 class="privacy-card__title">En tu banco, solo CLYNIA</h3>
-            <p class="privacy-card__text">Nada que mencione salud sexual, ni el motivo de tu consulta, ni qué has contratado. Ni en el extracto ni en la app del banco.</p>
+            <h3 class="via__t">En tu banco, solo CLYNIA</h3>
+            <p class="via__d">Nada que mencione salud sexual, ni el motivo de tu consulta, ni qué has contratado. Ni en el extracto ni en la app del banco.</p>
           </article>
 
-          <article class="privacy-card reveal-up">
-            <span class="privacy-card__icon">
+          <article class="via">
+            <span class="via__ico">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/></svg>
             </span>
-            <h3 class="privacy-card__title">Un médico con nombre y número</h3>
-            <p class="privacy-card__text">Colegiado en España, y firma lo que te dice. No un chat anónimo ni un formulario que te suelta una caja sin haber leído tu caso.</p>
+            <h3 class="via__t">Un médico con nombre y número</h3>
+            <p class="via__d">Colegiado en España, y firma lo que te dice. No un chat anónimo ni un formulario que te suelta una caja sin haber leído tu caso.</p>
           </article>
 
-          <article class="privacy-card reveal-up">
-            <span class="privacy-card__icon">
+          <article class="via">
+            <span class="via__ico">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
             </span>
-            <h3 class="privacy-card__title">Si procede, en tu farmacia</h3>
-            <p class="privacy-card__text">Con receta electrónica, la de siempre, que recoges donde quieras. Sin paquetes en casa, sin aduanas y sin pagar de más por lo mismo.</p>
+            <h3 class="via__t">Si procede, en tu farmacia</h3>
+            <p class="via__d">Con receta electrónica, la de siempre, que recoges donde quieras. Sin paquetes en casa, sin aduanas y sin pagar de más por lo mismo.</p>
           </article>
 
-          <article class="privacy-card reveal-up">
-            <span class="privacy-card__icon">
+          <article class="via">
+            <span class="via__ico">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8"/><path d="M12 16v4"/></svg>
             </span>
-            <h3 class="privacy-card__title">Y alguien a quien volver a preguntar</h3>
-            <p class="privacy-card__text">Lo que no te da ninguna caja prestada: el mismo médico, en tu portal, para ajustar o resolver dudas después. Sin permanencia.</p>
+            <h3 class="via__t">Y alguien a quien volver a preguntar</h3>
+            <p class="via__d">Lo que no te da ninguna caja prestada: el mismo médico, en tu portal, para ajustar o resolver dudas después. Sin permanencia.</p>
           </article>
         </div>
       </div>
@@ -351,7 +344,7 @@
       <div class="wrap">
         <header class="section__head reveal-up">
           <h2 class="h2">Un seguimiento sencillo y sin permanencia.</h2>
-          <p class="lead">La primera consulta no cuesta nada. Solo pagas si el médico considera que puede ayudarte y tú decides seguir, y eliges cómo: mes a mes, el año entero o una consulta suelta. El medicamento, si te lo receta, va aparte y lo compras en tu farmacia.</p>
+          <p class="lead">La primera valoración no se cobra. Solo pagas si el médico considera que puede ayudarte y tú decides seguir, y eliges cómo: mes a mes, el año entero o una consulta suelta. El medicamento, si te lo receta, va aparte y lo compras en tu farmacia.</p>
         </header>
 
         <div style="text-align:center">
@@ -360,7 +353,7 @@
                en una nota debajo, que era donde nadie la veia. -->
           <div class="ciclo ciclo--3" role="group" aria-label="Elige cómo pagar">
             <span class="ciclo__thumb" aria-hidden="true"></span>
-            <button type="button" class="ciclo__opt is-on" data-ciclo="ano" aria-pressed="true">Anual <span class="ciclo__save">2 meses gratis</span></button>
+            <button type="button" class="ciclo__opt is-on" data-ciclo="ano" aria-pressed="true">Anual <span class="ciclo__save">-17%</span></button>
             <button type="button" class="ciclo__opt" data-ciclo="mes" aria-pressed="false">Mensual</button>
             <button type="button" class="ciclo__opt" data-ciclo="suelta" aria-pressed="false">Consulta suelta</button>
           </div>
@@ -382,20 +375,20 @@
             <p class="plan__meta" data-nota="suelta" hidden>Una sola vez. Sin suscripción y sin cobros recurrentes.</p>
             <p class="plan__ahorro" data-nota="ano">Pagas 10 meses y tienes 12: ahorras 78 €, un 17% menos que los 468 € del mes a mes.</p>
             <ul class="plan__list" data-nota="ano mes">
-              <li>Consulta gratis con un médico colegiado e independiente, respuesta, normalmente, en menos de 24 h</li>
+              <li>Primera valoración con un médico colegiado e independiente, sin cargo y con respuesta, normalmente, en menos de 24 h</li>
               <li>Tu médico a mano por el portal para tus dudas, en privado</li>
               <li>Seguimiento continuado: tu médico ve cómo te va y ajusta lo que haga falta</li>
               <li>Las decisiones clínicas son siempre de tu médico, tras valorar tu caso</li>
               <li>Facturación discreta (en tu banco, solo CLYNIA) y datos protegidos conforme al RGPD</li>
             </ul>
             <ul class="plan__list" data-nota="suelta" hidden>
-              <li>Consulta gratis con un médico colegiado e independiente, respuesta, normalmente, en menos de 24 h</li>
+              <li>Primera valoración con un médico colegiado e independiente, sin cargo y con respuesta, normalmente, en menos de 24 h</li>
               <li>30 días para escribirle por el portal y resolver lo que surja</li>
               <li>Las decisiones clínicas son siempre de tu médico, tras valorar tu caso</li>
               <li>Facturación discreta (en tu banco, solo CLYNIA) y datos protegidos conforme al RGPD</li>
             </ul>
             <p class="plan__for">Empiezas contando tu caso. No pagas nada hasta que un médico lo revise.</p>
-            <a class="btn btn--primary" href="saludsexual">Empieza gratis</a>
+            <a class="btn btn--primary" href="saludsexual">Empieza tu consulta</a>
           </article>
         </div>
 
@@ -432,7 +425,7 @@
           </details>
           <details name="faq" class="faq__item reveal-up">
             <summary>¿A qué me compromete?</summary>
-            <div class="faq__body"><p>A nada. La primera consulta es gratis y solo pagas si el médico considera que puede ayudarte y tú decides seguir. A partir de ahí, o el seguimiento mensual sin permanencia, que cancelas desde tu portal cuando quieras, o una consulta puntual sin suscripción. El medicamento, si te lo recetan, va aparte y lo compras en tu farmacia.</p></div>
+            <div class="faq__body"><p>A nada. La primera valoración no se cobra y solo pagas si el médico considera que puede ayudarte y tú decides seguir. A partir de ahí, o el seguimiento mensual sin permanencia, que cancelas desde tu portal cuando quieras, o una consulta puntual sin suscripción. El medicamento, si te lo recetan, va aparte y lo compras en tu farmacia.</p></div>
           </details>
         </div>
       </div>
@@ -443,9 +436,9 @@
       <div class="wrap">
         <div class="closing__inner reveal-up">
           <h2 class="closing__title">Dos minutos hoy, y sales de dudas.</h2>
-          <p class="closing__sub">La primera consulta con un médico colegiado es gratis y te responde, normalmente, en menos de 24 horas. Lo cuentas desde el móvil, en privado, y decides después. Sin compromiso.</p>
+          <p class="closing__sub">Un médico colegiado lee tu caso y te responde, normalmente, en menos de 24 horas, y esa primera valoración no se cobra. Lo cuentas desde el móvil, en privado, y decides después. Sin compromiso.</p>
           <a class="btn btn--light" id="ctaFinal" href="saludsexual">
-            Empieza gratis
+            Empieza tu consulta
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
           </a>
         </div>
@@ -527,7 +520,7 @@
     <div class="sticky-cta__inner">
       <span class="sticky-cta__hint">Sin compromiso</span>
       <a class="btn btn--primary" href="saludsexual">
-        Empieza gratis
+        Empieza tu consulta
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
       </a>
     </div>
