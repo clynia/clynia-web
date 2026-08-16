@@ -1051,13 +1051,6 @@ a { color: inherit; text-decoration: none; }
   .video__play { width: 72px; height: 72px; }
   .video__play svg { width: 26px; height: 26px; margin-left: 4px; }
 }
-.video__caption {
-  margin: 14px auto 0;
-  max-width: 980px;
-  text-align: center;
-  font-size: 12.5px;
-  color: var(--ink-faint);
-}
 /* Enlace discreto del hero de las landings hacia la sección del vídeo: texto con un triángulo
    de play en trazo fino. Es un enlace, no un segundo botón: no compite con el CTA. */
 .hero__watch {
