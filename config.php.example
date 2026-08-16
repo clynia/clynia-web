@@ -1,12 +1,13 @@
 <?php
 // Copia este archivo a config.php (NO se sube al repo) y ajusta los valores.
-// lead.php funciona sin config.php: enviara el email a clynia@clynia.es.
+// lead.php funciona sin config.php: manda el contacto al webhook de n8n por defecto,
+// que lo guarda en Airtable ("Contactos web") y avisa a clynia@clynia.es.
 return [
-    // Destino de los avisos de contacto.
+    // Destino del aviso de emergencia por PHP mail(), solo si n8n no responde.
     'TO'   => 'clynia@clynia.es',
-    // Remitente del email (mejor un buzon real del dominio para deliverability).
-    'FROM' => 'no-reply@clynia.es',
-    // Opcional: webhook de n8n para registrar el lead en Airtable "Contactos web".
-    // Dejalo vacio para no reenviar a n8n.
-    'N8N_WEBHOOK' => '',
+    // Remitente de ese aviso de emergencia.
+    'FROM' => 'clynia@clynia.es',
+    // Webhook de n8n del formulario de contacto. Vacio = no reenviar (no recomendado:
+    // sin el no queda registro en Airtable y el aviso acaba en Spam por SPF/DMARC).
+    'N8N_WEBHOOK' => 'https://n8n-ixwg.srv1722506.hstgr.cloud/webhook/contacto-web',
 ];
