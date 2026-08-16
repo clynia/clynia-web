@@ -114,7 +114,8 @@ a { color: var(--green); text-decoration: none; }
 .toolbanner { display: flex; align-items: center; gap: 18px; justify-content: space-between; flex-wrap: wrap; background: linear-gradient(135deg, var(--green-900), var(--green)); color: #fff; border-radius: var(--radius); padding: 22px 24px; margin: 26px 0; text-decoration: none; box-shadow: 0 12px 30px -14px rgba(40, 67, 60, 0.5); transition: transform 0.2s var(--ease), box-shadow 0.2s var(--ease); }
 .toolbanner:hover { transform: translateY(-2px); box-shadow: 0 16px 38px -14px rgba(40, 67, 60, 0.6); }
 .toolbanner__txt { flex: 1 1 280px; }
-.toolbanner__eyebrow { display: block; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--green-tint); margin-bottom: 5px; }
+/* Sin mayusculas: un pretitulo en caja alta es justo lo que no queremos que parezca. */
+.toolbanner__eyebrow { display: block; font-size: 12.5px; font-weight: 600; letter-spacing: 0.01em; color: var(--green-tint); margin-bottom: 5px; }
 .toolbanner__title { display: block; font-family: "Fraunces", serif; font-weight: 500; font-size: 23px; line-height: 1.2; margin-bottom: 6px; color: #fff; }
 .toolbanner__sub { display: block; font-size: 14.5px; line-height: 1.5; color: rgba(255, 255, 255, 0.9); }
 .toolbanner__cta { flex: none; display: inline-flex; align-items: center; gap: 8px; background: #fff; color: var(--green-900); font-weight: 700; font-size: 14.5px; padding: 12px 20px; border-radius: 30px; transition: background-color 0.2s var(--ease); }
@@ -342,3 +343,67 @@ a { color: var(--green); text-decoration: none; }
   .topnav__login-short { display: none; }
   .site-footer__cols { grid-template-columns: repeat(3, 1fr); gap: 40px; }
 }
+
+/* ===========================================================
+   Invitación a consultar dentro del artículo (ago 2026)
+   El blog llevaba 17 artículos sin una sola llamada a la acción: se leía y se
+   salía. Van dos por artículo, una arriba (contextual, escrita para ese tema) y
+   otra al final, más una barra fija en móvil. El texto NUNCA promete resultado
+   ni menciona fármacos: invita a que lo mire un médico, que es lo que vendemos.
+   =========================================================== */
+.artcta {
+  margin: 32px 0;
+  padding: 24px 24px 26px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-soft);
+}
+.artcta__t {
+  font-family: "Fraunces", Georgia, serif; font-weight: 500;
+  font-size: 21px; line-height: 1.25; letter-spacing: -0.005em;
+  color: var(--ink); margin: 0 0 8px; text-align: left;
+}
+.artcta__d { margin: 0 0 18px; font-size: 15.5px; line-height: 1.6; color: var(--ink-soft); text-align: left; }
+.artcta__b {
+  display: inline-flex; align-items: center; gap: 9px;
+  background: var(--green); color: #fff; font-weight: 600; font-size: 15.5px;
+  padding: 14px 24px; border-radius: 14px;
+  transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease);
+}
+.artcta__b:hover { transform: translateY(-2px); box-shadow: 0 16px 32px -20px rgba(40, 67, 60, 0.9); }
+.artcta__b svg { width: 18px; height: 18px; flex: none; }
+.artcta__legal { margin: 14px 0 0; font-size: 12.5px; line-height: 1.55; color: var(--ink-faint); text-align: left; }
+.artcta--end { background: var(--green-tint); border-color: var(--green-tint-2); box-shadow: none; }
+
+/* Compartir: API nativa del móvil y, si no la hay, copia el enlace. */
+.share { display: flex; align-items: center; gap: 10px; margin: 14px 0 0; }
+.share__b {
+  display: inline-flex; align-items: center; gap: 7px;
+  border: 1px solid var(--line); background: var(--surface); color: var(--ink-soft);
+  font: inherit; font-size: 13.5px; padding: 8px 15px; border-radius: 999px; cursor: pointer;
+  transition: border-color 0.2s var(--ease), color 0.2s var(--ease);
+}
+.share__b:hover { border-color: var(--green-tint-2); color: var(--green); }
+.share__b svg { width: 15px; height: 15px; }
+.share__ok { font-size: 13px; color: var(--green); }
+
+/* Barra fija, solo en móvil: aparece cuando ya has pasado la primera invitación
+   y se esconde al llegar a la del final, para no repetirse encima de ella. */
+.stickycta {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 40;
+  padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+  background: rgba(246, 244, 239, 0.94);
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  border-top: 1px solid var(--line);
+  transform: translateY(115%); transition: transform 0.4s var(--ease);
+}
+.stickycta.is-on { transform: none; }
+.stickycta a {
+  display: flex; align-items: center; justify-content: center; gap: 9px;
+  background: var(--green); color: #fff; font-weight: 600; font-size: 15.5px;
+  padding: 14px 18px; border-radius: 14px;
+}
+.stickycta svg { width: 18px; height: 18px; flex: none; }
+@media (min-width: 900px) { .stickycta { display: none; } }
+@media (prefers-reduced-motion: reduce) { .stickycta { transition: none; } .artcta__b { transition: none; } }

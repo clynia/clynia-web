@@ -1,0 +1,65 @@
+# Clynia
+
+> Clynia es una plataforma española de telemedicina que conecta a pacientes con médicos colegiados independientes. No es una clínica ni un centro sanitario: la decisión clínica corresponde siempre al médico, después de valorar cada caso. Servicio solo para España y solo para mayores de 18 años.
+
+Cómo funciona: la persona cuenta su caso en un cuestionario de unos minutos, desde el móvil y por escrito. Un médico colegiado lo valora y responde por email en menos de 24 horas. Esa primera valoración no se cobra: solo se paga si el médico considera que puede ayudar y la persona decide empezar. A partir de ahí el seguimiento es con el mismo médico, mes a mes y por el portal, sin permanencia.
+
+Si el médico indica un medicamento, la persona lo compra en su farmacia con su receta electrónica. El medicamento nunca va incluido en el precio del servicio y Clynia no vende ni envía medicamentos.
+
+Áreas atendidas hoy: pérdida de peso (89 € al mes o 890 € al año) y salud sexual masculina (39 € al mes, 390 € al año o consulta puntual de 79 €). Menopausia, salud capilar y longevidad están anunciadas pero todavía no abiertas.
+
+## Páginas principales
+
+- [Inicio](https://clynia.es/): qué es Clynia, cómo funciona y a quién atiende.
+- [Pérdida de peso](https://clynia.es/perdida-de-peso): el servicio de peso al detalle, qué incluye el plan, precio y preguntas frecuentes.
+- [Salud sexual masculina](https://clynia.es/salud-sexual): dificultades de erección, cómo se valora y qué incluye el seguimiento.
+- [Misión](https://clynia.es/mision): por qué existe Clynia y con qué criterio se atiende.
+- [Información del servicio](https://clynia.es/informacion): qué es y qué no es Clynia, límites del servicio y responsabilidades.
+- [Trabaja como médico](https://clynia.es/medicos): condiciones para médicos colegiados que quieran pasar consulta asíncrona.
+- [Colabora con Clynia](https://clynia.es/colaborar): programa para creadores y divulgadores.
+- [Contacto](https://clynia.es/contacto): formulario y correo de contacto.
+
+## Herramientas abiertas
+
+- [Cuánta proteína necesitas](https://clynia.es/proteinas): calculadora de proteína diaria según peso y objetivo, con fuentes oficiales y sin registro.
+
+## Blog: divulgación sobre GLP-1 y peso, con fuentes oficiales
+
+Artículos escritos por el equipo de Clynia y apoyados en EMA, AEMPS/CIMA, NIH y sociedades científicas españolas. Son informativos: no sustituyen la valoración de un médico ni el prospecto del medicamento.
+
+- [Qué es el GLP-1 y cómo funciona](https://clynia.es/blog/que-es-el-glp1): la hormona, los medicamentos que imitan su efecto y por qué necesitan receta.
+- [GLP-1 con seguridad: por qué necesita receta](https://clynia.es/blog/glp1-seguridad-y-receta-medica): riesgos de comprar por internet sin control.
+- [Qué comer durante un tratamiento con GLP-1](https://clynia.es/blog/que-comer-con-glp1): proteína, plato equilibrado y fibra.
+- [Alimentos que conviene moderar con GLP-1](https://clynia.es/blog/alimentos-a-evitar-con-glp1): qué sienta peor y por qué.
+- [Náuseas y molestias digestivas con GLP-1](https://clynia.es/blog/nauseas-y-molestias-glp1): cómo llevarlas mejor y cuándo consultar.
+- [Cómo se administra una inyección subcutánea, paso a paso](https://clynia.es/blog/como-inyectar-glp1-paso-a-paso).
+- [Zonas de inyección y por qué conviene rotarlas](https://clynia.es/blog/zonas-de-inyeccion-glp1).
+- [Cómo conservar el tratamiento: nevera, temperatura y viajes](https://clynia.es/blog/como-conservar-tu-tratamiento-glp1).
+- [GLP-1 y masa muscular: cómo no perder músculo al adelgazar](https://clynia.es/blog/masa-muscular-y-ejercicio-con-glp1).
+- [El efecto rebote: por qué se recupera el peso](https://clynia.es/blog/efecto-rebote-recuperar-peso).
+- [Qué es el food noise, el ruido mental con la comida](https://clynia.es/blog/que-es-el-food-noise).
+- [No es falta de fuerza de voluntad](https://clynia.es/blog/no-es-fuerza-de-voluntad-peso): qué hay detrás de un peso que no baja.
+- [A quién acudir en España para cuidar tu peso](https://clynia.es/blog/a-quien-acudir-cuidar-peso-espana): opciones reales y qué hace cada una.
+- [Qué costes tiene cuidar tu peso con un médico](https://clynia.es/blog/costes-cuidar-peso-con-medico): qué preguntar para que no haya sorpresas.
+- [Cómo distinguir un servicio médico serio de un timo](https://clynia.es/blog/servicio-medico-serio-o-timo-adelgazar): señales concretas.
+- [Seguimiento médico: por qué importa tanto como empezar](https://clynia.es/blog/seguimiento-medico-cuidar-peso).
+- [Cuando ir al médico por tu peso te da vergüenza](https://clynia.es/blog/verguenza-medico-peso-trato-digno): cómo lograr que te escuchen.
+
+## Legal y datos
+
+- [Aviso legal](https://clynia.es/avisolegal)
+- [Privacidad y RGPD](https://clynia.es/privacidad)
+- [Cookies](https://clynia.es/cookies)
+- [Términos del servicio](https://clynia.es/terminos)
+
+## Qué no es Clynia
+
+- No es una clínica ni un centro sanitario, y no presta asistencia sanitaria por sí misma: los actos médicos los realizan médicos colegiados independientes.
+- No vende ni envía medicamentos, y no garantiza que un médico vaya a indicar ninguno.
+- No promete pérdida de peso ni resultados de ningún tipo.
+- No atiende urgencias ni sustituye a tu médico habitual. Ante una urgencia hay que llamar al 112.
+- No atiende fuera de España ni a menores de 18 años.
+
+## Contacto
+
+Correo: clynia@clynia.es. Formulario en https://clynia.es/contacto. Portal de pacientes y médicos en https://portal.clynia.es.
