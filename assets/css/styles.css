@@ -1072,3 +1072,9 @@ a { color: inherit; text-decoration: none; }
 @media (max-width: 879px) {
   .section--video .wrap { padding-inline: 16px; }
 }
+/* CTA debajo del marco: 30 px de aire y el botón verde de siempre. Va con btn--inline, el
+   mismo modificador que el hero y el cierre de la home, porque .btn--primary es width: 100%
+   y sin él el botón se estiraría a los 980 px del marco en escritorio. Al ir a ancho de
+   contenido y centrado, en móvil tampoco llega a tocar los bordes. */
+.video__cta { margin-top: 30px; text-align: center; }
+.video__cta-line { margin: 0 0 14px; font-size: 15.5px; color: var(--ink-soft); }
