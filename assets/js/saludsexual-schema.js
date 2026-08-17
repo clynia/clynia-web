@@ -172,7 +172,7 @@ window.CLYNIA_FORM = {
     },
 
     // ═══════════ PARTE 2 (post-pago: el resto del cuestionario) ═══════════
-    { id: "p2_welcome", type: "statement", q: "Te damos la bienvenida", badge: "Pago confirmado", body: "Para que tu médico ajuste todo a ti, necesita conocer tu caso con más detalle. Son unos 5 minutos y puedes retomarlo cuando quieras.", steps: [{ t: "Tu plan ya está activo", d: "Pago confirmado. De eso ya no tienes que preocuparte.", done: true }, { t: "Nos cuentas tu caso con detalle", d: "Unos 5 minutos. Guardamos tu progreso, así que puedes parar y seguir cuando te venga bien.", icon: "ficha" }, { t: "Tu médico prepara tu tratamiento", d: "Con tus respuestas ajusta la pauta a tu caso y, si procede, emite tu receta.", icon: "medico" }], cta: "Empezar" },
+    { id: "p2_welcome", type: "statement", q: "Te damos la bienvenida", badge: "Pago confirmado", body: "Para que tu médico ajuste todo a ti, necesita conocer tu caso con más detalle. Son unos 5 minutos y puedes retomarlo cuando quieras.", steps: [{ t: "Tu plan ya está activo", d: "Pago confirmado. De eso ya no tienes que preocuparte.", done: true }, { t: "Nos cuentas tu caso con detalle", d: "Unos 5 minutos. Guardamos tu progreso, así que puedes parar y seguir cuando te venga bien.", icon: "ficha" }, { t: "Tu médico prepara tu tratamiento", d: "Con tus respuestas ajusta la pauta y la dosis a tu caso y emite tu receta electrónica.", icon: "medico" }], cta: "Empezar" },
 
     // ---------- BLOQUE CLÍNICO (resto) ----------
     { id: "ed_duracion", section: "Cuestionario clínico", type: "single", key: "ed_duracion", q: "¿Desde cuándo notas estas dificultades?", options: [{ label: "Menos de 3 meses" }, { label: "Entre 3 y 12 meses" }, { label: "Más de un año" }] },

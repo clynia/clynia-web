@@ -143,20 +143,21 @@ window.CLYNIA_FORM = {
     // ---------- PLANES (solo modo pago ?pay=): el apto elige plan -> finish() -> checkoutEndpoint ----------
     // La parte 1 NUNCA llega aquí: el paso 'consulta' cierra con submit (finish -> ending_ok). A este
     // paso solo se entra por payStartId en modo pago.
-    // La GARANTÍA deja de ir en un recuadro destacado (29 jul 2026). Alfonso la quitó ese día de
-    // TODOS los correos por un motivo que vale igual aquí: a este paso solo se llega si un médico YA
-    // ha dicho que la persona es candidata, y anunciar en grande una devolución del 100% se lee como
-    // que queda otra criba por delante, justo en el momento de pagar. La promesa NO desaparece (es
-    // la cláusula 8 de terminos.html y hay que sostenerla): baja a la letra pequeña, pegada a la
-    // frase de que la decisión clínica es siempre del médico colegiado, que es lo que impide leer
-    // todo esto como una promesa de tratamiento. Si cambia la cláusula 8, cambiar también esto.
+    // La GARANTÍA sale del todo de este paso (17 ago 2026, Alfonso). Ya había bajado a la letra
+    // pequeña el 29 jul; ahora se va, por el mismo motivo llevado hasta el final: a este paso solo
+    // se llega si un médico YA ha dicho que la persona es candidata, y hablarle de una devolución
+    // le hace pensar en una segunda criba justo cuando lo único que falta es suscribirse. La
+    // promesa NO desaparece (cláusula 8 de terminos.html, que hay que sostener) y si algún día pasa
+    // se avisa por correo personal, pero no se vende de antemano. Lo que SÍ se queda es que la
+    // pauta y la dosis las decide el especialista: es lo que impide leer esto como una promesa de
+    // tratamiento, y dicho así habla de cómo se personaliza, no de si te dejan entrar.
     // El coste del medicamento se declara SIN cifra a propósito: no hay fuente oficial de precio de
     // venta en farmacia que citar y una horquilla inventada es justo lo que no se puede publicar.
     // section:false = sin pretítulo en mayúsculas. El paso ya tiene titular, tarjetas y botón.
-    { id: "plans", section: false, type: "plans", key: "plan", q: "Ya puedes empezar. Elige cómo prefieres pagarlo", help: "El seguimiento médico es el mismo. Solo cambia cada cuánto se te cobra.", note: "Se renueva automáticamente hasta que la canceles: te das de baja desde tu portal cuando quieras, sin permanencia ni penalización. El medicamento no está incluido en la cuota; si tu médico te lo receta, lo compras en tu farmacia. Las decisiones clínicas son siempre del médico colegiado que valora tu caso: si finalmente no procede iniciar el tratamiento, te devolvemos el importe íntegro. Médicos colegiados en España. Pago seguro con Stripe.", cta: "Continuar al pago" },
+    { id: "plans", section: false, type: "plans", key: "plan", q: "Ya puedes empezar. Elige cómo prefieres pagarlo", help: "El seguimiento médico es el mismo, solo cambia cada cuánto se te cobra. Al terminar completas tu cuestionario clínico y tu especialista prepara tu tratamiento.", note: "Se renueva automáticamente hasta que la canceles: te das de baja desde tu portal cuando quieras, sin permanencia ni penalización. El medicamento no está incluido en la cuota: lo compras en tu farmacia con tu receta electrónica. La pauta y la dosis las decide tu especialista según tu caso. Médicos colegiados en España. Pago seguro con Stripe.", cta: "Continuar al pago" },
 
     // ═══════════ PARTE 2 (post-pago: el resto del cuestionario) ═══════════
-    { id: "p2_welcome", type: "statement", q: "Te damos la bienvenida a tu plan", badge: "Pago confirmado", body: "Para que tu especialista lo ajuste a ti de la mejor manera, necesita conocerte un poco mejor. Son unos 5 minutos y puedes retomarlo cuando quieras.", steps: [{ t: "Tu plan ya está activo", d: "Pago confirmado. De eso ya no tienes que preocuparte.", done: true }, { t: "Nos cuentas tu historia clínica", d: "Unos 5 minutos. Guardamos tu progreso, así que puedes parar y seguir cuando te venga bien.", icon: "ficha" }, { t: "Tu especialista prepara tu tratamiento", d: "Con tus respuestas ajusta la pauta a tu caso y, si procede, emite tu receta.", icon: "medico" }], cta: "Empezar" },
+    { id: "p2_welcome", type: "statement", q: "Te damos la bienvenida a tu plan", badge: "Pago confirmado", body: "Para que tu especialista lo ajuste a ti de la mejor manera, necesita conocerte un poco mejor. Son unos 5 minutos y puedes retomarlo cuando quieras.", steps: [{ t: "Tu plan ya está activo", d: "Pago confirmado. De eso ya no tienes que preocuparte.", done: true }, { t: "Nos cuentas tu historia clínica", d: "Unos 5 minutos. Guardamos tu progreso, así que puedes parar y seguir cuando te venga bien.", icon: "ficha" }, { t: "Tu especialista prepara tu tratamiento", d: "Con tus respuestas ajusta la pauta y la dosis a tu caso y emite tu receta electrónica.", icon: "medico" }], cta: "Empezar" },
 
     // ---------- BLOQUE CLÍNICO (resto) ----------
     { id: "peso_maximo", section: "Cuestionario clínico", type: "number", key: "peso_maximo", q: "¿Cuál ha sido tu peso máximo en la edad adulta?", unit: "kg", min: 30, max: 400 },
