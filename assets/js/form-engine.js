@@ -832,6 +832,17 @@
     vars = F.computeVars ? F.computeVars(answers) : {};
     root.innerHTML = '<div class="cq__center"><div class="cq__loading"><span class="cq__spin"></span> Enviando tu información de forma segura...</div><div id="cq-ts" style="margin-top:18px;min-height:1px;display:flex;justify-content:center"></div></div>';
     var payload = { product: F.product, intakeId: answers._intakeId, answers: answers, triage: vars, submittedAt: new Date().toISOString(), fase: F.p2StartId ? "parte1" : undefined };
+    // El consentimiento de cookies viaja al servidor: la CAPI de n8n solo dispara con consentimiento total (RGPD),
+    // y sin él no salen ni _fbp ni _fbc. Misma clave y misma caducidad (180 días) que el píxel del navegador.
+    try {
+      var cc = localStorage.getItem("clynia_cookie_consent"), ccTs = parseInt(localStorage.getItem("clynia_cookie_consent_ts") || "0", 10);
+      if (cc === "all" && (new Date().getTime() - ccTs) < 15552000000) {
+        payload.cookie_consent = "all";
+        var mFbp = document.cookie.match(/(?:^|; )_fbp=([^;]+)/), mFbc = document.cookie.match(/(?:^|; )_fbc=([^;]+)/);
+        if (mFbp) payload.fbp = mFbp[1];
+        if (mFbc) payload.fbc = mFbc[1];
+      } else { payload.cookie_consent = "none"; }
+    } catch (e) { payload.cookie_consent = "none"; }
     var plan = (F.plans || []).filter(function (p) { return p.id === answers.plan; })[0];
     var redirected = false;
     // --- Meta Pixel: eventos de conversión. eventID = clave compartida con la CAPI (n8n) para deduplicar. ---
