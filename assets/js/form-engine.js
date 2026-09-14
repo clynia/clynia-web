@@ -900,9 +900,34 @@
     function afterIntake(cid) {
       if (cid || plan) { proceedToPayment(cid); } else { finishFail(); }
     }
+    // El plan solo cuenta si se envía desde el paso de planes (modo pago). Un answers.plan que sobra de
+    // una visita anterior con ?pay=&plan= no puede convertir "Enviar mi consulta" en un cobro.
+    var desdePlanes = !!(current && (current.id === "plans" || current.id === F.payStartId));
+    if (!desdePlanes) plan = undefined;
     if (!F.webhook) { proceedToPayment(null); return; }
-    // Si ya creamos el caso en este intake, no lo recreamos: evita duplicados al volver atrás y reintentar.
-    if (answers._caso) { proceedToPayment(answers._caso); return; }
+    // Huella de lo contestado en la consulta (sin las claves internas "_" ni el plan): distingue
+    // reenviar la MISMA consulta de mandar otra distinta desde el mismo dispositivo.
+    function firmaConsulta() {
+      var s = JSON.stringify(Object.keys(answers).filter(function (k) { return k.charAt(0) !== "_" && k !== "plan"; }).sort().map(function (k) { return [k, answers[k]]; }));
+      var h = 5381;
+      for (var i = 0; i < s.length; i++) { h = ((h << 5) + h + s.charCodeAt(i)) | 0; }
+      return String(h >>> 0);
+    }
+    // _caso guardado = este dispositivo ya tiene un caso (una consulta enviada antes o el enlace ?pay=
+    // del correo del apto). Solo se reutiliza SIN reenviar en dos supuestos: desde el paso de planes,
+    // que cobra ESE caso, o si se reenvía exactamente la misma consulta, para no duplicarla. Todo lo
+    // demás es una consulta NUEVA y sale con intakeId nuevo, porque n8n hace upsert del caso por
+    // IntakeId y con el viejo pisaría el caso anterior, que puede ser de otra persona. Antes el atajo
+    // no distinguía nada: quien volvía al cuestionario dentro de las 24 h del store veía "Tu consulta
+    // ya está con un médico" sin que saliera ningún envío (paciente que lo intentó dos veces, 14 sep 2026).
+    if (answers._caso) {
+      if (desdePlanes || answers._casoFirma === firmaConsulta()) { proceedToPayment(answers._caso); return; }
+      delete answers._caso;
+      delete answers._casoFirma;
+      answers._intakeId = nuevoIntakeId();
+      payload.intakeId = answers._intakeId;
+      save();
+    }
     // Failsafe: si el intake tarda demasiado, decide afterIntake (el pago sigue; la consulta reintenta).
     var failsafe = setTimeout(function () { afterIntake(null); }, 14000);
     turnstileToken(function (cfToken) {
@@ -911,7 +936,7 @@
         if (files) payload.files = files;
         fetch(F.webhook, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) })
           .then(function (r) { return r.json().catch(function () { return {}; }); })
-          .then(function (data) { clearTimeout(failsafe); var cid = data && data.casoId ? data.casoId : null; if (cid) { answers._caso = cid; save(); } afterIntake(cid); })
+          .then(function (data) { clearTimeout(failsafe); var cid = data && data.casoId ? data.casoId : null; if (cid) { answers._caso = cid; answers._casoFirma = firmaConsulta(); save(); } afterIntake(cid); })
           .catch(function () {
             clearTimeout(failsafe);
             // El respaldo _pending va SIN los ficheros: un base64 de varios MB no cabe en la
@@ -962,11 +987,12 @@
 
   document.body.classList.add("cq-body");
   // Identificador estable de este intake: permite volver atrás y reintentar sin duplicar el caso.
-  if (!answers._intakeId) {
-    try { answers._intakeId = (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : (Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 10)); }
-    catch (e) { answers._intakeId = Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 10); }
-    save();
+  // finish() pide uno nuevo cuando detecta que desde este dispositivo sale una consulta distinta.
+  function nuevoIntakeId() {
+    try { if (window.crypto && crypto.randomUUID) return crypto.randomUUID(); } catch (e) {}
+    return Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 10);
   }
+  if (!answers._intakeId) { answers._intakeId = nuevoIntakeId(); save(); }
   // Reanudar: si volvemos del pago, al paso de planes; si no, al primer paso (respuestas ya guardadas).
   resume();
   // Volver atrás desde el pago restaura la página desde la bfcache con el spinner congelado:
