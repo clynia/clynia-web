@@ -971,6 +971,9 @@ a { color: inherit; text-decoration: none; }
 .site-footer__docs:hover { opacity: 0.78; }
 .site-footer__docs svg { width: 17px; height: 17px; transition: transform 0.25s var(--ease); }
 .site-footer__docs:hover svg { transform: translateX(3px); }
+/* Instagram junto al logo del pie. La misma regla vive en styles.css y en blog.css, porque el pie está duplicado en las dos hojas. */
+.site-footer__social { display: inline-flex; align-items: center; gap: 7px; margin-right: auto; font-weight: 500; }
+.site-footer__social svg { width: 18px; height: 18px; flex: none; }
 .site-footer__cols {
   display: grid;
   grid-template-columns: 1fr 1fr;
