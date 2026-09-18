@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Que te llamemos · Clynia</title>
+  <meta name="robots" content="noindex, nofollow, noarchive" />
+  <meta name="theme-color" content="#f6f4ef" />
+  <link rel="icon" type="image/png" href="assets/img/favicon.png" />
+
+  <!-- POR QUE ESTA PAGINA NO LLEVA PIXEL NI ANALITICA (y no se le pueden poner)
+       Aqui solo llega quien ha recibido el correo de "eres candidato": una visita cuenta que esa
+       persona ha pasado por una valoracion medica, y eso es dato de salud. Nada de fbq, ga.js,
+       cookies.js ni Contentsquare. Tampoco se pone ni una cookie, asi que no hace falta banner.
+
+       POR QUE ES HTML Y NO PHP (18 sep 2026)
+       Habia una version en PHP (te-llamamos.php, rama llamada-te-llamamos) que escondia dos claves
+       de webhook en un config.php del hosting. Nunca se publico ni se ejecuto, porque esas claves
+       hay que pegarlas a mano en el servidor. Esta version habla con n8n desde el navegador: quien
+       autentica es el TOKEN del enlace, que es unico por caso, caduca y del que Airtable solo
+       guarda el SHA256. Los webhooks aceptan la peticion sin clave, pero siguen rechazando una
+       clave equivocada, un token con mala forma, un telefono que no sea espanol y mas de cinco
+       peticiones por caso y hora. -->
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600&family=Hanken+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/styles.css?v=20260917ig" />
+
+  <style>
+    .tl { padding: 26px 0 44px; }
+    .tl__logo { display: block; width: 104px; height: auto; margin: 0 0 28px; }
+    .tl__h1 { font-family: Fraunces, Georgia, serif; font-size: clamp(26px, 7vw, 33px); line-height: 1.16; font-weight: 500; color: var(--ink); margin: 0 0 10px; letter-spacing: -0.01em; }
+    .tl__lead { font-size: 16px; line-height: 1.6; color: var(--ink-soft); margin: 0 0 24px; text-align: justify; hyphens: auto; }
+    .tl__label { display: block; font-size: 13.5px; font-weight: 600; color: var(--ink); margin: 0 0 7px; }
+    .tl__input { width: 100%; box-sizing: border-box; font: inherit; font-size: 17px; padding: 14px 15px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); color: var(--ink); }
+    .tl__input:focus { outline: 3px solid var(--green-tint-2); outline-offset: 1px; border-color: var(--green); }
+    .tl__franjas { display: grid; gap: 8px; margin: 0; padding: 0; border: 0; }
+    .tl__franja { display: block; position: relative; }
+    .tl__franja input { position: absolute; opacity: 0; width: 0; height: 0; }
+    .tl__franja span { display: block; padding: 14px 16px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); font-size: 15.5px; color: var(--ink); cursor: pointer; }
+    .tl__franja input:checked + span { border-color: var(--green); box-shadow: inset 0 0 0 1px var(--green); font-weight: 600; }
+    .tl__franja input:focus-visible + span { outline: 3px solid var(--green-tint-2); outline-offset: 2px; }
+    .tl__campo { margin: 0 0 20px; }
+    .tl__nota { font-size: 12.5px; line-height: 1.55; color: var(--ink-faint); margin: 8px 0 0; }
+    .tl__nota a { color: var(--green); font-weight: 600; }
+    .tl__btn { width: 100%; }
+    .tl__err { margin: 0 0 18px; padding: 14px 16px; border: 1px solid #e4cfcf; border-radius: 14px; background: #fbf3f3; color: #7a3b3b; font-size: 14.5px; line-height: 1.55; }
+    .tl__ok { text-align: center; }
+    .tl__ok-ico { display: grid; place-items: center; width: 62px; height: 62px; border-radius: 50%; background: var(--green-tint); margin: 6px auto 18px; }
+    .tl__ok-ico svg { width: 30px; height: 30px; color: var(--green); }
+    .tl__pie { margin: 32px 0 0; padding: 18px 0 0; border-top: 1px solid var(--line); font-size: 12px; line-height: 1.6; color: var(--ink-faint); text-align: center; }
+    .tl__pie a { color: var(--green); font-weight: 600; text-decoration: none; }
+    .tl__cargando { font-size: 15px; color: var(--ink-soft); }
+    [hidden] { display: none !important; }
+  </style>
+</head>
+<body>
+  <main class="tl">
+    <div class="wrap">
+      <img class="tl__logo" src="assets/logos/clynia-wordmark.png" alt="Clynia" width="104" height="30" />
+
+      <!-- 1. Mientras se pide el nombre y el telefono a n8n -->
+      <div id="tlCargando">
+        <p class="tl__cargando">Un momento, estamos abriendo tu enlace.</p>
+      </div>
+
+      <!-- 2. El enlace no sirve -->
+      <div id="tlMal" hidden>
+        <h1 class="tl__h1">Este enlace ya no sirve</h1>
+        <p class="tl__lead" id="tlMalTexto">Puede que haya caducado o que se haya copiado a medias. Escríbenos y te llamamos igual.</p>
+        <a class="btn btn--primary tl__btn" href="mailto:pacientes@clynia.es?subject=Quiero%20que%20me%20llam%C3%A9is">Escribir a Clynia</a>
+      </div>
+
+      <!-- 3. El formulario -->
+      <form id="tlForm" hidden novalidate>
+        <h1 class="tl__h1" id="tlTitulo">Te llamamos</h1>
+        <p class="tl__lead">Dinos a qué número y cuándo te viene bien. Te llama el equipo de Clynia para resolver dudas del plan: no es una consulta médica.</p>
+
+        <div class="tl__err" id="tlError" hidden></div>
+
+        <div class="tl__campo">
+          <label class="tl__label" for="tlTel">Tu teléfono</label>
+          <input class="tl__input" id="tlTel" name="telefono" type="tel" inputmode="tel" autocomplete="tel-national"
+                 maxlength="20" placeholder="600 000 000" required />
+          <p class="tl__nota" id="tlTelNota" hidden>Es el número que tenemos. Puedes cambiarlo.</p>
+        </div>
+
+        <div class="tl__campo">
+          <span class="tl__label" id="tlFranjaLabel">¿Cuándo te viene mejor?</span>
+          <fieldset class="tl__franjas" aria-labelledby="tlFranjaLabel">
+            <label class="tl__franja"><input type="radio" name="franja" value="Cuando podais" checked /><span>Cuando podáis</span></label>
+            <label class="tl__franja"><input type="radio" name="franja" value="Mañana (9 a 14)" /><span>Por la mañana, de 9 a 14</span></label>
+            <label class="tl__franja"><input type="radio" name="franja" value="Tarde (14 a 18)" /><span>Por la tarde, de 14 a 18</span></label>
+            <label class="tl__franja"><input type="radio" name="franja" value="Final del dia (18 a 21)" /><span>A última hora, de 18 a 21</span></label>
+          </fieldset>
+        </div>
+
+        <button class="btn btn--primary tl__btn" type="submit" id="tlEnviar">Que me llamen</button>
+        <!-- CONSENTIMIENTO. Su version viaja en la peticion como "consent-llamada-v1" y se guarda en
+             el caso, para poder saber que texto leyo esta persona. Si se cambia una palabra de este
+             parrafo, hay que subir la version aqui y anadirla a la lista CONSENTS del nodo "Decidir"
+             de n8n (workflow SwjeArhsnfhjG85X). -->
+        <p class="tl__nota">Al pedirlo, nos autorizas a llamarte a ese número para hablar de tu plan. Lo guardamos en tu ficha junto a tu caso. Puedes pedirnos que lo borremos escribiendo a <a href="mailto:pacientes@clynia.es">pacientes@clynia.es</a>. Más detalles en <a href="privacidad">Privacidad</a>.</p>
+      </form>
+
+      <!-- 4. Hecho -->
+      <div id="tlHecho" hidden>
+        <div class="tl__ok">
+          <div class="tl__ok-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></div>
+          <h1 class="tl__h1">Hecho, te llamamos</h1>
+          <p class="tl__lead" id="tlHechoTexto" style="text-align:center;">Ya lo tenemos apuntado. Te llamamos al número que nos has dado.</p>
+          <a class="btn btn--primary tl__btn" id="tlHechoPago" href="peso.html" hidden>Prefiero empezar ya</a>
+        </div>
+      </div>
+
+      <p class="tl__pie">
+        Clynia Inversiones, S.L. · <a href="terminos">Términos</a> · <a href="privacidad">Privacidad</a><br />
+        Para una urgencia, llama al 112 o acude a urgencias.
+      </p>
+    </div>
+  </main>
+
+  <script>
+    (function () {
+      var N8N = 'https://n8n-ixwg.srv1722506.hstgr.cloud/webhook/';
+      // Misma lista blanca que el nodo "Decidir" de n8n (SwjeArhsnfhjG85X). Una fuente nueva son dos
+      // lineas: una aqui y otra alli.
+      var ORIGENES = { apto: 'email-apto v1', recordatorio: 'email-recordatorio v1', portal: 'portal v1', video: 'email-apto v1' };
+      var CONSENT = 'consent-llamada-v1';
+
+      var elCargando = document.getElementById('tlCargando');
+      var elMal = document.getElementById('tlMal');
+      var elMalTexto = document.getElementById('tlMalTexto');
+      var elForm = document.getElementById('tlForm');
+      var elTitulo = document.getElementById('tlTitulo');
+      var elTel = document.getElementById('tlTel');
+      var elTelNota = document.getElementById('tlTelNota');
+      var elError = document.getElementById('tlError');
+      var elEnviar = document.getElementById('tlEnviar');
+      var elHecho = document.getElementById('tlHecho');
+      var elHechoPago = document.getElementById('tlHechoPago');
+
+      var token = '', origen = 'email-apto v1', urlPago = '';
+
+      function ver(el) {
+        [elCargando, elMal, elForm, elHecho].forEach(function (x) { x.hidden = x !== el; });
+      }
+      function fallo(texto) {
+        elMalTexto.textContent = texto;
+        ver(elMal);
+      }
+      function error(texto) {
+        elError.textContent = texto;
+        elError.hidden = false;
+        elError.scrollIntoView({ block: 'center' });
+      }
+      function pedir(ruta, cuerpo) {
+        return fetch(N8N + ruta, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(cuerpo)
+        }).then(function (r) { return r.json().catch(function () { return { ok: false, motivo: 'red' }; }); });
+      }
+
+      try {
+        var qs = new URLSearchParams(window.location.search);
+        token = (qs.get('t') || '').trim();
+        var o = (qs.get('o') || 'apto').trim().toLowerCase();
+        if (ORIGENES[o]) origen = ORIGENES[o];
+      } catch (e) {}
+
+      // Sin token no hay nada que hacer: ni se llama a n8n.
+      if (!/^[A-Za-z0-9_.-]{16,80}$/.test(token)) {
+        fallo('Nos falta la parte final del enlace. Suele pasar cuando se copia a medias desde el correo. Ábrelo otra vez desde el correo o escríbenos.');
+      } else {
+        pedir('llamada-datos', { token: token }).then(function (d) {
+          if (d && d.ok) {
+            if (d.nombre) elTitulo.textContent = 'Te llamamos, ' + d.nombre;
+            if (d.telefono) { elTel.value = d.telefono; elTelNota.hidden = false; }
+            urlPago = d.pago || '';
+            ver(elForm);
+            return;
+          }
+          var motivo = (d && d.motivo) || 'red';
+          if (motivo === 'caducado') fallo('Este enlace ha caducado. Escríbenos y te llamamos igual.');
+          else if (motivo === 'pagado') fallo('Ya tienes tu plan en marcha, así que esto no hace falta. Si quieres que te llamemos igualmente, escríbenos.');
+          else if (motivo === 'red') fallo('No hemos podido abrir tu enlace ahora mismo. Vuelve a intentarlo en un minuto o escríbenos.');
+          else fallo('Este enlace ya no sirve. Ábrelo otra vez desde el correo o escríbenos.');
+        }).catch(function () {
+          fallo('No hemos podido abrir tu enlace ahora mismo. Vuelve a intentarlo en un minuto o escríbenos.');
+        });
+      }
+
+      elForm.addEventListener('submit', function (ev) {
+        ev.preventDefault();
+        elError.hidden = true;
+
+        var tel = (elTel.value || '').replace(/[\s.\-()]/g, '');
+        if (tel.indexOf('0034') === 0) tel = tel.slice(4);
+        else if (tel.indexOf('+34') === 0) tel = tel.slice(3);
+        else if (tel.length === 11 && tel.indexOf('34') === 0) tel = tel.slice(2);
+        if (!/^[6789]\d{8}$/.test(tel)) {
+          error('Ese número no nos cuadra. Escríbelo con los nueve dígitos, sin prefijo de país.');
+          elTel.focus();
+          return;
+        }
+        var franja = 'Cuando podais';
+        var marcado = elForm.querySelector('input[name="franja"]:checked');
+        if (marcado) franja = marcado.value;
+
+        elEnviar.disabled = true;
+        elEnviar.textContent = 'Un momento...';
+
+        pedir('llamada-solicitada', {
+          token: token, telefono: tel, franja: franja, origen: origen, consentimiento: CONSENT
+        }).then(function (d) {
+          elEnviar.disabled = false;
+          elEnviar.textContent = 'Que me llamen';
+          // SOLO se le dice que esta hecho si n8n confirma que lo ha sellado. Si dice que no, o si
+          // no contesta, se le dice la verdad y se le deja reintentar: prometer una llamada que no
+          // esta apuntada en ningun sitio es peor que no ofrecerla.
+          if (d && d.ok) {
+            if (urlPago) { elHechoPago.href = urlPago; elHechoPago.hidden = false; }
+            ver(elHecho);
+            return;
+          }
+          var motivo = (d && d.motivo) || 'red';
+          if (motivo === 'telefono') error('Ese número no nos cuadra. Escríbelo con los nueve dígitos, sin prefijo de país.');
+          else if (motivo === 'limite') error('Ya nos lo has pedido hace un momento. La llamada está apuntada, no hace falta repetirlo.');
+          else if (motivo === 'caducado') error('Este enlace ha caducado. Escríbenos a pacientes@clynia.es y te llamamos igual.');
+          else if (motivo === 'pagado') error('Ya tienes tu plan en marcha. Si aun así quieres que te llamemos, escríbenos a pacientes@clynia.es.');
+          else error('No hemos podido apuntarlo. Vuelve a intentarlo en un minuto; si sigue igual, escríbenos a pacientes@clynia.es.');
+        }).catch(function () {
+          elEnviar.disabled = false;
+          elEnviar.textContent = 'Que me llamen';
+          error('No hemos podido apuntarlo. Vuelve a intentarlo en un minuto; si sigue igual, escríbenos a pacientes@clynia.es.');
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tu vídeo · Clynia</title>
+  <meta name="robots" content="noindex, nofollow, noarchive" />
+  <meta name="theme-color" content="#f6f4ef" />
+  <link rel="icon" type="image/png" href="assets/img/favicon.png" />
+
+  <!-- POR QUE ESTA PAGINA NO LLEVA PIXEL NI ANALITICA (y no se le pueden poner)
+       Aqui solo llega quien ha recibido el correo de "eres candidato", asi que una visita a esta
+       URL dice que esa persona ha pasado por una valoracion medica. Eso es dato de salud: mandarlo
+       a Meta o a Google seria justo el error del evento QStep. Por eso no hay fbq, ni ga.js, ni
+       cookies.js (no hace falta banner: no se pone ni una cookie), ni Contentsquare. Quien anada un
+       tercero aqui rompe la razon de ser de la pagina. El noindex va ademas en robots.txt. -->
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600&family=Hanken+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/styles.css?v=20260917ig" />
+
+  <style>
+    .tv { padding: 26px 0 40px; }
+    .tv__logo { display: block; width: 104px; height: auto; margin: 0 0 26px; }
+    .tv__h1 { font-family: Fraunces, Georgia, serif; font-size: clamp(27px, 7.4vw, 34px); line-height: 1.16; font-weight: 500; color: var(--ink); margin: 0 0 10px; letter-spacing: -0.01em; }
+    .tv__lead { font-size: 16px; line-height: 1.6; color: var(--ink-soft); margin: 0 0 22px; text-align: justify; hyphens: auto; }
+    /* El marco se adapta al video que toque: 9/16 en movil, 16/9 en escritorio. No uso .video__frame
+       del sitio porque ese esta clavado a 16/9 y aqui el video principal es vertical. */
+    .tv__frame { position: relative; background: #000; border-radius: 22px; overflow: hidden; box-shadow: var(--shadow-card); aspect-ratio: 9 / 16; }
+    .tv__frame video { display: block; width: 100%; height: 100%; object-fit: cover; background: #000; }
+    .tv__play { position: absolute; inset: 0; display: grid; place-items: center; width: 100%; height: 100%; border: 0; background: transparent; cursor: pointer; padding: 0; }
+    .tv__play span { display: grid; place-items: center; width: 74px; height: 74px; border-radius: 50%; background: rgba(255,255,255,.94); box-shadow: 0 10px 30px -10px rgba(0,0,0,.6); transition: transform .25s var(--ease); }
+    .tv__play:hover span { transform: scale(1.06); }
+    .tv__play svg { width: 30px; height: 30px; color: var(--green); margin-left: 4px; }
+    .tv__play.is-off { display: none; }
+    .tv__nota { font-size: 12.5px; line-height: 1.5; color: var(--ink-faint); margin: 10px 2px 0; text-align: center; }
+    .tv__cta { margin: 26px 0 0; }
+    .tv__cta .btn { width: 100%; }
+    .tv__bajo { font-size: 13.5px; line-height: 1.5; color: var(--ink-soft); margin: 10px 0 0; text-align: center; }
+    .tv__sec { display: block; margin: 16px 0 0; text-align: center; font-size: 15.5px; font-weight: 600; color: var(--green); text-decoration: none; padding: 13px 8px; }
+    .tv__sec:hover { text-decoration: underline; }
+    .tv__pie { margin: 34px 0 0; padding: 18px 0 0; border-top: 1px solid var(--line); font-size: 12px; line-height: 1.6; color: var(--ink-faint); text-align: center; }
+    .tv__pie a { color: var(--green); font-weight: 600; text-decoration: none; }
+    @media (min-width: 760px) {
+      .tv { padding: 40px 0 56px; }
+      .tv__frame { aspect-ratio: 16 / 9; }
+      .tv__cta .btn { width: auto; }
+      .tv__cta { text-align: center; }
+    }
+  </style>
+</head>
+<body>
+  <main class="tv">
+    <div class="wrap">
+      <img class="tv__logo" src="assets/logos/clynia-wordmark.png" alt="Clynia" width="104" height="30" />
+
+      <h1 class="tv__h1">Así empiezas</h1>
+      <p class="tv__lead">Dos minutos: qué incluye tu plan, cómo es tu médico, cómo se paga y qué pasa después. Si prefieres leerlo, está todo en el correo.</p>
+
+      <figure class="tv__frame" style="margin:0;">
+        <video id="tvVideo" playsinline preload="metadata" controls
+               poster="assets/video/clynia-apto-poster-vertical.jpg?v=20260918"
+               aria-label="Vídeo: así empiezas con Clynia"></video>
+        <button class="tv__play" id="tvPlay" type="button" aria-label="Reproducir el vídeo">
+          <span><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.2v13.6a.7.7 0 0 0 1.07.6l10.9-6.8a.7.7 0 0 0 0-1.2L9.07 4.6A.7.7 0 0 0 8 5.2z"/></svg></span>
+        </button>
+      </figure>
+      <p class="tv__nota">Imágenes ilustrativas con datos ficticios. Las decisiones médicas las toma siempre tu médico.</p>
+
+      <div class="tv__cta">
+        <a class="btn btn--primary" id="tvPagar" href="peso.html">
+          Elegir mi plan y empezar
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
+        </a>
+        <p class="tv__bajo">No pagas hasta confirmar. Después, tu cuestionario clínico y la receta.</p>
+        <a class="tv__sec" id="tvLlamada" href="te-llamamos" hidden>Prefiero que me llamen</a>
+      </div>
+
+      <p class="tv__pie">
+        Clynia Inversiones, S.L. · <a href="terminos">Términos</a> · <a href="privacidad">Privacidad</a><br />
+        Para una urgencia, llama al 112 o acude a urgencias.
+      </p>
+    </div>
+  </main>
+
+  <script>
+    (function () {
+      // Fuente del video segun el ancho: vertical en movil (que es por donde llega casi todo el
+      // mundo desde el correo) y 16:9 en escritorio. Se elige UNA VEZ, al cargar: cambiarla a mitad
+      // de reproduccion reiniciaria el video.
+      var v = document.getElementById('tvVideo');
+      var play = document.getElementById('tvPlay');
+      if (v) {
+        var ancho = window.innerWidth || document.documentElement.clientWidth || 390;
+        var vertical = ancho < 760;
+        v.src = vertical ? 'assets/video/clynia-apto-vertical.mp4?v=20260918'
+                         : 'assets/video/clynia-apto-720.mp4?v=20260918';
+        if (!vertical) v.poster = 'assets/video/clynia-apto-poster.jpg?v=20260918';
+        if (play) {
+          play.addEventListener('click', function () {
+            play.classList.add('is-off');
+            v.play();
+          });
+          v.addEventListener('play', function () { play.classList.add('is-off'); });
+        }
+      }
+      // Los parametros del correo tienen que sobrevivir a esta pagina: `pay` es el caso que entra
+      // directo al paso de pago (form-engine.js lo exige con formato recXXXX) y `t` es el enlace de
+      // la llamada. Sin ellos los botones siguen siendo utiles, pero el de llamada se esconde
+      // porque sin token esa pagina no puede hacer nada.
+      try {
+        var qs = new URLSearchParams(window.location.search);
+        var pay = (qs.get('pay') || '').trim();
+        var tok = (qs.get('t') || '').trim();
+        var pagar = document.getElementById('tvPagar');
+        if (pagar && /^rec[a-zA-Z0-9]{6,20}$/.test(pay)) {
+          pagar.href = 'peso.html?pay=' + encodeURIComponent(pay) +
+            '&utm_source=clynia&utm_medium=email&utm_campaign=siguiente-paso&utm_content=video-pagina&plan=sub_mensual';
+        } else if (pagar) {
+          pagar.href = 'peso.html?utm_source=clynia&utm_medium=email&utm_campaign=siguiente-paso&utm_content=video-pagina';
+        }
+        var llam = document.getElementById('tvLlamada');
+        if (llam && /^[A-Za-z0-9_.-]{16,80}$/.test(tok)) {
+          llam.href = 'te-llamamos?t=' + encodeURIComponent(tok) + '&o=video';
+          llam.hidden = false;
+        }
+      } catch (e) {}
+    })();
+  </script>
+</body>
+</html>

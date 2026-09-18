@@ -6,5 +6,7 @@ Disallow: /lista
 Disallow: /medicos-alta
 Disallow: /saludsexual
 Disallow: /capilar
+Disallow: /tu-video
+Disallow: /te-llamamos
 
 Sitemap: https://clynia.es/sitemap.xml
