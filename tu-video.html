@@ -15,15 +15,19 @@
        cookies.js (no hace falta banner: no se pone ni una cookie), ni Contentsquare. Quien anada un
        tercero aqui rompe la razon de ser de la pagina. El noindex va ademas en robots.txt. -->
 
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600&family=Hanken+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <!-- SIN GOOGLE FONTS, a proposito. El resto del sitio las pide, pero aqui no: una peticion a
+       fonts.googleapis.com le cuenta a Google la IP y el momento exacto en que alguien abre una
+       pagina a la que solo se llega tras una valoracion medica. Es la misma razon por la que el
+       correo de apto tampoco las pide (hay un control en su generador que lo prohibe). Se usan las
+       fuentes del sistema: Georgia para los titulares, que es el respaldo de Fraunces en toda la
+       web, y la pila del sistema para el texto. Si algun dia se quiere la tipografia de marca aqui,
+       hay que ALOJARLA en clynia.es, no volver a pedirsela a Google. -->
   <link rel="stylesheet" href="assets/css/styles.css?v=20260917ig" />
 
   <style>
     .tv { padding: 26px 0 40px; }
     .tv__logo { display: block; width: 104px; height: auto; margin: 0 0 26px; }
-    .tv__h1 { font-family: Fraunces, Georgia, serif; font-size: clamp(27px, 7.4vw, 34px); line-height: 1.16; font-weight: 500; color: var(--ink); margin: 0 0 10px; letter-spacing: -0.01em; }
+    .tv__h1 { font-family: Georgia, 'Times New Roman', serif; font-size: clamp(27px, 7.4vw, 34px); line-height: 1.16; font-weight: 500; color: var(--ink); margin: 0 0 10px; letter-spacing: -0.01em; }
     .tv__lead { font-size: 16px; line-height: 1.6; color: var(--ink-soft); margin: 0 0 22px; text-align: justify; hyphens: auto; }
     /* El marco se adapta al video que toque: 9/16 en movil, 16/9 en escritorio. No uso .video__frame
        del sitio porque ese esta clavado a 16/9 y aqui el video principal es vertical. */
