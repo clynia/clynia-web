@@ -5,6 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Que te llamemos · Clynia</title>
   <meta name="robots" content="noindex, nofollow, noarchive" />
+  <!-- El token de la llamada viaja en la URL de esta pagina y es una credencial: con el se puede
+       leer el nombre y el telefono del caso y pedir una llamada. Sin esto, el navegador manda esta
+       URL entera como Referer a la pagina de pago, y alli el pixel de Meta y GA4 la reenvian a sus
+       servidores, o sea que el token acabaria en manos de terceros. no-referrer lo corta de raiz. -->
+  <meta name="referrer" content="no-referrer" />
   <meta name="theme-color" content="#f6f4ef" />
   <link rel="icon" type="image/png" href="assets/img/favicon.png" />
 
