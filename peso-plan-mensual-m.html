@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <!-- Meta Pixel Code -->
+  <script>
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('consent', 'revoke');
+  fbq('init', '4585495085018912');
+  try{ if(localStorage.getItem('clynia_cookie_consent')==='all' && (Date.now()-parseInt(localStorage.getItem('clynia_cookie_consent_ts')||'0',10))<15552000000){ fbq('consent','grant'); } }catch(e){}
+  fbq('track', 'PageView');
+  </script>
+  <noscript><img height="1" width="1" style="display:none"
+  src="https://www.facebook.com/tr?id=4585495085018912&ev=PageView&noscript=1"/></noscript>
+  <!-- End Meta Pixel Code -->
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Un control al mes y mensajes con tu médico · Clynia</title>
+  <meta name="description" content="Cuida tu peso con un médico. Cada mes, un control por escrito que revisa tu médico y, entre control y control, mensajes con él. 89 € al mes, sin permanencia." />
+  <!-- LANDING DE RETARGETING del plan mensual (89 EUR, octubre 2026). Fuera del índice, fuera del
+       sitemap y sin enlaces desde el sitio: solo se llega desde los anuncios rt-incluye-m (y su
+       reserva rt-mismo-m), con la misma foto (v2-mujer-cocina = hero-peso-m1) y el mismo titular.
+       Sustituye como destino a peso-secreto-a-voces-m, que no vale para esta campaña: presenta la
+       receta como parte del plan, ata la devolución a que no se inicie el tratamiento, trae una
+       reseña que nombra a un endocrinólogo y le pide al apto que vuelva a contar su caso.
+       Aquí no se nombra Esencial a propósito: esta página puede salir antes que el pago único, y
+       mientras el interruptor siga apagado no se enseña en ninguna superficie. -->
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="theme-color" content="#f6f4ef" />
+  <link rel="icon" type="image/png" href="assets/img/favicon.png" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Hanken+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="assets/css/styles.css?v=20260917ig" />
+  <link rel="canonical" href="https://clynia.es/peso-plan-mensual-m" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Clynia" />
+  <meta property="og:locale" content="es_ES" />
+  <meta property="og:title" content="Un control al mes y mensajes con tu médico · Clynia" />
+  <meta property="og:description" content="Cada mes, un control por escrito que revisa tu médico y, entre control y control, mensajes con él. 89 € al mes, sin permanencia." />
+  <meta property="og:url" content="https://clynia.es/peso-plan-mensual-m" />
+  <meta property="og:image" content="https://clynia.es/assets/img/og-default.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Un control al mes y mensajes con tu médico · Clynia" />
+  <meta name="twitter:description" content="Cada mes, un control por escrito que revisa tu médico y, entre control y control, mensajes con él. 89 € al mes, sin permanencia." />
+  <meta name="twitter:image" content="https://clynia.es/assets/img/og-default.png" />
+  <style>
+    /* Selector anual/mensual, mismo patrón que peso-secreto-a-voces-m y salud-sexual.html (son
+       copias: si se toca allí, tocar aquí). Una sola tarjeta: es el mismo servicio y solo cambia
+       cómo se paga. */
+    .ciclo {
+      position: relative; display: inline-flex; align-items: center; gap: 2px; margin: 6px auto 24px;
+      padding: 5px; border-radius: 999px; background: #fff;
+      box-shadow: inset 0 0 0 1px var(--line), 0 10px 26px -18px rgba(40, 67, 60, .55);
+    }
+    .ciclo__thumb {
+      position: absolute; top: 5px; bottom: 5px; left: 0; width: 0; border-radius: 999px;
+      background: var(--green); box-shadow: 0 6px 16px -8px rgba(40, 67, 60, .7);
+      transition: transform .34s cubic-bezier(.4, 0, .2, 1), width .34s cubic-bezier(.4, 0, .2, 1);
+      pointer-events: none;
+    }
+    .ciclo__opt {
+      position: relative; z-index: 1;
+      display: inline-flex; align-items: center; gap: 9px; border: 0; cursor: pointer;
+      padding: 12px 24px; border-radius: 999px; background: transparent;
+      font: inherit; font-size: 15px; font-weight: 600; letter-spacing: -.005em; color: var(--ink-soft);
+      transition: color .26s var(--ease);
+    }
+    .ciclo__opt:hover { color: var(--ink); }
+    .ciclo__opt.is-on { color: #fff; }
+    .ciclo__save {
+      font-size: 11px; font-weight: 700; letter-spacing: .03em; text-transform: none;
+      padding: 4px 9px; border-radius: 999px;
+      background: var(--green-tint); color: var(--green-900);
+      transition: background .26s var(--ease), color .26s var(--ease);
+    }
+    .ciclo__opt.is-on .ciclo__save { background: rgba(255, 255, 255, .2); color: #fff; }
+    @media (prefers-reduced-motion: reduce) { .ciclo__thumb { transition: none; } }
+    @media (max-width: 620px) {
+      .ciclo { display: flex; width: 100%; margin-left: 0; margin-right: 0; }
+      .ciclo__opt { flex: 1 1 0; justify-content: center; flex-direction: column; gap: 3px; padding: 10px 6px; font-size: 13.5px; }
+      .ciclo__save { font-size: 10px; padding: 2px 7px; letter-spacing: .01em; }
+    }
+    .plan__price { display: flex; align-items: baseline; justify-content: center; gap: 8px; margin: 2px 0 4px; }
+    .plan__amount { font-family: "Fraunces", Georgia, serif; font-weight: 500; font-size: 46px; line-height: 1; color: var(--ink); }
+    .plan__unit { font-size: 15px; color: var(--ink-soft); }
+    .plan__ahorro { margin: 0 0 6px; font-size: 13.5px; font-weight: 600; color: var(--green); }
+    [hidden] { display: none !important; }
+
+    .plans--solo { display: flex; justify-content: center; }
+    .plans--solo .plan { max-width: 460px; width: 100%; }
+    .plans--solo .plan--featured { transform: none; }
+
+    /* Justificado a ambos lados CON guiones. Estas clases no las alcanza la regla general de
+       styles.css. Los titulares y las líneas sueltas del precio no se justifican. */
+    .pillars--rich .pillar > span,
+    .plans__note,
+    .plan__list li,
+    .plan__for,
+    .faq__body p,
+    .hero__ya {
+      text-align: justify;
+      -webkit-hyphens: auto;
+      hyphens: auto;
+    }
+    .plans__note { max-width: 62ch; text-align-last: center; }
+    .closing__sub { text-align: justify; text-align-last: center; -webkit-hyphens: auto; hyphens: auto; }
+
+    .plan__list li { position: relative; padding-left: 27px; }
+    .plan__list li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: .3em;
+      width: 17px;
+      height: 17px;
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23437066' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E") no-repeat center / 17px 17px;
+    }
+
+    /* Quien ya pasó la valoración no tiene que repetirla: en su correo tiene el enlace de pago de
+       SU caso (?pay=<casoId>). Es el único camino que existe hoy para llevar al apto al pago sin
+       volver a contar su caso, así que se dice arriba, en el hero, donde lo ve antes de pulsar. */
+    .hero__ya {
+      margin: 16px 0 0; padding: 13px 15px; border-radius: 14px;
+      background: var(--green-tint); color: var(--ink-soft); font-size: 14px; line-height: 1.55;
+    }
+    .hero__ya strong { color: var(--ink); font-weight: 600; }
+    .hero__ya a { color: var(--green-700); font-weight: 600; text-decoration: underline; }
+    .review--solo { max-width: 560px; margin: 0 auto; }
+  </style>
+  <script src="assets/js/ga.js?v=20260702b"></script>
+</head>
+<body>
+
+  <!-- ===================== NAV ===================== -->
+  <header class="topnav" id="topnav">
+    <div class="topnav__inner">
+      <a class="topnav__brand" href="/" aria-label="Clynia, inicio">
+        <img src="/assets/logos/clynia-wordmark.png" alt="Clynia" />
+      </a>
+      <nav class="topnav__links" aria-label="Navegación">
+        <a href="/#categorias">Tratamientos</a>
+        <a href="/blog">Blog</a>
+        <a href="/mision">Misión</a>
+        <a href="/contacto">Contacto</a>
+      </nav>
+      <div class="topnav__actions">
+        <a class="topnav__login" href="https://portal.clynia.es" aria-label="Acceso a tu portal de Clynia">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" x2="3" y1="12" y2="12"/></svg>
+          <span class="topnav__login-full">Acceso a tu portal</span>
+          <span class="topnav__login-short">Portal</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- ===================== HERO =====================
+         Misma foto y mismo titular que el anuncio rt-incluye-m. En impersonal lo que haga falta: el
+         anuncio no puede dar a entender que sabemos que ya vino, y la página tampoco lo afirma; solo
+         ofrece el atajo a quien sí pasó la valoración. -->
+    <section class="hero">
+      <div class="wrap">
+        <div class="hero__inner">
+
+          <figure class="hero__media reveal d1">
+            <img
+              src="assets/img/hero-peso-m1.webp"
+              alt="Mujer sonriente en la cocina de su casa, con una taza entre las manos"
+              width="1080" height="1440"
+              fetchpriority="high"
+            />
+          </figure>
+
+          <div class="hero__copy">
+            <h1 class="hero__title reveal d3">
+              Cuida tu peso con un médico. <em>Un control al mes y mensajes.</em>
+            </h1>
+            <p class="hero__sub reveal d4">
+              Cada mes, un control por escrito que revisa tu médico y, entre control y control, mensajes con él cuando los necesites. 89 € al mes, sin permanencia. Empiezas contando tu caso: un médico lo valora y te responde, normalmente en menos de 24 h.
+            </p>
+
+            <div class="reveal d5">
+              <a class="btn btn--primary" href="peso" data-cta="peso">
+                Cuéntale tu caso
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
+              </a>
+              <p class="hero__assurance">Te conectamos con un médico que lee tu caso y te responde por email. La valoración no se cobra: solo pagas si decides empezar. Solo para mayores de 18 años.</p>
+              <p class="hero__ya"><strong>¿Un médico de Clynia ya valoró tu caso?</strong> No tienes que repetirlo: en el correo con su respuesta tienes el enlace para empezar tu plan. Si no lo encuentras, escríbenos a <a href="mailto:pacientes@clynia.es">pacientes@clynia.es</a> y te lo reenviamos.</p>
+              <p class="hero__pencaption hero__pencaption--in">
+                Cualquier indicación médica corresponde siempre a un médico, si lo considera adecuado tras
+                valorarte, y con el seguimiento oportuno.
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== QUÉ INCLUYE TU PLAN =====================
+         Lo que se tiene cada mes, contado en concreto y con la conversación del portal al lado. Sin
+         "receta" como parte de lo que se compra: lo del medicamento va como información en el precio
+         y en las preguntas, nunca como ventaja del plan. -->
+    <section class="section" id="incluye">
+      <div class="wrap">
+        <div class="program">
+          <div class="program__copy">
+            <header class="section__head section__head--left reveal-up">
+              <h2 class="h2">Qué incluye tu plan.</h2>
+              <p class="lead">Un solo plan, sin versiones. Esto es lo que tienes cada mes:</p>
+            </header>
+            <ul class="pillars pillars--rich">
+              <li class="pillar reveal-up">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+                <span><strong>El mismo médico, todo el plan.</strong> Un médico asignado que conoce tu caso y lo sigue de principio a fin; no tienes que explicarte de nuevo cada mes.</span>
+              </li>
+              <li class="pillar reveal-up">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="m9 15 2 2 4-4"/></svg>
+                <span><strong>Un control cada mes.</strong> Rellenas tu control en el portal y tu médico lo revisa y te contesta por escrito; no pasa un mes sin que alguien lo mire.</span>
+              </li>
+              <li class="pillar reveal-up">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                <span><strong>Mensajes con tu médico.</strong> Dudas, molestias, algo que no esperabas: se lo escribes por la mensajería privada de tu portal y te responde.</span>
+              </li>
+              <li class="pillar reveal-up">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21v-7"/><path d="M4 10V3"/><path d="M12 21v-9"/><path d="M12 8V3"/><path d="M20 21v-5"/><path d="M20 12V3"/><path d="M1 14h6"/><path d="M9 8h6"/><path d="M17 16h6"/></svg>
+                <span><strong>La pauta se ajusta a ti.</strong> Según tu evolución, tu médico ajusta lo que te ha indicado; no hay una pauta igual para todos.</span>
+              </li>
+              <li class="pillar reveal-up">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                <span><strong>Todo tu caso, en un solo sitio.</strong> Lo que has contado y lo que tu médico te ha ido indicando, ordenado en tu portal y a mano cuando lo necesites.</span>
+              </li>
+              <li class="pillar reveal-up">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="16.5" rx="2.5"/><path d="M8 2.5v4M16 2.5v4M3 10h18"/><path d="m9.5 13.5 5 5M14.5 13.5l-5 5"/></svg>
+                <span><strong>Sin permanencia.</strong> 89 € al mes, o 74,17 € al mes pagando el año. Te das de baja desde tu portal cuando quieras.</span>
+              </li>
+            </ul>
+          </div>
+          <figure class="program__media reveal-up chat-figure">
+            <img
+              src="assets/img/portal-conversacion.webp"
+              alt="Conversación en el portal de Clynia: una paciente escribe a su médico y él le responde"
+              width="1080" height="1350" loading="lazy"
+            />
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== CÓMO FUNCIONA ===================== -->
+    <section class="section section--tint" id="como-funciona">
+      <div class="wrap">
+        <header class="section__head reveal-up">
+          <h2 class="h2">Cómo funciona.</h2>
+          <p class="lead">Tres pasos, por escrito y desde el móvil.</p>
+        </header>
+
+        <ol class="steps steps--flow reveal-up">
+          <li class="step reveal-up">
+            <span class="step__num">1</span>
+            <h3 class="step__title">Cuentas tu caso desde el móvil</h3>
+            <p class="step__text">Unas preguntas en unos minutos y sin cita. Si algo de lo que respondes desaconseja seguir, te lo decimos en el acto.</p>
+          </li>
+          <li class="step reveal-up">
+            <span class="step__num">2</span>
+            <h3 class="step__title">Un médico lo valora y te responde</h3>
+            <p class="step__text">Te contesta por email, normalmente en menos de 24 h; si necesita aclarar algo, puede llamarte. La valoración no se cobra: si no eres candidata, te lo explica y no pagas nada.</p>
+          </li>
+          <li class="step reveal-up">
+            <span class="step__num">3</span>
+            <h3 class="step__title">Si eres candidata y quieres, empiezas</h3>
+            <p class="step__text">Contratas el plan: 89 € al mes o 890 € al año, sin permanencia. Desde ese momento tienes a tu médico y tu portal: un control cada mes, ajustes y mensajería privada.</p>
+          </li>
+        </ol>
+
+        <div class="section__cta reveal-up">
+          <a class="btn btn--primary btn--inline" href="peso">
+            Cuéntale tu caso
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== PRECIO ===================== -->
+    <section class="section" id="planes">
+      <div class="wrap">
+        <header class="section__head reveal-up">
+          <h2 class="h2">Un solo plan.</h2>
+          <p class="lead">Todo lo de arriba por un precio; lo pagas mes a mes o por el año, y lo dejas cuando quieras desde tu portal.</p>
+        </header>
+
+        <div style="text-align:center">
+          <!-- Arranca en MENSUAL, igual que el resto de landings de peso, el paso de pago de peso.html
+               y el correo del apto: si una superficie enseña una cosa y otra otra, el paciente cree que
+               le han cambiado el precio. -->
+          <div class="ciclo" role="group" aria-label="Elige cómo pagar">
+            <span class="ciclo__thumb" aria-hidden="true"></span>
+            <button type="button" class="ciclo__opt is-on" data-ciclo="mes" aria-pressed="true">Mensual</button>
+            <button type="button" class="ciclo__opt" data-ciclo="ano" aria-pressed="false">Anual <span class="ciclo__save">ahorras 178 €</span></button>
+          </div>
+        </div>
+
+        <div class="plans plans--solo">
+          <article class="plan plan--featured reveal-up">
+            <h3 class="plan__name">Seguimiento con tu médico</h3>
+            <p class="plan__price">
+              <span class="plan__amount" data-precio="mes">89 €</span>
+              <span class="plan__amount" data-precio="ano" hidden>74,17 €</span>
+              <span class="plan__unit">al mes</span>
+            </p>
+            <p class="plan__meta" data-nota="mes">Sin permanencia: te das de baja cuando quieras.</p>
+            <p class="plan__meta" data-nota="ano" hidden>890 € una vez al año. Sin permanencia: al terminar decides si sigues.</p>
+            <p class="plan__ahorro" data-nota="ano" hidden>Pagas 10 meses y tienes 12: ahorras 178 €, un 17% menos que los 1.068 € del mes a mes.</p>
+            <ul class="plan__list">
+              <li>El mismo médico durante todo el plan</li>
+              <li>Un control al mes, que tu médico revisa y responde</li>
+              <li>Ajuste de la pauta según tu evolución</li>
+              <li>Mensajería privada con tu médico</li>
+              <li>Tu historia clínica en tu portal</li>
+            </ul>
+            <p class="plan__for">Empiezas contando tu caso. No pagas nada hasta que un médico lo valore.</p>
+            <a class="btn btn--primary" href="peso">Cuéntale tu caso</a>
+          </article>
+        </div>
+
+        <p class="callout reveal-up">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+          <span><strong>Si tu médico no llega a atender tu caso, te devolvemos lo que hayas pagado.</strong></span>
+        </p>
+
+        <!-- Medicamento como información, sin cifras ni nombres, y la devolución atada al acto (que el
+             médico llegue a atender el caso), nunca a que recete o a que inicie un tratamiento. -->
+        <p class="plans__note reveal-up">
+          El medicamento, si tu médico te lo indica, lo compras en la farmacia que prefieras y va aparte:
+          no está incluido en el plan. Clynia no vende ni dispensa medicamentos. El plan se renueva solo
+          hasta que lo canceles; te das de baja desde tu portal cuando quieras y conservas a tu médico
+          hasta el final del periodo pagado. Pago con Visa, Mastercard, American Express, Apple Pay y
+          Google Pay.
+        </p>
+      </div>
+
+      <script>
+        // Selector anual/mensual. Sin dependencias: enseña u oculta el importe y la nota del ciclo
+        // elegido. Copiado de peso-secreto-a-voces-m y salud-sexual.html (son copias).
+        (function () {
+          var opts = document.querySelectorAll(".ciclo__opt");
+          var thumb = document.querySelector(".ciclo__thumb");
+          if (!opts.length) return;
+          var actual = "mes";
+          function moverPastilla() {
+            if (!thumb) return;
+            var b = document.querySelector('.ciclo__opt[data-ciclo="' + actual + '"]');
+            if (!b) return;
+            thumb.style.width = b.offsetWidth + "px";
+            thumb.style.transform = "translateX(" + b.offsetLeft + "px)";
+          }
+          function set(ciclo) {
+            actual = ciclo;
+            opts.forEach(function (b) {
+              var on = b.getAttribute("data-ciclo") === ciclo;
+              b.classList.toggle("is-on", on);
+              b.setAttribute("aria-pressed", on ? "true" : "false");
+            });
+            document.querySelectorAll("[data-precio],[data-nota]").forEach(function (el) {
+              var k = el.getAttribute("data-precio") || el.getAttribute("data-nota") || "";
+              el.hidden = k.split(" ").indexOf(ciclo) === -1;
+            });
+            moverPastilla();
+          }
+          opts.forEach(function (b) {
+            b.addEventListener("click", function () { set(b.getAttribute("data-ciclo")); });
+          });
+          moverPastilla();
+          if (document.fonts && document.fonts.ready) { document.fonts.ready.then(moverPastilla); }
+          window.addEventListener("resize", moverPastilla);
+        })();
+      </script>
+    </section>
+
+    <!-- ===================== CONFIANZA =====================
+         Reseña REAL de Google, literal (con sus erratas). Solo la de Sara: la de Laura nombra a un
+         endocrinólogo y no está verificado que lo haya en el equipo. -->
+    <section class="section section--tint" id="confianza">
+      <div class="wrap">
+        <header class="section__head reveal-up">
+          <h2 class="h2">Lo que cuenta una paciente.</h2>
+        </header>
+        <div class="review review--solo reveal-up">
+          <span class="review__head"><span class="review__av" aria-hidden="true">S</span><span class="review__who"><span class="review__name">Sara Jaime A.</span><span class="review__stars" aria-label="Cinco estrellas">★★★★★</span></span></span>
+          <p class="review__text">Rellene el cuestionario un jueves por la noche, no tuve que hacer ninguna llamada y el médico revisó mi caso y me contento por la web muy rápido. Ha sido súper cómodo y estoy muy contenta.</p>
+          <span class="review__src">Reseña de Google</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== PARA QUIÉN ES ===================== -->
+    <section class="section" id="para-quien">
+      <div class="wrap">
+        <header class="section__head reveal-up">
+          <h2 class="h2">¿Es para ti?</h2>
+        </header>
+        <div class="fit">
+          <div class="fit__col fit__col--yes reveal-up">
+            <h3 class="fit__h">Es para ti si...</h3>
+            <ul class="fit__list">
+              <li>quieres cuidar tu peso con un médico detrás, y no con lo que te han contado.</li>
+              <li>sabes que empezar es lo fácil y quieres a alguien que siga ahí cuando pase la novedad.</li>
+              <li>no tienes tardes para salas de espera ni ganas de contar tu caso a alguien nuevo cada vez.</li>
+            </ul>
+          </div>
+          <div class="fit__col fit__col--no reveal-up">
+            <h3 class="fit__h">No es para ti si...</h3>
+            <ul class="fit__list">
+              <li>quieres que te digan que sí a todo: aquí decide un médico, y a veces dice que no; en ese caso, la valoración no se cobra.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== FAQ ===================== -->
+    <section class="section section--tint" id="faq">
+      <div class="wrap">
+        <header class="section__head reveal-up">
+          <h2 class="h2">Preguntas frecuentes.</h2>
+        </header>
+        <div class="faq">
+          <details name="faq" class="faq__item reveal-up">
+            <summary>Ya me valoró un médico de Clynia. ¿Tengo que repetirlo?</summary>
+            <div class="faq__body"><p>No. En el correo con la respuesta de tu médico tienes el enlace para empezar tu plan: eliges cómo pagarlo y completas tu cuestionario clínico, sin volver a contar tu caso. Si no encuentras ese correo, escríbenos a <a href="mailto:pacientes@clynia.es">pacientes@clynia.es</a> y te lo reenviamos.</p></div>
+          </details>
+          <details name="faq" class="faq__item reveal-up">
+            <summary>¿Tengo que pedir cita o hacer una videollamada?</summary>
+            <div class="faq__body"><p>No. Todo es por escrito y desde el móvil: cuentas tu caso, un médico lo valora y te responde por email. Si necesita aclarar algo, puede llamarte. No hay salas de espera ni desplazamientos.</p></div>
+          </details>
+          <details name="faq" class="faq__item reveal-up">
+            <summary>¿Cuánto cuesta?</summary>
+            <div class="faq__body"><p>La valoración del médico no se cobra. Si eres candidata y decides empezar, el plan son 89 € al mes o 890 € al año (74,17 € al mes), sin permanencia. El medicamento, si tu médico te lo indica, va aparte.</p></div>
+          </details>
+          <details name="faq" class="faq__item reveal-up">
+            <summary>¿Y si no soy candidata?</summary>
+            <div class="faq__body"><p>El médico te lo explica por email y no pagas nada. Ser candidata lo decide siempre un médico con tu caso delante; y si algo de lo que respondes en el cuestionario desaconseja seguir, te lo decimos en el acto.</p></div>
+          </details>
+          <details name="faq" class="faq__item reveal-up">
+            <summary>¿Quién me atiende?</summary>
+            <div class="faq__body"><p>Médicos independientes con los que Clynia te pone en contacto; la decisión clínica es siempre suya. Un médico valora tu caso y, si empiezas el plan, tienes un médico asignado que te lleva de principio a fin, el mismo mes a mes.</p></div>
+          </details>
+          <details name="faq" class="faq__item reveal-up">
+            <summary>¿Cómo hablo con mi médico?</summary>
+            <div class="faq__body"><p>Por escrito, desde la mensajería privada de tu portal: dudas, molestias, algo que no esperabas. Cada mes, además, rellenas tu control y tu médico lo revisa y te responde. Si necesita aclarar algo, puede llamarte.</p></div>
+          </details>
+          <details name="faq" class="faq__item reveal-up">
+            <summary>¿Y si lo dejo?</summary>
+            <div class="faq__body"><p>Te das de baja desde tu portal cuando quieras y sin dar explicaciones; no hay permanencia. Conservas a tu médico hasta el final del periodo que hayas pagado, así que nada se corta de un día para otro. Si no cancelas, el plan se renueva solo, mes a mes o año a año, según lo que elijas.</p><p>Y si quieres dejar lo que te ha indicado tu médico, díselo antes: mientras tu plan siga activo, él te dice cómo hacerlo y te acompaña. Está dentro del plan, no es una consulta aparte.</p></div>
+          </details>
+          <details name="faq" class="faq__item reveal-up">
+            <summary>¿Qué pasa con mis datos?</summary>
+            <div class="faq__body"><p>Van cifrados y se tratan conforme al RGPD. Solo los ve el médico que te atiende: nada pasa por una recepción ni por la agenda de nadie, y nadie te cruza en una sala de espera.</p></div>
+          </details>
+          <details name="faq" class="faq__item reveal-up">
+            <summary>¿Y si mi médico me indica un medicamento?</summary>
+            <div class="faq__body"><p>Lo decide siempre tu médico, después de valorar tu caso, y te lo deja por escrito. El medicamento lo compras en la farmacia que prefieras y va aparte: no está incluido en el plan. Clynia no vende ni dispensa medicamentos.</p></div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== CTA FINAL ===================== -->
+    <section class="closing" id="empezar">
+      <div class="wrap">
+        <div class="closing__inner reveal-up">
+          <h2 class="closing__title">Un control al mes y mensajes con tu médico.</h2>
+          <p class="closing__sub">Cuenta tu caso en unos minutos, desde el móvil. Un médico lo valora y te responde por email, normalmente en menos de 24 h; solo pagas si eres candidata y decides empezar. Después, 89 € al mes, sin permanencia.</p>
+          <a class="btn btn--light" id="ctaFinal" href="peso">
+            Cuéntale tu caso
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer class="site-footer">
+    <div class="wrap">
+      <div class="site-footer__top">
+        <a class="site-footer__home" href="/" aria-label="Clynia, inicio">
+          <img src="/assets/logos/clynia-wordmark.png" alt="Clynia" />
+        </a>
+        <a class="site-footer__social" href="https://www.instagram.com/clynia.es/" target="_blank" rel="noopener" aria-label="Clynia en Instagram, @clynia.es">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="2.5" width="19" height="19" rx="5.5"/><circle cx="12" cy="12" r="4.3"/><circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none"/></svg>
+          <span>@clynia.es</span>
+        </a>
+        <a class="site-footer__docs" href="/colaborar">
+          Colabora con Clynia
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
+        </a>
+      </div>
+      <div class="site-footer__cols">
+        <div>
+          <h4>Tratamientos</h4>
+          <ul>
+            <li><a href="/perdida-de-peso">Pérdida de peso</a></li>
+            <li><a href="/#categorias">Menopausia</a></li>
+            <li><a href="/#categorias">Salud sexual</a></li>
+            <li><a href="/#categorias">Cabello</a></li>
+            <li><a href="/#categorias">Longevidad</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Clynia</h4>
+          <ul>
+            <li><a href="/mision">Misión</a></li>
+            <li><a href="/#como-funciona">Cómo funciona</a></li>
+            <li><a href="/#categorias">Tratamientos</a></li>
+            <li><a href="/blog">Blog</a></li>
+            <li><a href="/informacion">Información</a></li>
+            <li><a href="/contacto">Contacto</a></li>
+            <li><a href="/colaborar">Colabora con Clynia</a></li>
+            <li><a href="/medicos">Trabaja como médico</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Legal</h4>
+          <ul>
+            <li><a href="/avisolegal">Aviso legal</a></li>
+            <li><a href="/privacidad">Privacidad (RGPD)</a></li>
+            <li><a href="/cookies">Cookies</a></li>
+            <li><a href="/terminos">Términos</a></li>
+          </ul>
+        </div>
+      </div>
+      <p class="site-footer__legal">
+        Clynia es una plataforma que conecta pacientes con médicos colegiados independientes en
+        España. No es un centro sanitario ni una clínica. Cada decisión clínica corresponde al
+        médico colegiado responsable, que actúa con su propio criterio e independencia. La
+        información de esta web tiene carácter general y no sustituye una consulta médica ni
+        constituye consejo médico. Los tratamientos sólo se facilitan cuando un médico colegiado
+        los considera adecuados tras valorar cada caso de forma individual. Tratamos tus datos
+        conforme al RGPD y a la normativa española de protección de datos.
+      </p>
+      <div class="site-footer__pay">
+        <span class="site-footer__pay-label">Pago seguro</span>
+        <span class="pay-badges">
+          <img src="/assets/img/pay/visa.svg" alt="Visa" width="44" height="27" loading="lazy">
+          <img src="/assets/img/pay/mastercard.svg" alt="Mastercard" width="44" height="27" loading="lazy">
+          <img src="/assets/img/pay/amex.svg" alt="American Express" width="44" height="27" loading="lazy">
+          <img src="/assets/img/pay/apple-pay.svg" alt="Apple Pay" width="44" height="27" loading="lazy">
+          <img src="/assets/img/pay/google-pay.svg" alt="Google Pay" width="44" height="27" loading="lazy">
+        </span>
+      </div>
+      <p class="site-footer__copy">© Clynia. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+  <!-- ===================== STICKY CTA (móvil) ===================== -->
+  <div class="sticky-cta" id="stickyCta" aria-hidden="true">
+    <div class="sticky-cta__inner">
+      <span class="sticky-cta__hint">Un control al mes y mensajes con tu médico.</span>
+      <a class="btn btn--primary" href="peso">
+        Cuéntale tu caso
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
+      </a>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      // Reveal on scroll
+      var reveals = document.querySelectorAll('.reveal-up');
+      if (reduce || !('IntersectionObserver' in window)) {
+        reveals.forEach(function (el) { el.classList.add('is-in'); });
+      } else {
+        var ro = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            if (e.isIntersecting) { e.target.classList.add('is-in'); ro.unobserve(e.target); }
+          });
+        }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+        reveals.forEach(function (el) { ro.observe(el); });
+      }
+
+      // Sticky mobile CTA: aparece al dejar atrás el botón del hero y se esconde en el cierre
+      var heroCta = document.querySelector('.hero [data-cta="peso"]');
+      var sticky = document.getElementById('stickyCta');
+      var finalCta = document.getElementById('ctaFinal');
+      var pastHero = false, atFinal = false;
+      function syncSticky() {
+        var show = pastHero && !atFinal;
+        sticky.classList.toggle('is-visible', show);
+        sticky.setAttribute('aria-hidden', show ? 'false' : 'true');
+      }
+      if (heroCta && sticky && 'IntersectionObserver' in window) {
+        new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            pastHero = !e.isIntersecting && e.boundingClientRect.top < 0;
+            syncSticky();
+          });
+        }, { threshold: 0 }).observe(heroCta);
+        if (finalCta) {
+          new IntersectionObserver(function (entries) {
+            entries.forEach(function (e) { atFinal = e.isIntersecting; syncSticky(); });
+          }, { threshold: 0 }).observe(finalCta);
+        }
+      }
+    })();
+  </script>
+  <script src="assets/js/utm.js?v=20260815" defer></script>
+  <script src="assets/js/cursor-glow.js" defer></script>
+  <script src="assets/js/cookies.js?v=20260724" defer></script>
+</body>
+</html>
