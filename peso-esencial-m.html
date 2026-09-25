@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <!-- Meta Pixel Code -->
+  <script>
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('consent', 'revoke');
+  fbq('init', '4585495085018912');
+  try{ if(localStorage.getItem('clynia_cookie_consent')==='all' && (Date.now()-parseInt(localStorage.getItem('clynia_cookie_consent_ts')||'0',10))<15552000000){ fbq('consent','grant'); } }catch(e){}
+  fbq('track', 'PageView');
+  </script>
+  <noscript><img height="1" width="1" style="display:none"
+  src="https://www.facebook.com/tr?id=4585495085018912&ev=PageView&noscript=1"/></noscript>
+  <!-- End Meta Pixel Code -->
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Solo la consulta que necesitas · Clynia</title>
+  <meta name="description" content="Cuida tu peso con un médico. Primero valora tu caso por escrito y sin cita, normalmente en menos de 24 h. Si quieres seguir, Esencial: 49 € por consulta, un solo pago y sin suscripción." />
+  <!-- LANDING DE CAMPAÑA de Esencial (pago único de 49 EUR, octubre 2026). Fuera del índice, fuera
+       del sitemap y sin enlaces desde el resto del sitio: solo se llega desde el anuncio pu-solo-m
+       (y su reserva pu-cuotas-m), que usa la misma foto y el mismo titular. La página madre
+       indexable sigue siendo /perdida-de-peso.
+       NO es un clon limpio de peso-secreto-a-voces-m: de allí se ha quitado a propósito "receta" y
+       "tratamiento" como parte de lo que se compra, la devolución atada a que no se inicie el
+       tratamiento, la reseña que nombra a un endocrinólogo, la tabla que pinta la consulta suelta
+       como "nadie tras la respuesta" y el vídeo, que dice "eliges tu suscripción".
+       Se publica el día del lanzamiento de Esencial, con el interruptor del paso de pago encendido
+       (ESENCIAL_PUBLICO en assets/js/peso-schema.js) y la cláusula de pago único ya en /terminos. -->
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="theme-color" content="#f6f4ef" />
+  <link rel="icon" type="image/png" href="assets/img/favicon.png" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Hanken+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="assets/css/styles.css?v=20260917ig" />
+  <link rel="canonical" href="https://clynia.es/peso-esencial-m" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Clynia" />
+  <meta property="og:locale" content="es_ES" />
+  <meta property="og:title" content="Solo la consulta que necesitas · Clynia" />
+  <meta property="og:description" content="Un médico revisa tu caso completo y te deja sus indicaciones por escrito. 49 € por consulta, un solo pago y sin suscripción." />
+  <meta property="og:url" content="https://clynia.es/peso-esencial-m" />
+  <meta property="og:image" content="https://clynia.es/assets/img/og-default.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Solo la consulta que necesitas · Clynia" />
+  <meta name="twitter:description" content="Un médico revisa tu caso completo y te deja sus indicaciones por escrito. 49 € por consulta, un solo pago y sin suscripción." />
+  <meta name="twitter:image" content="https://clynia.es/assets/img/og-default.png" />
+  <style>
+    [hidden] { display: none !important; }
+
+    /* Texto de cuerpo justificado a ambos lados CON guiones, como en el resto de landings. Estas
+       clases no las alcanza la regla general de styles.css. Los titulares no se justifican. */
+    .pillars--rich .pillar > span,
+    .plan__list li,
+    .plan__for,
+    .plan__meta,
+    .plans__note,
+    .faq__body p {
+      text-align: justify;
+      -webkit-hyphens: auto;
+      hyphens: auto;
+    }
+    .closing__sub { text-align: justify; text-align-last: center; -webkit-hyphens: auto; hyphens: auto; }
+
+    /* "Qué incluye" sin imagen al lado: en Esencial no se enseña la conversación del portal, porque
+       los mensajes con el médico después de su respuesta van en el plan mensual. La lista va sola,
+       centrada y a una medida de lectura cómoda. */
+    .incluye { max-width: 640px; margin: 0 auto; }
+
+    /* Las dos opciones lado a lado, Esencial primero. En móvil una encima de otra. */
+    .plans--duo { max-width: 880px; margin: 0 auto; }
+    @media (min-width: 880px) {
+      .plans--duo { grid-template-columns: 1fr 1fr; }
+      .plans--duo .plan--featured { transform: none; }
+    }
+    .plan__lema { margin: 4px 0 0; font-family: "Fraunces", Georgia, serif; font-style: italic; font-weight: 500; font-size: 17px; color: var(--green); }
+    .plan__price { display: flex; align-items: baseline; gap: 8px; margin: 14px 0 4px; }
+    .plan__amount { font-family: "Fraunces", Georgia, serif; font-weight: 500; font-size: 46px; line-height: 1; color: var(--ink); }
+    .plan__unit { font-family: "Hanken Grotesk", system-ui, sans-serif; font-size: 15px; font-weight: 500; color: var(--ink-soft); }
+    .plan__mas { margin: 16px 0 -6px; font-size: 14px; font-weight: 600; color: var(--ink); }
+
+    /* Check verde delante de cada línea de lo que incluye (mismo recurso que las otras landings). */
+    .plan__list li { position: relative; padding-left: 27px; }
+    .plan__list li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: .3em;
+      width: 17px;
+      height: 17px;
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23437066' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E") no-repeat center / 17px 17px;
+    }
+    .plans__note { max-width: 62ch; text-align-last: center; }
+
+    /* Las dos columnas de "¿Qué opción encaja contigo?" son afirmativas: ninguna es la mala. */
+    .fit--duo .fit__col--mes { background: var(--tint-soft); }
+    @media (min-width: 720px) { .fit--duo { grid-template-columns: 1fr 1fr; } }
+    .review--solo { max-width: 560px; margin: 0 auto; }
+  </style>
+  <script src="assets/js/ga.js?v=20260702b"></script>
+</head>
+<body>
+
+  <!-- ===================== NAV ===================== -->
+  <header class="topnav" id="topnav">
+    <div class="topnav__inner">
+      <a class="topnav__brand" href="/" aria-label="Clynia, inicio">
+        <img src="/assets/logos/clynia-wordmark.png" alt="Clynia" />
+      </a>
+      <nav class="topnav__links" aria-label="Navegación">
+        <a href="/#categorias">Tratamientos</a>
+        <a href="/blog">Blog</a>
+        <a href="/mision">Misión</a>
+        <a href="/contacto">Contacto</a>
+      </nav>
+      <div class="topnav__actions">
+        <a class="topnav__login" href="https://portal.clynia.es" aria-label="Acceso a tu portal de Clynia">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" x2="3" y1="12" y2="12"/></svg>
+          <span class="topnav__login-full">Acceso a tu portal</span>
+          <span class="topnav__login-short">Portal</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- ===================== HERO =====================
+         Misma foto (v2-mujer-sofa = hero-peso-m2) y mismo titular que el anuncio pu-solo-m: quien
+         pulsa tiene que reconocer al instante la página de la que viene. Las 24 h van atadas a la
+         valoración inicial, que es lo que se publica y se vigila (workflow "Aviso consultas 24h"),
+         y siempre con "normalmente". -->
+    <section class="hero">
+      <div class="wrap">
+        <div class="hero__inner">
+
+          <figure class="hero__media reveal d1">
+            <img
+              src="assets/img/hero-peso-m2.webp"
+              alt="Mujer sonriente de pie junto a la ventana de su salón"
+              width="1080" height="1440"
+              fetchpriority="high"
+            />
+          </figure>
+
+          <div class="hero__copy">
+            <h1 class="hero__title reveal d3">
+              Cuida tu peso con un médico. <em>Solo la consulta que necesitas.</em>
+            </h1>
+            <p class="hero__sub reveal d4">
+              Primero, un médico valora tu caso por escrito y sin cita, y te responde normalmente en menos de 24 h. Si quieres seguir, eliges Esencial: 49 € por consulta, en un solo pago y sin suscripción. Tu médico revisa tu caso completo y te deja sus indicaciones por escrito.
+            </p>
+
+            <div class="reveal d5">
+              <a class="btn btn--primary" href="peso" data-cta="peso">
+                Cuéntale tu caso
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
+              </a>
+              <p class="hero__assurance">Te conectamos con un médico que lee tu caso y te responde por email. La valoración no se cobra: solo pagas si decides seguir. Solo para mayores de 18 años.</p>
+              <a class="hero__watch" href="#incluye">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg>
+                Qué incluye Esencial
+              </a>
+              <p class="hero__pencaption hero__pencaption--in">
+                Cualquier indicación médica corresponde siempre a un médico, si lo considera adecuado tras
+                valorarte, y con el seguimiento oportuno.
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== QUÉ INCLUYE ESENCIAL =====================
+         Lo que compran los 49 EUR, en positivo (LCD art. 7 y TRLGDCU art. 20: las características
+         esenciales antes de comprar). Se describe el acto, no su resultado: nada de "receta" ni de
+         "tratamiento" como objeto de la compra. Lo que no incluye se cuenta más abajo como lo que
+         añade el plan mensual, nunca como "sin seguimiento". -->
+    <section class="section" id="incluye">
+      <div class="wrap">
+        <div class="incluye">
+          <header class="section__head reveal-up">
+            <h2 class="h2">Qué incluye Esencial.</h2>
+            <p class="lead">Un solo pago por tu consulta. Esto es lo que tienes:</p>
+          </header>
+          <ul class="pillars pillars--rich">
+            <li class="pillar reveal-up">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/><path d="m9 14 2 2 4-4"/></svg>
+              <span><strong>Tu caso completo, revisado por un médico.</strong> Completas tu cuestionario clínico desde el móvil y tu médico lo revisa entero, con calma y por escrito.</span>
+            </li>
+            <li class="pillar reveal-up">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+              <span><strong>Su respuesta, por escrito.</strong> Tu médico te deja por escrito lo que te indica para tu caso y cuándo conviene que vuelvas a consultarle.</span>
+            </li>
+            <li class="pillar reveal-up">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M8 9h8"/><path d="M8 13h5"/></svg>
+              <span><strong>Si necesita preguntarte algo, te escribe.</strong> Mientras revisa tu caso, tu médico puede escribirte por tu portal para aclarar lo que necesite, y le contestas ahí mismo.</span>
+            </li>
+            <li class="pillar reveal-up">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+              <span><strong>Todo tu caso, en tu portal.</strong> Lo que contaste y lo que te indicó tu médico, ordenado en tu portal y a mano cuando lo necesites.</span>
+            </li>
+            <li class="pillar reveal-up">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="16.5" rx="2.5"/><path d="M8 2.5v4M16 2.5v4M3 10h18"/><path d="m9.5 13.5 5 5M14.5 13.5l-5 5"/></svg>
+              <span><strong>Sin suscripción.</strong> Pagas 49 € al hacer la consulta y no se renueva nada. Si más adelante quieres volver a consultar, es una consulta nueva y se paga al hacerla.</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== CÓMO FUNCIONA ===================== -->
+    <section class="section section--tint" id="como-funciona">
+      <div class="wrap">
+        <header class="section__head reveal-up">
+          <h2 class="h2">Cómo funciona.</h2>
+          <p class="lead">Tres pasos, por escrito y desde el móvil.</p>
+        </header>
+
+        <ol class="steps steps--flow reveal-up">
+          <li class="step reveal-up">
+            <span class="step__num">1</span>
+            <h3 class="step__title">Cuentas tu caso</h3>
+            <p class="step__text">Unas preguntas en unos minutos, desde el móvil y sin cita. Si algo de lo que respondes desaconseja seguir, te lo decimos en el acto.</p>
+          </li>
+          <li class="step reveal-up">
+            <span class="step__num">2</span>
+            <h3 class="step__title">Un médico lo valora y te responde</h3>
+            <p class="step__text">Te contesta por email, normalmente en menos de 24 h. La valoración no se cobra: si no eres candidata, te lo explica y no pagas nada. Ser candidata lo decide siempre el médico.</p>
+          </li>
+          <li class="step reveal-up">
+            <span class="step__num">3</span>
+            <h3 class="step__title">Si quieres seguir, eliges Esencial</h3>
+            <p class="step__text">Pagas 49 € y completas tu cuestionario clínico. Tu médico revisa tu caso completo y te deja sus indicaciones por escrito.</p>
+          </li>
+        </ol>
+
+        <div class="section__cta reveal-up">
+          <a class="btn btn--primary btn--inline" href="peso">
+            Cuéntale tu caso
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== LAS DOS OPCIONES =====================
+         Esencial primero y el plan mensual al lado, contado por lo que AÑADE (controles, mensajes,
+         ajustes), nunca Esencial por lo que le falta. Precios presentados igual que el de 89 en el
+         resto de la web. Mismo orden y mismos nombres que el paso de pago de peso.html y la tercera
+         fila del correo del apto: si cambian aquí, cambian allí. -->
+    <section class="section" id="planes">
+      <div class="wrap">
+        <header class="section__head reveal-up">
+          <h2 class="h2">Dos formas de seguir.</h2>
+          <p class="lead">En las dos, la valoración inicial no se cobra y la decisión clínica es siempre de tu médico. Elige la que encaje contigo.</p>
+        </header>
+
+        <div class="plans plans--duo">
+          <article class="plan plan--featured reveal-up">
+            <h3 class="plan__name">Esencial</h3>
+            <p class="plan__lema">Solo lo que necesitas</p>
+            <p class="plan__price">
+              <span class="plan__amount">49 €</span>
+              <span class="plan__unit">por consulta</span>
+            </p>
+            <p class="plan__meta">Un solo pago. No se renueva ni genera cargos después.</p>
+            <ul class="plan__list">
+              <li>Tu médico revisa tu caso completo</li>
+              <li>Sus indicaciones, por escrito</li>
+              <li>Mensajes con tu médico mientras revisa tu caso</li>
+              <li>Tu caso, guardado en tu portal</li>
+              <li>Cada consulta se paga al hacerla</li>
+            </ul>
+            <p class="plan__for">Empiezas contando tu caso. No pagas nada hasta que un médico lo valore.</p>
+            <a class="btn btn--primary" href="peso">Cuéntale tu caso</a>
+          </article>
+
+          <article class="plan reveal-up">
+            <h3 class="plan__name">Con tu médico cada mes</h3>
+            <p class="plan__lema">Alguien que mira cómo vas</p>
+            <p class="plan__price">
+              <span class="plan__amount">89 €</span>
+              <span class="plan__unit">al mes</span>
+            </p>
+            <p class="plan__meta">O 890 € al año, 74,17 € al mes. Sin permanencia: te das de baja cuando quieras.</p>
+            <p class="plan__mas">Todo lo de Esencial y, además:</p>
+            <ul class="plan__list">
+              <li>Un control cada mes, que tu médico revisa y responde</li>
+              <li>Mensajes con tu médico, entre control y control</li>
+              <li>Ajuste de la pauta según cómo vas</li>
+              <li>El mismo médico, mes a mes</li>
+            </ul>
+            <p class="plan__for">Se renueva solo hasta que lo canceles desde tu portal.</p>
+            <a class="btn btn--ghost" href="peso">Cuéntale tu caso</a>
+          </article>
+        </div>
+
+        <p class="callout reveal-up">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+          <span><strong>Si tu médico no llega a atender tu caso, te devolvemos lo que hayas pagado.</strong></span>
+        </p>
+
+        <!-- Medicamento: dicho claro, sin cifras, sin nombrarlo y como información, no como ventaja
+             (regla del 10 sep: el coste del medicamento solo después del acto médico). -->
+        <p class="plans__note reveal-up">
+          El medicamento, si tu médico te lo indica, lo compras en la farmacia que prefieras y va aparte:
+          no está incluido en ninguna de las dos opciones. Clynia no vende ni dispensa medicamentos.
+          Esencial es un solo pago y cada consulta nueva se paga al hacerla. El plan mensual se renueva
+          solo hasta que lo canceles desde tu portal. Pago con Visa, Mastercard, American Express,
+          Apple Pay y Google Pay.
+        </p>
+      </div>
+    </section>
+
+    <!-- ===================== CONFIANZA =====================
+         Reseña REAL de Google copiada literal (con sus erratas) desde clyniareviews.com; regla fija:
+         no se retoca. Solo la de Sara: la de Laura nombra a un endocrinólogo y no está verificado que
+         lo haya en el equipo. -->
+    <section class="section section--tint" id="confianza">
+      <div class="wrap">
+        <header class="section__head reveal-up">
+          <h2 class="h2">Lo que cuenta una paciente.</h2>
+        </header>
+        <div class="review review--solo reveal-up">
+          <span class="review__head"><span class="review__av" aria-hidden="true">S</span><span class="review__who"><span class="review__name">Sara Jaime A.</span><span class="review__stars" aria-label="Cinco estrellas">★★★★★</span></span></span>
+          <p class="review__text">Rellene el cuestionario un jueves por la noche, no tuve que hacer ninguna llamada y el médico revisó mi caso y me contento por la web muy rápido. Ha sido súper cómodo y estoy muy contenta.</p>
+          <span class="review__src">Reseña de Google</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== QUÉ OPCIÓN ENCAJA CONTIGO ===================== -->
+    <section class="section" id="para-quien">
+      <div class="wrap">
+        <header class="section__head reveal-up">
+          <h2 class="h2">¿Qué opción encaja contigo?</h2>
+        </header>
+        <div class="fit fit--duo">
+          <div class="fit__col fit__col--yes reveal-up">
+            <h3 class="fit__h">Esencial, si...</h3>
+            <ul class="fit__list">
+              <li>quieres que un médico revise tu caso y te diga por escrito qué te indica.</li>
+              <li>prefieres no tener una cuota cada mes y pagar cada consulta al hacerla.</li>
+              <li>no tienes tardes para salas de espera ni ganas de pedir cita.</li>
+            </ul>
+          </div>
+          <div class="fit__col fit__col--yes fit__col--mes reveal-up">
+            <h3 class="fit__h">Cada mes, si...</h3>
+            <ul class="fit__list">
+              <li>quieres que alguien mire cómo vas, mes a mes.</li>
+              <li>te da tranquilidad poder escribir a tu médico cuando lo necesites.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== FAQ ===================== -->
+    <section class="section section--tint" id="faq">
+      <div class="wrap">
+        <header class="section__head reveal-up">
+          <h2 class="h2">Preguntas frecuentes.</h2>
+        </header>
+        <div class="faq">
+          <details name="faq" class="faq__item reveal-up">
+            <summary>¿Qué incluye exactamente Esencial?</summary>
+            <div class="faq__body"><p>La revisión de tu caso completo por un médico, a partir de tu cuestionario clínico, y su respuesta por escrito: lo que te indica y cuándo conviene que vuelvas a consultarle. Mientras revisa tu caso, puede escribirte por tu portal si necesita aclarar algo. Son 49 € en un solo pago y no se renueva.</p></div>
+          </details>
+          <details name="faq" class="faq__item reveal-up">
+            <summary>¿Cuánto cuesta?</summary>
+            <div class="faq__body"><p>La valoración inicial no se cobra. Si eres candidata y eliges Esencial, son 49 € por consulta, en un solo pago. Si prefieres tener a tu médico cada mes, el plan son 89 € al mes o 890 € al año (74,17 € al mes), sin permanencia. El medicamento, si tu médico te lo indica, va aparte.</p></div>
+          </details>
+          <details name="faq" class="faq__item reveal-up">
+            <summary>¿Y si más adelante quiero volver a consultar?</summary>
+            <div class="faq__body"><p>Es una consulta nueva y se paga al hacerla. Tu médico te deja por escrito cuándo conviene que vuelvas, y tu caso sigue guardado en tu portal, así que no empiezas de cero.</p></div>
+          </details>
+          <details name="faq" class="faq__item reveal-up">
+            <summary>¿Y si luego prefiero que mi médico me lleve cada mes?</summary>
+            <div class="faq__body"><p>Puedes pasarte al plan mensual cuando quieras, sin volver a contar tu caso. Desde ese momento tienes un control cada mes y mensajes con tu médico cuando los necesites.</p></div>
+          </details>
+          <details name="faq" class="faq__item reveal-up">
+            <summary>¿Y si algo no va bien después?</summary>
+            <div class="faq__body"><p>En tu portal tienes el botón "Avisar de un problema", que le llega a tu médico. Si es urgente, llama al 112 o acude a urgencias.</p></div>
+          </details>
+          <details name="faq" class="faq__item reveal-up">
+            <summary>¿Tengo que pedir cita o hacer una videollamada?</summary>
+            <div class="faq__body"><p>No. Todo es por escrito y desde el móvil: cuentas tu caso, un médico lo valora y te responde por email. Si necesita aclarar algo, puede llamarte. No hay salas de espera ni desplazamientos.</p></div>
+          </details>
+          <details name="faq" class="faq__item reveal-up">
+            <summary>¿Quién me atiende?</summary>
+            <div class="faq__body"><p>Médicos independientes con los que Clynia te pone en contacto. La decisión clínica es siempre suya, después de revisar tu caso.</p></div>
+          </details>
+          <details name="faq" class="faq__item reveal-up">
+            <summary>¿Y si mi médico me indica un medicamento?</summary>
+            <div class="faq__body"><p>Lo decide siempre tu médico, después de revisar tu caso, y te lo deja por escrito. El medicamento lo compras en la farmacia que prefieras y va aparte: no está incluido en los 49 €. Clynia no vende ni dispensa medicamentos.</p></div>
+          </details>
+          <details name="faq" class="faq__item reveal-up">
+            <summary>¿Qué pasa con mis datos?</summary>
+            <div class="faq__body"><p>Van cifrados y se tratan conforme al RGPD. Solo los ve el médico que te atiende: nada pasa por una recepción ni por la agenda de nadie, y nadie te cruza en una sala de espera.</p></div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== CTA FINAL ===================== -->
+    <section class="closing" id="empezar">
+      <div class="wrap">
+        <div class="closing__inner reveal-up">
+          <h2 class="closing__title">Solo la consulta que necesitas. Empieza contando tu caso.</h2>
+          <p class="closing__sub">Unos minutos, desde el móvil. Un médico lo valora y te responde por email, normalmente en menos de 24 h. Si quieres seguir, Esencial son 49 € en un solo pago.</p>
+          <a class="btn btn--light" id="ctaFinal" href="peso">
+            Cuéntale tu caso
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer class="site-footer">
+    <div class="wrap">
+      <div class="site-footer__top">
+        <a class="site-footer__home" href="/" aria-label="Clynia, inicio">
+          <img src="/assets/logos/clynia-wordmark.png" alt="Clynia" />
+        </a>
+        <a class="site-footer__social" href="https://www.instagram.com/clynia.es/" target="_blank" rel="noopener" aria-label="Clynia en Instagram, @clynia.es">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="2.5" width="19" height="19" rx="5.5"/><circle cx="12" cy="12" r="4.3"/><circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none"/></svg>
+          <span>@clynia.es</span>
+        </a>
+        <a class="site-footer__docs" href="/colaborar">
+          Colabora con Clynia
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
+        </a>
+      </div>
+      <div class="site-footer__cols">
+        <div>
+          <h4>Tratamientos</h4>
+          <ul>
+            <li><a href="/perdida-de-peso">Pérdida de peso</a></li>
+            <li><a href="/#categorias">Menopausia</a></li>
+            <li><a href="/#categorias">Salud sexual</a></li>
+            <li><a href="/#categorias">Cabello</a></li>
+            <li><a href="/#categorias">Longevidad</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Clynia</h4>
+          <ul>
+            <li><a href="/mision">Misión</a></li>
+            <li><a href="/#como-funciona">Cómo funciona</a></li>
+            <li><a href="/#categorias">Tratamientos</a></li>
+            <li><a href="/blog">Blog</a></li>
+            <li><a href="/informacion">Información</a></li>
+            <li><a href="/contacto">Contacto</a></li>
+            <li><a href="/colaborar">Colabora con Clynia</a></li>
+            <li><a href="/medicos">Trabaja como médico</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Legal</h4>
+          <ul>
+            <li><a href="/avisolegal">Aviso legal</a></li>
+            <li><a href="/privacidad">Privacidad (RGPD)</a></li>
+            <li><a href="/cookies">Cookies</a></li>
+            <li><a href="/terminos">Términos</a></li>
+          </ul>
+        </div>
+      </div>
+      <p class="site-footer__legal">
+        Clynia es una plataforma que conecta pacientes con médicos colegiados independientes en
+        España. No es un centro sanitario ni una clínica. Cada decisión clínica corresponde al
+        médico colegiado responsable, que actúa con su propio criterio e independencia. La
+        información de esta web tiene carácter general y no sustituye una consulta médica ni
+        constituye consejo médico. Los tratamientos sólo se facilitan cuando un médico colegiado
+        los considera adecuados tras valorar cada caso de forma individual. Tratamos tus datos
+        conforme al RGPD y a la normativa española de protección de datos.
+      </p>
+      <div class="site-footer__pay">
+        <span class="site-footer__pay-label">Pago seguro</span>
+        <span class="pay-badges">
+          <img src="/assets/img/pay/visa.svg" alt="Visa" width="44" height="27" loading="lazy">
+          <img src="/assets/img/pay/mastercard.svg" alt="Mastercard" width="44" height="27" loading="lazy">
+          <img src="/assets/img/pay/amex.svg" alt="American Express" width="44" height="27" loading="lazy">
+          <img src="/assets/img/pay/apple-pay.svg" alt="Apple Pay" width="44" height="27" loading="lazy">
+          <img src="/assets/img/pay/google-pay.svg" alt="Google Pay" width="44" height="27" loading="lazy">
+        </span>
+      </div>
+      <p class="site-footer__copy">© Clynia. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+  <!-- ===================== STICKY CTA (móvil) ===================== -->
+  <div class="sticky-cta" id="stickyCta" aria-hidden="true">
+    <div class="sticky-cta__inner">
+      <span class="sticky-cta__hint">Solo la consulta que necesitas.</span>
+      <a class="btn btn--primary" href="peso">
+        Cuéntale tu caso
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
+      </a>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      // Reveal on scroll
+      var reveals = document.querySelectorAll('.reveal-up');
+      if (reduce || !('IntersectionObserver' in window)) {
+        reveals.forEach(function (el) { el.classList.add('is-in'); });
+      } else {
+        var ro = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            if (e.isIntersecting) { e.target.classList.add('is-in'); ro.unobserve(e.target); }
+          });
+        }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+        reveals.forEach(function (el) { ro.observe(el); });
+      }
+
+      // Sticky mobile CTA: aparece al dejar atrás el botón del hero y se esconde en el cierre
+      var heroCta = document.querySelector('.hero [data-cta="peso"]');
+      var sticky = document.getElementById('stickyCta');
+      var finalCta = document.getElementById('ctaFinal');
+      var pastHero = false, atFinal = false;
+      function syncSticky() {
+        var show = pastHero && !atFinal;
+        sticky.classList.toggle('is-visible', show);
+        sticky.setAttribute('aria-hidden', show ? 'false' : 'true');
+      }
+      if (heroCta && sticky && 'IntersectionObserver' in window) {
+        new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            pastHero = !e.isIntersecting && e.boundingClientRect.top < 0;
+            syncSticky();
+          });
+        }, { threshold: 0 }).observe(heroCta);
+        if (finalCta) {
+          new IntersectionObserver(function (entries) {
+            entries.forEach(function (e) { atFinal = e.isIntersecting; syncSticky(); });
+          }, { threshold: 0 }).observe(finalCta);
+        }
+      }
+    })();
+  </script>
+  <script src="assets/js/utm.js?v=20260815" defer></script>
+  <script src="assets/js/cursor-glow.js" defer></script>
+  <script src="assets/js/cookies.js?v=20260724" defer></script>
+</body>
+</html>
