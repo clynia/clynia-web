@@ -31,7 +31,12 @@
        receta como parte del plan, ata la devolución a que no se inicie el tratamiento, trae una
        reseña que nombra a un endocrinólogo y le pide al apto que vuelva a contar su caso.
        Aquí no se nombra Esencial a propósito: esta página puede salir antes que el pago único, y
-       mientras el interruptor siga apagado no se enseña en ninguna superficie. -->
+       mientras el interruptor siga apagado no se enseña en ninguna superficie.
+       Se publica ANTES de activar rt-incluye-m y, publicada, se comprueba con curl que da 200: con la
+       landing en 404 Meta rechaza el anuncio y el tráfico se pierde.
+       Revisión del 25 sep: fuera la captura de chat inventada, "pauta" en lo que incluye, "médico de
+       Clynia" (los médicos son independientes: "a través de Clynia") y la promesa de que los datos
+       solo los ve un médico. En el menú y en el pie, "Áreas" en vez de "Tratamientos". -->
   <meta name="robots" content="noindex, nofollow" />
   <meta name="theme-color" content="#f6f4ef" />
   <link rel="icon" type="image/png" href="assets/img/favicon.png" />
@@ -138,6 +143,19 @@
     .hero__ya strong { color: var(--ink); font-weight: 600; }
     .hero__ya a { color: var(--green-700); font-weight: 600; text-decoration: underline; }
     .review--solo { max-width: 560px; margin: 0 auto; }
+
+    /* "Qué incluye tu plan" sin imagen al lado: la lista va sola, centrada y a una medida de lectura
+       cómoda (mismo recurso que peso-esencial-m). */
+    .incluye { max-width: 640px; margin: 0 auto; }
+
+    /* Pie del héroe: la foto es la misma del anuncio, que va rotulado "Imagen creada con IA", y la
+       landing informa igual (Reglamento de IA, art. 50.4; revisión del 25 sep). Va sobre el degradado
+       oscuro de la parte baja de la foto, discreto y legible. */
+    .hero__ia {
+      position: absolute; z-index: 2; right: 12px; bottom: 10px; margin: 0;
+      font-size: 11px; font-weight: 500; letter-spacing: .01em; line-height: 1.2;
+      color: rgba(255, 255, 255, .9); text-shadow: 0 1px 2px rgba(0, 0, 0, .4);
+    }
   </style>
   <script src="assets/js/ga.js?v=20260702b"></script>
 </head>
@@ -150,7 +168,7 @@
         <img src="/assets/logos/clynia-wordmark.png" alt="Clynia" />
       </a>
       <nav class="topnav__links" aria-label="Navegación">
-        <a href="/#categorias">Tratamientos</a>
+        <a href="/#categorias">Áreas</a>
         <a href="/blog">Blog</a>
         <a href="/mision">Misión</a>
         <a href="/contacto">Contacto</a>
@@ -181,6 +199,7 @@
               width="1080" height="1440"
               fetchpriority="high"
             />
+            <figcaption class="hero__ia">Imagen creada con IA</figcaption>
           </figure>
 
           <div class="hero__copy">
@@ -197,7 +216,7 @@
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
               </a>
               <p class="hero__assurance">Te conectamos con un médico que lee tu caso y te responde por email. La valoración no se cobra: solo pagas si decides empezar. Solo para mayores de 18 años.</p>
-              <p class="hero__ya"><strong>¿Un médico de Clynia ya valoró tu caso?</strong> No tienes que repetirlo: en el correo con su respuesta tienes el enlace para empezar tu plan. Si no lo encuentras, escríbenos a <a href="mailto:pacientes@clynia.es">pacientes@clynia.es</a> y te lo reenviamos.</p>
+              <p class="hero__ya"><strong>¿Ya te valoró un médico a través de Clynia?</strong> No tienes que repetirlo: el enlace para empezar tu plan está en el correo con su respuesta. Si no lo encuentras, <a href="mailto:pacientes@clynia.es">escríbenos</a> y te lo reenviamos.</p>
               <p class="hero__pencaption hero__pencaption--in">
                 Cualquier indicación médica corresponde siempre a un médico, si lo considera adecuado tras
                 valorarte, y con el seguimiento oportuno.
@@ -210,14 +229,18 @@
     </section>
 
     <!-- ===================== QUÉ INCLUYE TU PLAN =====================
-         Lo que se tiene cada mes, contado en concreto y con la conversación del portal al lado. Sin
-         "receta" como parte de lo que se compra: lo del medicamento va como información en el precio
-         y en las preguntas, nunca como ventaja del plan. -->
+         Lo que se tiene cada mes, contado en concreto. Sin "receta" como parte de lo que se compra: lo
+         del medicamento va como información en el precio y en las preguntas, nunca como ventaja del
+         plan. SIN la captura portal-conversacion.webp (revisión del 25 sep): es un chat inventado,
+         con una doctora y una paciente que no existen, síntomas, "ajustamos la pauta" y una frase de
+         resultado, así que da a entender un medicamento con receta y funciona como testimonio. La
+         lista va sola y centrada, como en peso-esencial-m. Esa imagen sigue en otras landings vivas:
+         su limpieza va aparte. -->
     <section class="section" id="incluye">
       <div class="wrap">
-        <div class="program">
-          <div class="program__copy">
-            <header class="section__head section__head--left reveal-up">
+        <div class="incluye">
+          <div>
+            <header class="section__head reveal-up">
               <h2 class="h2">Qué incluye tu plan.</h2>
               <p class="lead">Un solo plan, sin versiones. Esto es lo que tienes cada mes:</p>
             </header>
@@ -236,7 +259,7 @@
               </li>
               <li class="pillar reveal-up">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21v-7"/><path d="M4 10V3"/><path d="M12 21v-9"/><path d="M12 8V3"/><path d="M20 21v-5"/><path d="M20 12V3"/><path d="M1 14h6"/><path d="M9 8h6"/><path d="M17 16h6"/></svg>
-                <span><strong>La pauta se ajusta a ti.</strong> Según tu evolución, tu médico ajusta lo que te ha indicado; no hay una pauta igual para todos.</span>
+                <span><strong>Ajustado a ti.</strong> Tu médico revisa cómo vas y ajusta lo que te ha indicado.</span>
               </li>
               <li class="pillar reveal-up">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
@@ -248,13 +271,6 @@
               </li>
             </ul>
           </div>
-          <figure class="program__media reveal-up chat-figure">
-            <img
-              src="assets/img/portal-conversacion.webp"
-              alt="Conversación en el portal de Clynia: una paciente escribe a su médico y él le responde"
-              width="1080" height="1350" loading="lazy"
-            />
-          </figure>
         </div>
       </div>
     </section>
@@ -327,7 +343,7 @@
             <ul class="plan__list">
               <li>El mismo médico durante todo el plan</li>
               <li>Un control al mes, que tu médico revisa y responde</li>
-              <li>Ajuste de la pauta según tu evolución</li>
+              <li>Tu médico revisa cómo vas y ajusta lo que te ha indicado</li>
               <li>Mensajería privada con tu médico</li>
               <li>Tu historia clínica en tu portal</li>
             </ul>
@@ -439,7 +455,7 @@
         </header>
         <div class="faq">
           <details name="faq" class="faq__item reveal-up">
-            <summary>Ya me valoró un médico de Clynia. ¿Tengo que repetirlo?</summary>
+            <summary>Ya me valoró un médico a través de Clynia. ¿Tengo que repetirlo?</summary>
             <div class="faq__body"><p>No. En el correo con la respuesta de tu médico tienes el enlace para empezar tu plan: eliges cómo pagarlo y completas tu cuestionario clínico, sin volver a contar tu caso. Si no encuentras ese correo, escríbenos a <a href="mailto:pacientes@clynia.es">pacientes@clynia.es</a> y te lo reenviamos.</p></div>
           </details>
           <details name="faq" class="faq__item reveal-up">
@@ -468,7 +484,7 @@
           </details>
           <details name="faq" class="faq__item reveal-up">
             <summary>¿Qué pasa con mis datos?</summary>
-            <div class="faq__body"><p>Van cifrados y se tratan conforme al RGPD. Solo los ve el médico que te atiende: nada pasa por una recepción ni por la agenda de nadie, y nadie te cruza en una sala de espera.</p></div>
+            <div class="faq__body"><p>Viajan cifrados y se tratan conforme al RGPD. Solo acceden a ellos los médicos que valoran tu caso y el personal autorizado que lo gestiona, con deber de confidencialidad. Y como todo es por escrito, no hay sala de espera en la que nadie te cruce.</p></div>
           </details>
           <details name="faq" class="faq__item reveal-up">
             <summary>¿Y si mi médico me indica un medicamento?</summary>
@@ -511,7 +527,7 @@
       </div>
       <div class="site-footer__cols">
         <div>
-          <h4>Tratamientos</h4>
+          <h4>Áreas</h4>
           <ul>
             <li><a href="/perdida-de-peso">Pérdida de peso</a></li>
             <li><a href="/#categorias">Menopausia</a></li>
@@ -525,7 +541,7 @@
           <ul>
             <li><a href="/mision">Misión</a></li>
             <li><a href="/#como-funciona">Cómo funciona</a></li>
-            <li><a href="/#categorias">Tratamientos</a></li>
+            <li><a href="/#categorias">Áreas</a></li>
             <li><a href="/blog">Blog</a></li>
             <li><a href="/informacion">Información</a></li>
             <li><a href="/contacto">Contacto</a></li>

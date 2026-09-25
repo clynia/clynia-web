@@ -33,7 +33,18 @@
        tratamiento, la reseña que nombra a un endocrinólogo, la tabla que pinta la consulta suelta
        como "nadie tras la respuesta" y el vídeo, que dice "eliges tu suscripción".
        Se publica el día del lanzamiento de Esencial, con el interruptor del paso de pago encendido
-       (ESENCIAL_PUBLICO en assets/js/peso-schema.js) y la cláusula de pago único ya en /terminos. -->
+       (ESENCIAL_PUBLICO en assets/js/peso-schema.js) y la cláusula de pago único ya en /terminos.
+       NO SE PUBLICA ANTES de que el portal esté desplegado con ESENCIAL_ACTIVO y probados de punta a
+       punta el botón "Avisar de un problema", los mensajes con el médico mientras el caso está abierto
+       y el paso al plan mensual: esta página los promete. Orden completo del lanzamiento en el
+       comentario del interruptor, arriba de assets/js/peso-schema.js.
+       Revisión del 25 sep: fuera "cuándo conviene que vuelvas a consultarle" (el portal no obliga al
+       médico a dejarlo escrito) y todo lo que daba por hecho que se puede volver a consultar pagando
+       otra vez (la fase 2, "Volver a pedir", no existe todavía). Fuera también "pauta" en la
+       comparación. Si algún día existe la fase 2, se vuelve a contar aquí. Los datos ya no "solo los
+       ve el médico que te atiende" (los ven los dos médicos del flujo y el personal autorizado), la
+       foto del héroe lleva "Imagen creada con IA" como el anuncio, y el menú y el pie dicen "Áreas"
+       en vez de "Tratamientos". -->
   <meta name="robots" content="noindex, nofollow" />
   <meta name="theme-color" content="#f6f4ef" />
   <link rel="icon" type="image/png" href="assets/img/favicon.png" />
@@ -108,6 +119,15 @@
     .fit--duo .fit__col--mes { background: var(--tint-soft); }
     @media (min-width: 720px) { .fit--duo { grid-template-columns: 1fr 1fr; } }
     .review--solo { max-width: 560px; margin: 0 auto; }
+
+    /* Pie del héroe: la foto es la misma del anuncio, que va rotulado "Imagen creada con IA", y la
+       landing informa igual (Reglamento de IA, art. 50.4; revisión del 25 sep). Va sobre el degradado
+       oscuro de la parte baja de la foto, discreto y legible. */
+    .hero__ia {
+      position: absolute; z-index: 2; right: 12px; bottom: 10px; margin: 0;
+      font-size: 11px; font-weight: 500; letter-spacing: .01em; line-height: 1.2;
+      color: rgba(255, 255, 255, .9); text-shadow: 0 1px 2px rgba(0, 0, 0, .4);
+    }
   </style>
   <script src="assets/js/ga.js?v=20260702b"></script>
 </head>
@@ -120,7 +140,7 @@
         <img src="/assets/logos/clynia-wordmark.png" alt="Clynia" />
       </a>
       <nav class="topnav__links" aria-label="Navegación">
-        <a href="/#categorias">Tratamientos</a>
+        <a href="/#categorias">Áreas</a>
         <a href="/blog">Blog</a>
         <a href="/mision">Misión</a>
         <a href="/contacto">Contacto</a>
@@ -152,6 +172,7 @@
               width="1080" height="1440"
               fetchpriority="high"
             />
+            <figcaption class="hero__ia">Imagen creada con IA</figcaption>
           </figure>
 
           <div class="hero__copy">
@@ -202,7 +223,7 @@
             </li>
             <li class="pillar reveal-up">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
-              <span><strong>Su respuesta, por escrito.</strong> Tu médico te deja por escrito lo que te indica para tu caso y cuándo conviene que vuelvas a consultarle.</span>
+              <span><strong>Su respuesta, por escrito.</strong> Tu médico te deja por escrito lo que te indica para tu caso.</span>
             </li>
             <li class="pillar reveal-up">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M8 9h8"/><path d="M8 13h5"/></svg>
@@ -214,7 +235,7 @@
             </li>
             <li class="pillar reveal-up">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="16.5" rx="2.5"/><path d="M8 2.5v4M16 2.5v4M3 10h18"/><path d="m9.5 13.5 5 5M14.5 13.5l-5 5"/></svg>
-              <span><strong>Sin suscripción.</strong> Pagas 49 € al hacer la consulta y no se renueva nada. Si más adelante quieres volver a consultar, es una consulta nueva y se paga al hacerla.</span>
+              <span><strong>Sin suscripción.</strong> Pagas 49 € una sola vez, al hacer la consulta. No se renueva nada ni hay más cargos después.</span>
             </li>
           </ul>
         </div>
@@ -282,7 +303,7 @@
               <li>Sus indicaciones, por escrito</li>
               <li>Mensajes con tu médico mientras revisa tu caso</li>
               <li>Tu caso, guardado en tu portal</li>
-              <li>Cada consulta se paga al hacerla</li>
+              <li>Si algo no va bien, se lo avisas desde tu portal</li>
             </ul>
             <p class="plan__for">Empiezas contando tu caso. No pagas nada hasta que un médico lo valore.</p>
             <a class="btn btn--primary" href="peso">Cuéntale tu caso</a>
@@ -300,7 +321,7 @@
             <ul class="plan__list">
               <li>Un control cada mes, que tu médico revisa y responde</li>
               <li>Mensajes con tu médico, entre control y control</li>
-              <li>Ajuste de la pauta según cómo vas</li>
+              <li>Tu médico revisa cómo vas y ajusta lo que te ha indicado</li>
               <li>El mismo médico, mes a mes</li>
             </ul>
             <p class="plan__for">Se renueva solo hasta que lo canceles desde tu portal.</p>
@@ -318,7 +339,7 @@
         <p class="plans__note reveal-up">
           El medicamento, si tu médico te lo indica, lo compras en la farmacia que prefieras y va aparte:
           no está incluido en ninguna de las dos opciones. Clynia no vende ni dispensa medicamentos.
-          Esencial es un solo pago y cada consulta nueva se paga al hacerla. El plan mensual se renueva
+          Esencial es un solo pago y no se renueva. El plan mensual se renueva
           solo hasta que lo canceles desde tu portal. Pago con Visa, Mastercard, American Express,
           Apple Pay y Google Pay.
         </p>
@@ -353,7 +374,7 @@
             <h3 class="fit__h">Esencial, si...</h3>
             <ul class="fit__list">
               <li>quieres que un médico revise tu caso y te diga por escrito qué te indica.</li>
-              <li>prefieres no tener una cuota cada mes y pagar cada consulta al hacerla.</li>
+              <li>prefieres pagar una sola vez, sin una cuota cada mes.</li>
               <li>no tienes tardes para salas de espera ni ganas de pedir cita.</li>
             </ul>
           </div>
@@ -377,19 +398,15 @@
         <div class="faq">
           <details name="faq" class="faq__item reveal-up">
             <summary>¿Qué incluye exactamente Esencial?</summary>
-            <div class="faq__body"><p>La revisión de tu caso completo por un médico, a partir de tu cuestionario clínico, y su respuesta por escrito: lo que te indica y cuándo conviene que vuelvas a consultarle. Mientras revisa tu caso, puede escribirte por tu portal si necesita aclarar algo. Son 49 € en un solo pago y no se renueva.</p></div>
+            <div class="faq__body"><p>La revisión de tu caso completo por un médico, a partir de tu cuestionario clínico, y su respuesta por escrito con lo que te indica. Mientras revisa tu caso, puede escribirte por tu portal si necesita aclarar algo. Son 49 € en un solo pago y no se renueva.</p></div>
           </details>
           <details name="faq" class="faq__item reveal-up">
             <summary>¿Cuánto cuesta?</summary>
             <div class="faq__body"><p>La valoración inicial no se cobra. Si eres candidata y eliges Esencial, son 49 € por consulta, en un solo pago. Si prefieres tener a tu médico cada mes, el plan son 89 € al mes o 890 € al año (74,17 € al mes), sin permanencia. El medicamento, si tu médico te lo indica, va aparte.</p></div>
           </details>
           <details name="faq" class="faq__item reveal-up">
-            <summary>¿Y si más adelante quiero volver a consultar?</summary>
-            <div class="faq__body"><p>Es una consulta nueva y se paga al hacerla. Tu médico te deja por escrito cuándo conviene que vuelvas, y tu caso sigue guardado en tu portal, así que no empiezas de cero.</p></div>
-          </details>
-          <details name="faq" class="faq__item reveal-up">
             <summary>¿Y si luego prefiero que mi médico me lleve cada mes?</summary>
-            <div class="faq__body"><p>Puedes pasarte al plan mensual cuando quieras, sin volver a contar tu caso. Desde ese momento tienes un control cada mes y mensajes con tu médico cuando los necesites.</p></div>
+            <div class="faq__body"><p>Cuando tu médico te haya dejado su respuesta, puedes pasarte al plan mensual desde tu portal, sin volver a contar tu caso. Desde ese momento tienes un control cada mes y mensajes con tu médico cuando los necesites.</p></div>
           </details>
           <details name="faq" class="faq__item reveal-up">
             <summary>¿Y si algo no va bien después?</summary>
@@ -409,7 +426,7 @@
           </details>
           <details name="faq" class="faq__item reveal-up">
             <summary>¿Qué pasa con mis datos?</summary>
-            <div class="faq__body"><p>Van cifrados y se tratan conforme al RGPD. Solo los ve el médico que te atiende: nada pasa por una recepción ni por la agenda de nadie, y nadie te cruza en una sala de espera.</p></div>
+            <div class="faq__body"><p>Viajan cifrados y se tratan conforme al RGPD. Solo acceden a ellos los médicos que valoran tu caso y el personal autorizado que lo gestiona, con deber de confidencialidad. Y como todo es por escrito, no hay sala de espera en la que nadie te cruce.</p></div>
           </details>
         </div>
       </div>
@@ -448,7 +465,7 @@
       </div>
       <div class="site-footer__cols">
         <div>
-          <h4>Tratamientos</h4>
+          <h4>Áreas</h4>
           <ul>
             <li><a href="/perdida-de-peso">Pérdida de peso</a></li>
             <li><a href="/#categorias">Menopausia</a></li>
@@ -462,7 +479,7 @@
           <ul>
             <li><a href="/mision">Misión</a></li>
             <li><a href="/#como-funciona">Cómo funciona</a></li>
-            <li><a href="/#categorias">Tratamientos</a></li>
+            <li><a href="/#categorias">Áreas</a></li>
             <li><a href="/blog">Blog</a></li>
             <li><a href="/informacion">Información</a></li>
             <li><a href="/contacto">Contacto</a></li>
