@@ -7,6 +7,24 @@
    email/portal). El motor (form-engine.js) decide el modo; el corte es el paso con id F.p2StartId.
    La parte 1 va al webhook (consulta-intake, fase='parte1') y la parte 2 a part2Webhook
    (peso-intake-parte2), que funde por intakeId y pasa el Tipo de Consulta a Intake. */
+
+/* INTERRUPTOR DE ESENCIAL (pago unico de 49 EUR, decidido por Alfonso el 24 sep 2026).
+   Mientras ESENCIAL_PUBLICO sea false, la tercera tarjeta del paso de planes SOLO se ve si la URL
+   trae plan=pago_unico o esencial=1, que es lo que llevan el enlace de la prueba de 1 EUR y, cuando
+   se encienda, los correos del portal. Nadie la ve llegando por los enlaces de hoy. Se pone a true
+   el dia del lanzamiento, a la vez que ESENCIAL_ACTIVO en el portal y despues de que el checkout de
+   n8n (X54ImCdMKN4Hm5C3) conozca 'pago_unico': si la tarjeta sale antes, crear-checkout contesta
+   'tipo_caso desconocido' y el paciente se queda en Reintentar. Las paginas que la enseñan en su
+   texto (peso-esencial-m y terminos) salen el mismo dia. */
+var ESENCIAL_PUBLICO = false;
+var ESENCIAL_VISIBLE = (function () {
+  if (ESENCIAL_PUBLICO) return true;
+  try {
+    var qs = new URLSearchParams(window.location.search);
+    return qs.get("plan") === "pago_unico" || qs.get("esencial") === "1";
+  } catch (e) { return false; }
+})();
+
 window.CLYNIA_FORM = {
   product: "Pérdida de peso",
   storeKey: "clynia_peso_v1",
@@ -43,8 +61,9 @@ window.CLYNIA_FORM = {
   checkoutEndpoint: "https://n8n-ixwg.srv1722506.hstgr.cloud/webhook/crear-checkout",
   payStartId: "plans",
   // pago = Payment Link de Stripe (respaldo si crear-checkout falla). id = clave que 'Mapear plan a
-  // price' (n8n · Crear Checkout Session) mapea a priceId: valoracion|plan4|plan12. No renombrar los
-  // id sin tocar ese nodo. (nombre/precio/desc son solo presentación y se pueden cambiar libremente.)
+  // price' (n8n · Crear Checkout Session) mapea a priceId: las de las tarjetas de abajo, sub_mensual
+  // y sub_anual, y con Esencial pago_unico. No renombrar los id sin tocar ese nodo. (nombre/precio/desc son solo
+  // presentación y se pueden cambiar libremente.)
   plans: [
     // Las DOS se enseñan como precio MENSUAL, que es lo único comparable de un vistazo: 89 al mes,
     // y 74,17 al mes con los 89 tachados al lado. El servicio no es "anual": es el mismo mes de
@@ -62,9 +81,25 @@ window.CLYNIA_FORM = {
     // `icono` es SVG en crudo (fichero nuestro, no entrada de usuario) y es OPCIONAL en el motor:
     // calendario simple para el mes a mes, y el mismo calendario con un check para el año entero.
     // Mismo trazo y grosor que el resto del sitio.
-    { id: "sub_mensual", nombre: "Pagando mes a mes", precio: 89, unidad: "al mes", tag: "Más popular", featured: true, desc: "Se cobra cada mes. Sin permanencia.", icono: '<svg viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="16.5" rx="2.5"/><path d="M8 2.5v4M16 2.5v4M3 10h18"/></svg>', pago: "https://buy.stripe.com/fZu8wR77zdV89WwdGtfEk06" },
+    // Con Esencial a la vista, las dos suscripciones llevan encima el separador "Con tu médico cada
+    // mes", que es como se presenta la suscripción al lado del pago único (decisión del 24 sep). Sin
+    // Esencial no hay nada que separar y el paso queda exactamente como estaba.
+    { id: "sub_mensual", nombre: "Pagando mes a mes", precio: 89, unidad: "al mes", tag: "Más popular", featured: true, sep: ESENCIAL_VISIBLE ? "Con tu médico cada mes" : undefined, desc: "Se cobra cada mes. Sin permanencia.", icono: '<svg viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="16.5" rx="2.5"/><path d="M8 2.5v4M16 2.5v4M3 10h18"/></svg>', pago: "https://buy.stripe.com/fZu8wR77zdV89WwdGtfEk06" },
     { id: "sub_anual", nombre: "Pagando el año entero", precio: 890, precioUI: "74,17", unidad: "al mes", antes: 89, desc: "890 € en un solo pago. Ahorras 178 € al año.", icono: '<svg viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="16.5" rx="2.5"/><path d="M8 2.5v4M16 2.5v4M3 10h18"/><path d="M8.8 15.4l2.1 2.1 4.3-4.3"/></svg>', pago: "https://buy.stripe.com/00w9AVdvXcR41q01XLfEk07" }
-  ],
+  ].concat(ESENCIAL_VISIBLE ? [
+    // ESENCIAL: pago único de 49 EUR, tercera tarjeta y debajo de las dos suscripciones, en el MISMO
+    // orden y con el MISMO nombre que la tercera fila del correo del apto v4 y del drip. El id
+    // 'pago_unico' es la clave que 'Mapear plan a price' de n8n traduce a su price (mode=payment,
+    // sin casilla de códigos) y la que el correo pone en ?plan=; no renombrarlo sin tocar los dos.
+    // `precio` 49 es lo que viaja a Meta y GA4 y lo que usa gracias.html para el Purchase.
+    // Sin `pago` a propósito: el Payment Link de respaldo no existe todavía (PENDIENTE del frente de
+    // Stripe, y solo se pone si su metadata llega a la sesión con modalidad=pago_unico). Sin él, si
+    // crear-checkout no contesta en 6 s el motor enseña "No hemos podido abrir el pago" con
+    // Reintentar, nunca la pantalla de gracias.
+    // Copia: se dice lo que incluye y cómo se paga, en positivo. Nada de "sin seguimiento" ni de
+    // "receta" como objeto de la compra; el medicamento y lo que añade la suscripción van en el note.
+    { id: "pago_unico", nombre: "Esencial", precio: 49, unidad: "por consulta", sep: "¿Prefieres un solo pago?", meta: "Un solo pago. Sin cuota mensual.", desc: "Solo lo que necesitas: tu médico revisa tu caso completo y te deja sus indicaciones por escrito. Cada consulta se paga al hacerla.", icono: '<svg viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h4"/></svg>' }
+  ] : []),
 
   steps: [
     // ═══════════ PARTE 1 (pre-pago, mínima) ═══════════
@@ -154,10 +189,23 @@ window.CLYNIA_FORM = {
     // El coste del medicamento se declara SIN cifra a propósito: no hay fuente oficial de precio de
     // venta en farmacia que citar y una horquilla inventada es justo lo que no se puede publicar.
     // section:false = sin pretítulo en mayúsculas. El paso ya tiene titular, tarjetas y botón.
-    { id: "plans", section: false, type: "plans", key: "plan", q: "Ya puedes empezar. Elige cómo prefieres pagarlo", help: "El seguimiento médico es el mismo, solo cambia cada cuánto se te cobra. Al terminar completas tu cuestionario clínico y tu médico prepara tu tratamiento.", note: "Se renueva automáticamente hasta que la canceles: te das de baja desde tu portal cuando quieras, sin permanencia ni penalización. El medicamento no está incluido en la cuota: lo compras en tu farmacia con tu receta electrónica. La pauta y la dosis las decide tu médico según tu caso. Médicos colegiados en España. Pago seguro con Stripe.", cta: "Continuar al pago" },
+    // CON ESENCIAL A LA VISTA el help pierde "El seguimiento médico es el mismo, solo cambia cada
+    // cuánto se te cobra", que solo es verdad entre las dos suscripciones, y el note pasa a ser una
+    // función: habla de la opción marcada, porque "Se renueva automáticamente" es falso para
+    // Esencial y lo que no incluye Esencial (TRLGDCU art. 20 y LCD art. 7) tiene que leerse antes de
+    // pagar. El note de la suscripción es literalmente el de siempre. Sin Esencial, el paso sale
+    // idéntico al de hoy.
+    { id: "plans", section: false, type: "plans", key: "plan", q: "Ya puedes empezar. Elige cómo prefieres pagarlo", help: ESENCIAL_VISIBLE ? "Al terminar completas tu cuestionario clínico y tu médico prepara tu tratamiento." : "El seguimiento médico es el mismo, solo cambia cada cuánto se te cobra. Al terminar completas tu cuestionario clínico y tu médico prepara tu tratamiento.", note: function (a) {
+      if (a.plan === "pago_unico") return "Esencial es un solo pago: no se renueva ni genera cargos después. Incluye la revisión de tu caso completo y las indicaciones de tu médico por escrito; los controles de cada mes y los mensajes con tu médico cuando los necesites van en \"Con tu médico cada mes\". Si más adelante quieres volver a consultar, esa consulta se paga al hacerla. El medicamento no está incluido en los 49 €: lo compras en tu farmacia con tu receta electrónica. La pauta y la dosis las decide tu médico según tu caso. Médicos colegiados en España. Pago seguro con Stripe.";
+      return "Se renueva automáticamente hasta que la canceles: te das de baja desde tu portal cuando quieras, sin permanencia ni penalización. El medicamento no está incluido en la cuota: lo compras en tu farmacia con tu receta electrónica. La pauta y la dosis las decide tu médico según tu caso. Médicos colegiados en España. Pago seguro con Stripe.";
+    }, cta: "Continuar al pago" },
 
     // ═══════════ PARTE 2 (post-pago: el resto del cuestionario) ═══════════
-    { id: "p2_welcome", type: "statement", q: "Te damos la bienvenida a tu plan", badge: "Pago confirmado", body: "Para que tu médico lo ajuste a ti de la mejor manera, necesita conocerte un poco mejor. Son unos 5 minutos y puedes retomarlo cuando quieras.", steps: [{ t: "Tu plan ya está activo", d: "Pago confirmado. De eso ya no tienes que preocuparte.", done: true }, { t: "Nos cuentas tu historia clínica", d: "Unos 5 minutos. Guardamos tu progreso, así que puedes parar y seguir cuando te venga bien.", icon: "ficha" }, { t: "Tu médico prepara tu tratamiento", d: "Con tus respuestas ajusta la pauta y la dosis a tu caso y emite tu receta electrónica.", icon: "medico" }], cta: "Empezar" },
+    // NEUTRO a propósito (25 sep 2026): aquí llegan igual quien paga la suscripción y quien paga
+    // Esencial, y el motor no siempre sabe cuál de las dos fue (desde el correo o en otro
+    // dispositivo la parte 2 arranca sin las respuestas de la parte de pago). "Tu plan ya está
+    // activo" era falso para Esencial, que no es un plan que quede activo.
+    { id: "p2_welcome", type: "statement", q: "Te damos la bienvenida", badge: "Pago confirmado", body: "Para que tu médico lo ajuste todo a ti, necesita conocerte un poco mejor. Son unos 5 minutos y puedes retomarlo cuando quieras.", steps: [{ t: "Tu pago, hecho", d: "De eso ya no tienes que preocuparte.", done: true }, { t: "Nos cuentas tu historia clínica", d: "Unos 5 minutos. Guardamos tu progreso, así que puedes parar y seguir cuando te venga bien.", icon: "ficha" }, { t: "Tu médico prepara tu tratamiento", d: "Con tus respuestas ajusta la pauta y la dosis a tu caso y emite tu receta electrónica.", icon: "medico" }], cta: "Empezar" },
 
     // ---------- BLOQUE CLÍNICO (resto) ----------
     { id: "peso_maximo", section: "Cuestionario clínico", type: "number", key: "peso_maximo", q: "¿Cuál ha sido tu peso máximo en la edad adulta?", unit: "kg", min: 30, max: 400 },

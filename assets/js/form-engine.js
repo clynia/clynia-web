@@ -9,6 +9,11 @@
   if (!F || !root) return;
 
   var answers = load();
+  // Un plan guardado que el esquema ya no ofrece se descarta. Pasa con una tarjeta que solo sale con
+  // un parametro en la URL (Esencial en peso, ?plan=pago_unico): quien la eligio y vuelve por un
+  // enlace sin ese parametro no la ve, y con el plan viejo guardado el boton de pagar seguia activo
+  // sin nada marcado y acababa en la pantalla de gracias sin cobrar. Asi tiene que elegir de nuevo.
+  if (answers.plan && F.plans && !F.plans.some(function (p) { return p.id === answers.plan; })) { delete answers.plan; }
   var vars = {};
   var history = [];
   var current = null;
@@ -58,6 +63,7 @@
   // finish() ve answers._caso y lanza el checkout (crear-checkout) sin recrear el caso. P2 gana sobre
   // PAY: si ya pagó (?p2= o marker _paid), va a la parte 2, nunca de vuelta a planes. ──
   var PAY = false;
+  var PLAN_URL = false; // la tarjeta viene marcada desde el enlace (?plan=): ver verPlanElegido()
   (function () {
     if (P2 || !F.payStartId) return;
     var pc = null;
@@ -73,7 +79,7 @@
     try {
       var qs = new URLSearchParams(window.location.search);
       var pl = qs.get("plan");
-      if (pl && (F.plans || []).some(function (p) { return p.id === pl; })) { answers.plan = pl; }
+      if (pl && (F.plans || []).some(function (p) { return p.id === pl; })) { answers.plan = pl; PLAN_URL = true; }
       // ?code=<CODIGO>: el correo del descuento lo trae en el enlace para que la sesion de Stripe
       // se abra YA con el precio rebajado. Sin esto el correo titula 71,20 y la pantalla de pago
       // enseña 89 hasta que ella escriba el codigo a mano, que es lo que hace cerrar la pestaña.
@@ -282,11 +288,25 @@
       .then(arranca, arranca);
   }
 
+  // Si el enlace trae ?plan= y esa tarjeta cae por debajo del boton fijo (Esencial es la tercera en
+  // peso; la consulta puntual, en salud sexual), se baja lo justo para que se vea marcada. Si no, la
+  // persona llega desde "su" opcion del correo y en la primera pantalla solo ve las otras dos.
+  function verPlanElegido() {
+    function ajustar() {
+      try {
+        var sel = root.querySelector(".cq__plan.is-sel"), foot = root.querySelector(".cq__foot");
+        if (!sel || !foot) return;
+        var sobra = sel.getBoundingClientRect().bottom - (foot.getBoundingClientRect().top - 16);
+        if (sobra > 0) window.scrollBy(0, sobra);
+      } catch (e) {}
+    }
+    if (window.requestAnimationFrame) { requestAnimationFrame(ajustar); } else { ajustar(); }
+  }
   function resume() {
     // Parte 2: siempre arranca en su primer paso (nunca en los de la parte 1 ni en planes).
     if (P2) { history = []; arrancarP2(); return; }
     // Modo pago (apto desde el email): arranca directo en el paso de planes, sin repetir la parte 1.
-    if (PAY) { history = []; go(byId(F.payStartId), false); return; }
+    if (PAY) { history = []; go(byId(F.payStartId), false); if (PLAN_URL) verPlanElegido(); return; }
     var target = null;
     try { target = sessionStorage.getItem(F.storeKey + "_return"); } catch (e) {}
     if (!target || !byId(target)) { history = []; go(resolveFrom(0), false); return; }
@@ -335,7 +355,11 @@
     h += '<div class="cq__field" id="cqField">' + fieldHTML(s) + "</div>";
     // `note` = letra pequena DESPUES del campo. Existe para que lo legal no tenga que viajar en el
     // `help`, que se pinta ENCIMA y empujaba las tarjetas de plan fuera de la primera pantalla.
-    if (s.note) h += '<p class="cq__note">' + interp(s.note) + "</p>";
+    // Puede ser una FUNCION (answers, vars) -> texto: el paso de planes de peso la usa para que la
+    // letra pequena hable de la opcion marcada (la suscripcion se renueva, el pago unico no). No se
+    // mete en computeVars a proposito: lo que devuelve computeVars viaja como `triage` en el envio.
+    var noteTxt = typeof s.note === "function" ? s.note(answers, vars) : s.note;
+    if (noteTxt) h += '<p class="cq__note">' + interp(noteTxt) + "</p>";
     h += '<div class="cq__err" id="cqErr" style="display:none"></div>';
     h += "</div></main>";
     h += '<footer class="cq__foot"><div class="in"><button class="cq__next" type="button" id="cqNext">' + esc(s.cta || "Continuar") + "</button>" + (history.length ? '<button class="cq__backlow" type="button" id="cqBackLow">&#8592; Atrás</button>' : "") + "</div></footer>";
@@ -862,14 +886,28 @@
     }
     // Ruta por defecto y fallback: Payment Link estático. casoId -> client_reference_id (emparejamiento del pago).
     function payViaLink(casoId) {
-      if (redirected) return; redirected = true;
+      if (redirected) return;
       if (plan && plan.pago) {
+        redirected = true;
         fireCheckout(casoId);
         var url = plan.pago + (plan.pago.indexOf("?") > -1 ? "&" : "?") + "prefilled_email=" + encodeURIComponent(answers.email || "");
         if (casoId) url += "&client_reference_id=" + encodeURIComponent(casoId);
         markReturn();
         window.location.href = url;
-      } else { go(byId("ending_ok"), false); }
+      } else if (plan) {
+        // Hay plan elegido pero ni checkout ni Payment Link de respaldo (un plan sin `pago`, como
+        // Esencial o los de salud sexual, con crear-checkout caido o lento). Antes caia en ending_ok,
+        // "Tu consulta ya esta con un medico", sin haber cobrado nada: se enseña el fallo y se deja
+        // reintentar. `redirected` no se marca para que Reintentar pueda volver a intentarlo.
+        payFail();
+      } else { redirected = true; go(byId("ending_ok"), false); }
+    }
+    function payFail() {
+      window.scrollTo(0, 0);
+      root.innerHTML = '<div class="cq__center stop"><h1>No hemos podido abrir el pago</h1><p>Comprueba tu conexión y vuelve a intentarlo en un momento. No se ha hecho ningún cargo y tu elección sigue guardada.</p><button class="btn" type="button" id="cqRetryPay">Reintentar</button><button class="cq__backlow" type="button" id="cqPayBack">&#8592; Volver a las opciones</button></div>';
+      var b = document.getElementById("cqRetryPay"); if (b) b.onclick = function () { finish(); };
+      // `current` sigue siendo el paso de planes: repintarlo devuelve a las tarjetas tal como estaban.
+      var v = document.getElementById("cqPayBack"); if (v) v.onclick = function () { render(); };
     }
     // Ruta preferida si está configurada: Stripe Checkout Session creada en servidor (n8n) con el email BLOQUEADO.
     function proceedToPayment(casoId) {
