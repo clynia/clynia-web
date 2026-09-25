@@ -15,7 +15,13 @@
    el dia del lanzamiento, a la vez que ESENCIAL_ACTIVO en el portal y despues de que el checkout de
    n8n (X54ImCdMKN4Hm5C3) conozca 'pago_unico': si la tarjeta sale antes, crear-checkout contesta
    'tipo_caso desconocido' y el paciente se queda en Reintentar. Las paginas que la enseñan en su
-   texto (peso-esencial-m y terminos) salen el mismo dia. */
+   texto (peso-esencial-m y terminos) salen el mismo dia.
+   ORDEN DEL LANZAMIENTO (revision del 25 sep; si se salta un paso, el anuncio vende un precio que
+   el flujo no ofrece): 1) n8n X54ImCdMKN4Hm5C3 con pago_unico y sin casilla de codigos; 2) prueba
+   de 1 EUR de Alfonso de punta a punta; 3) portal desplegado con ESENCIAL_ACTIVO=true y probados el
+   aviso de problema, la mensajeria del caso abierto y el paso a la suscripcion; 4) esta constante a
+   true; 5) publicar peso-esencial-m y terminos (con la fecha del dia y el visto bueno del abogado a
+   la clausula 8); 6) comprobar con curl que las landings dan 200; 7) activar el anuncio pu-solo-m. */
 var ESENCIAL_PUBLICO = false;
 var ESENCIAL_VISIBLE = (function () {
   if (ESENCIAL_PUBLICO) return true;
@@ -98,7 +104,9 @@ window.CLYNIA_FORM = {
     // Reintentar, nunca la pantalla de gracias.
     // Copia: se dice lo que incluye y cómo se paga, en positivo. Nada de "sin seguimiento" ni de
     // "receta" como objeto de la compra; el medicamento y lo que añade la suscripción van en el note.
-    { id: "pago_unico", nombre: "Esencial", precio: 49, unidad: "por consulta", sep: "¿Prefieres un solo pago?", meta: "Un solo pago. Sin cuota mensual.", desc: "Solo lo que necesitas: tu médico revisa tu caso completo y te deja sus indicaciones por escrito. Cada consulta se paga al hacerla.", icono: '<svg viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h4"/></svg>' }
+    // Sin "Cada consulta se paga al hacerla" (25 sep): da por hecho que se puede volver a consultar,
+    // y la fase 2 no existe todavía.
+    { id: "pago_unico", nombre: "Esencial", precio: 49, unidad: "por consulta", sep: "¿Prefieres un solo pago?", meta: "Un solo pago. Sin cuota mensual.", desc: "Solo lo que necesitas: tu médico revisa tu caso completo y te deja sus indicaciones por escrito.", icono: '<svg viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h4"/></svg>' }
   ] : []),
 
   steps: [
@@ -195,8 +203,13 @@ window.CLYNIA_FORM = {
     // Esencial y lo que no incluye Esencial (TRLGDCU art. 20 y LCD art. 7) tiene que leerse antes de
     // pagar. El note de la suscripción es literalmente el de siempre. Sin Esencial, el paso sale
     // idéntico al de hoy.
-    { id: "plans", section: false, type: "plans", key: "plan", q: "Ya puedes empezar. Elige cómo prefieres pagarlo", help: ESENCIAL_VISIBLE ? "Al terminar completas tu cuestionario clínico y tu médico prepara tu tratamiento." : "El seguimiento médico es el mismo, solo cambia cada cuánto se te cobra. Al terminar completas tu cuestionario clínico y tu médico prepara tu tratamiento.", note: function (a) {
-      if (a.plan === "pago_unico") return "Esencial es un solo pago: no se renueva ni genera cargos después. Incluye la revisión de tu caso completo y las indicaciones de tu médico por escrito; los controles de cada mes y los mensajes con tu médico cuando los necesites van en \"Con tu médico cada mes\". Si más adelante quieres volver a consultar, esa consulta se paga al hacerla. El medicamento no está incluido en los 49 €: lo compras en tu farmacia con tu receta electrónica. La pauta y la dosis las decide tu médico según tu caso. Médicos colegiados en España. Pago seguro con Stripe.";
+    // Revisión del 25 sep: con Esencial a la vista el help ya no dice "tu médico prepara tu
+    // tratamiento" (es el mismo texto para las tres tarjetas y, junto a un pago único de 49, se leía
+    // como "49 € = tratamiento"), y el note de Esencial deja la receta en manos del médico, igual que
+    // la cláusula 7 de los términos. Tampoco dice ya que se pueda "volver a consultar": la fase 2
+    // (Volver a pedir) no existe todavía y no se promete lo que no hay.
+    { id: "plans", section: false, type: "plans", key: "plan", q: "Ya puedes empezar. Elige cómo prefieres pagarlo", help: ESENCIAL_VISIBLE ? "Al terminar completas tu cuestionario clínico y tu médico revisa tu caso completo." : "El seguimiento médico es el mismo, solo cambia cada cuánto se te cobra. Al terminar completas tu cuestionario clínico y tu médico prepara tu tratamiento.", note: function (a) {
+      if (a.plan === "pago_unico") return "Esencial es un solo pago: no se renueva ni genera cargos después. Incluye la revisión de tu caso completo y las indicaciones de tu médico por escrito; los controles de cada mes y los mensajes con tu médico cuando los necesites van en \"Con tu médico cada mes\". El medicamento no está incluido en los 49 €. La receta electrónica, la pauta y la dosis las decide tu médico según tu caso; el medicamento lo compras en tu farmacia. Médicos colegiados en España. Pago seguro con Stripe.";
       return "Se renueva automáticamente hasta que la canceles: te das de baja desde tu portal cuando quieras, sin permanencia ni penalización. El medicamento no está incluido en la cuota: lo compras en tu farmacia con tu receta electrónica. La pauta y la dosis las decide tu médico según tu caso. Médicos colegiados en España. Pago seguro con Stripe.";
     }, cta: "Continuar al pago" },
 
@@ -205,7 +218,10 @@ window.CLYNIA_FORM = {
     // Esencial, y el motor no siempre sabe cuál de las dos fue (desde el correo o en otro
     // dispositivo la parte 2 arranca sin las respuestas de la parte de pago). "Tu plan ya está
     // activo" era falso para Esencial, que no es un plan que quede activo.
-    { id: "p2_welcome", type: "statement", q: "Te damos la bienvenida", badge: "Pago confirmado", body: "Para que tu médico lo ajuste todo a ti, necesita conocerte un poco mejor. Son unos 5 minutos y puedes retomarlo cuando quieras.", steps: [{ t: "Tu pago, hecho", d: "De eso ya no tienes que preocuparte.", done: true }, { t: "Nos cuentas tu historia clínica", d: "Unos 5 minutos. Guardamos tu progreso, así que puedes parar y seguir cuando te venga bien.", icon: "ficha" }, { t: "Tu médico prepara tu tratamiento", d: "Con tus respuestas ajusta la pauta y la dosis a tu caso y emite tu receta electrónica.", icon: "medico" }], cta: "Empezar" },
+    // El tercer paso tampoco promete "prepara tu tratamiento" ni "emite tu receta electrónica" sin
+    // condición (revisión del 25 sep): quien acaba de pagar 49 € lo leería como lo que ha comprado.
+    // Se dice lo que hace el médico, sin un "si procede" que al apto le suene a segunda criba.
+    { id: "p2_welcome", type: "statement", q: "Te damos la bienvenida", badge: "Pago confirmado", body: "Para que tu médico lo ajuste todo a ti, necesita conocerte un poco mejor. Son unos 5 minutos y puedes retomarlo cuando quieras.", steps: [{ t: "Tu pago, hecho", d: "De eso ya no tienes que preocuparte.", done: true }, { t: "Nos cuentas tu historia clínica", d: "Unos 5 minutos. Guardamos tu progreso, así que puedes parar y seguir cuando te venga bien.", icon: "ficha" }, { t: "Tu médico revisa tu caso", d: "Con tus respuestas decide la pauta y la dosis para ti y te lo deja por escrito.", icon: "medico" }], cta: "Empezar" },
 
     // ---------- BLOQUE CLÍNICO (resto) ----------
     { id: "peso_maximo", section: "Cuestionario clínico", type: "number", key: "peso_maximo", q: "¿Cuál ha sido tu peso máximo en la edad adulta?", unit: "kg", min: 30, max: 400 },
