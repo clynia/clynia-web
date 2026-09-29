@@ -206,8 +206,9 @@ window.CLYNIA_FORM = {
     // Revisión del 25 sep: con Esencial a la vista el help ya no dice "tu médico prepara tu
     // tratamiento" (es el mismo texto para las tres tarjetas y, junto a un pago único de 49, se leía
     // como "49 € = tratamiento"), y el note de Esencial deja la receta en manos del médico, igual que
-    // la cláusula 7 de los términos. Tampoco dice ya que se pueda "volver a consultar": la fase 2
-    // (Volver a pedir) no existe todavía y no se promete lo que no hay.
+    // la cláusula 7 de los términos. Tampoco dice que se pueda "volver a consultar": la fase 2
+    // (Volver a pedir) ya existe en el portal (28 sep, sin espera para Esencial desde el 29 sep),
+    // pero la web no la promete hasta que Alfonso lo decida. Si se añade, sin plazos ni esperas.
     { id: "plans", section: false, type: "plans", key: "plan", q: "Ya puedes empezar. Elige cómo prefieres pagarlo", help: ESENCIAL_VISIBLE ? "Al terminar completas tu cuestionario clínico y tu médico revisa tu caso completo." : "El seguimiento médico es el mismo, solo cambia cada cuánto se te cobra. Al terminar completas tu cuestionario clínico y tu médico prepara tu tratamiento.", note: function (a) {
       if (a.plan === "pago_unico") return "Esencial es un solo pago: no se renueva ni genera cargos después. Incluye la revisión de tu caso completo y las indicaciones de tu médico por escrito; los controles de cada mes y los mensajes con tu médico cuando los necesites van en \"Con tu médico cada mes\". El medicamento no está incluido en los 49 €. La receta electrónica, la pauta y la dosis las decide tu médico según tu caso; el medicamento lo compras en tu farmacia. Médicos colegiados en España. Pago seguro con Stripe.";
       return "Se renueva automáticamente hasta que la canceles: te das de baja desde tu portal cuando quieras, sin permanencia ni penalización. El medicamento no está incluido en la cuota: lo compras en tu farmacia con tu receta electrónica. La pauta y la dosis las decide tu médico según tu caso. Médicos colegiados en España. Pago seguro con Stripe.";
