@@ -22,7 +22,7 @@
    aviso de problema, la mensajeria del caso abierto y el paso a la suscripcion; 4) esta constante a
    true; 5) publicar peso-esencial-m y terminos (con la fecha del dia y el visto bueno del abogado a
    la clausula 8); 6) comprobar con curl que las landings dan 200; 7) activar el anuncio pu-solo-m. */
-var ESENCIAL_PUBLICO = false;
+var ESENCIAL_PUBLICO = true;
 var ESENCIAL_VISIBLE = (function () {
   if (ESENCIAL_PUBLICO) return true;
   try {
