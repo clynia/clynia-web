@@ -112,6 +112,26 @@
   // avance). Sirve para etiquetar a quien empieza y no termina (retargeting) y medir el embudo. ---
   var started = false;
   function px(ev, params) { try { if (window.fbq) fbq("trackCustom", ev, params || {}); } catch (e) {} }
+  // Decision de cookies que viaja a n8n (5 oct 2026). Misma fuente y caducidad que el pixel y cookies.js:
+  // localStorage clynia_cookie_consent ("all" = Aceptar todo) con su _ts de menos de 180 dias. Devuelve
+  // "accept" SOLO en ese caso; rechazo, sin decidir, caducada o storage bloqueado = "reject". n8n solo
+  // manda algo a Meta por CAPI si llega exactamente "accept".
+  function cookieChoice() {
+    try {
+      var c = localStorage.getItem("clynia_cookie_consent");
+      var ts = parseInt(localStorage.getItem("clynia_cookie_consent_ts") || "0", 10);
+      return (c === "all" && ts > 0 && (Date.now() - ts) < 15552000000) ? "accept" : "reject";
+    } catch (e) { return "reject"; }
+  }
+  // Identificadores de Meta (_fbp, _fbc): solo se leen y se mandan con "accept".
+  function metaIds(o) {
+    try {
+      var mFbp = document.cookie.match(/(?:^|; )_fbp=([^;]+)/), mFbc = document.cookie.match(/(?:^|; )_fbc=([^;]+)/);
+      if (mFbp) o.fbp = mFbp[1];
+      if (mFbc) o.fbc = mFbc[1];
+    } catch (e) {}
+    return o;
+  }
   // --- Meta Pixel: un evento por paso ALCANZADO (solo avance, una vez por paso y sesión).
   // Permite ver en qué pregunta abandona la gente. Envía el id del paso, nunca respuestas. ---
   var seenSteps = {};
@@ -159,7 +179,8 @@
   }
   // Guarda un "lead parcial" en cuanto tenemos email + los consentimientos obligatorios, aunque la
   // persona no termine el cuestionario. Es un envío de la propia persona (con su consentimiento
-  // explícito), independiente de las cookies. Una sola vez por intake. Solo actúa si el esquema
+  // explícito). El guardado en Airtable no depende de las cookies; el envío a Meta sí: n8n solo lo
+  // manda por CAPI si "cookies" llega como "accept". Una sola vez por intake. Solo actúa si el esquema
   // define F.leadWebhook (hoy: solo el de peso); en los demás formularios es un no-op.
   var partialSent = false;
   function sendPartial() {
@@ -168,7 +189,8 @@
       var email = answers.email;
       if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return;
       if (answers.acepta_privacidad !== true || answers.acepta_datos_salud !== true) return;
-      var body = JSON.stringify({
+      var ck = cookieChoice();
+      var obj = {
         email: email,
         nombre: [answers.nombre, answers.primer_apellido].filter(Boolean).join(" "),
         telefono: answers.telefono || "",
@@ -181,8 +203,12 @@
         intakeId: answers._intakeId || "",
         origen: "web-peso-form",
         utm: answers._utm || "",
+        // Para la CAPI de n8n (Captura web > Prep CAPI Lead): solo "accept" puede acabar en Meta.
+        cookies: ck,
         ts: new Date().toISOString()
-      });
+      };
+      if (ck === "accept") metaIds(obj);
+      var body = JSON.stringify(obj);
       var sent = false;
       if (navigator.sendBeacon) { try { sent = navigator.sendBeacon(F.leadWebhook, new Blob([body], { type: "text/plain;charset=UTF-8" })); } catch (e) {} }
       if (!sent) { try { fetch(F.leadWebhook, { method: "POST", headers: { "Content-Type": "text/plain" }, body: body, keepalive: true, mode: "no-cors" }); } catch (e) {} }
@@ -857,16 +883,10 @@
     root.innerHTML = '<div class="cq__center"><div class="cq__loading"><span class="cq__spin"></span> Enviando tu información de forma segura...</div><div id="cq-ts" style="margin-top:18px;min-height:1px;display:flex;justify-content:center"></div></div>';
     var payload = { product: F.product, intakeId: answers._intakeId, answers: answers, triage: vars, submittedAt: new Date().toISOString(), fase: F.p2StartId ? "parte1" : undefined };
     // El consentimiento de cookies viaja al servidor: la CAPI de n8n solo dispara con consentimiento total (RGPD),
-    // y sin él no salen ni _fbp ni _fbc. Misma clave y misma caducidad (180 días) que el píxel del navegador.
-    try {
-      var cc = localStorage.getItem("clynia_cookie_consent"), ccTs = parseInt(localStorage.getItem("clynia_cookie_consent_ts") || "0", 10);
-      if (cc === "all" && (new Date().getTime() - ccTs) < 15552000000) {
-        payload.cookie_consent = "all";
-        var mFbp = document.cookie.match(/(?:^|; )_fbp=([^;]+)/), mFbc = document.cookie.match(/(?:^|; )_fbc=([^;]+)/);
-        if (mFbp) payload.fbp = mFbp[1];
-        if (mFbc) payload.fbc = mFbc[1];
-      } else { payload.cookie_consent = "none"; }
-    } catch (e) { payload.cookie_consent = "none"; }
+    // y sin él no salen ni _fbp ni _fbc. cookie_consent ("all"/"none") es lo que lee hoy "Consulta gratis" en n8n.
+    payload.cookies = cookieChoice();
+    payload.cookie_consent = payload.cookies === "accept" ? "all" : "none";
+    if (payload.cookies === "accept") metaIds(payload);
     var plan = (F.plans || []).filter(function (p) { return p.id === answers.plan; })[0];
     var redirected = false;
     // --- Meta Pixel: eventos de conversión. eventID = clave compartida con la CAPI (n8n) para deduplicar. ---

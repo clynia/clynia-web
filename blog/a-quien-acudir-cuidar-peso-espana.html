@@ -7,17 +7,19 @@
   {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
   n.callMethod.apply(n,arguments):n.queue.push(arguments)};
   if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-  n.queue=[];t=b.createElement(e);t.async=!0;
-  t.src=v;s=b.getElementsByTagName(e)[0];
-  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  n.queue=[];
+  // 5 oct 2026: fbevents.js solo se descarga con consentimiento (Aceptar todo vigente); si no, cookies.js lo carga al aceptar.
+  f.clyniaLoadFb=function(){if(f.__clyniaFbLoaded)return;f.__clyniaFbLoaded=1;
+  t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)};
+  try{if(localStorage.getItem('clynia_cookie_consent')==='all'&&(Date.now()-parseInt(localStorage.getItem('clynia_cookie_consent_ts')||'0',10))<15552000000)f.clyniaLoadFb()}catch(x){}
+  }(window, document,'script',
   'https://connect.facebook.net/en_US/fbevents.js');
   fbq('consent', 'revoke');
   fbq('init', '4585495085018912');
   try{ if(localStorage.getItem('clynia_cookie_consent')==='all' && (Date.now()-parseInt(localStorage.getItem('clynia_cookie_consent_ts')||'0',10))<15552000000){ fbq('consent','grant'); } }catch(e){}
   fbq('track', 'PageView');
   </script>
-  <noscript><img height="1" width="1" style="display:none"
-  src="https://www.facebook.com/tr?id=4585495085018912&ev=PageView&noscript=1"/></noscript>
   <!-- End Meta Pixel Code -->
 
   <meta charset="UTF-8" />
@@ -55,7 +57,7 @@
   {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Clynia","item":"https://clynia.es/"},{"@type":"ListItem","position":2,"name":"Blog","item":"https://clynia.es/blog"},{"@type":"ListItem","position":3,"name":"¿A quién acudir para cuidar tu peso?","item":"https://clynia.es/blog/a-quien-acudir-cuidar-peso-espana"}]}
   </script>
   <script src="../assets/js/ga.js?v=20260702b"></script>
-  <script src="../assets/js/cookies.js?v=20260724" defer></script>
+  <script src="../assets/js/cookies.js?v=20261005" defer></script>
   <script src="../assets/js/oferta-bienvenida.js?v=20260710b" defer></script>
 </head>
 <body>

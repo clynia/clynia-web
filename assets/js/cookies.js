@@ -36,11 +36,61 @@
     }
   } catch (e) {}
 
+  // Retirar o cambiar el consentimiento en cualquier momento (art. 7.3 RGPD, 5 oct 2026): enlace
+  // "Configurar cookies" junto a cada enlace del pie a /cookies y boton en la politica de cookies.
+  // Borra la decision guardada, revoca el pixel y vuelve a mostrar el aviso.
+  window.clyniaConfigurarCookies = function () {
+    try { localStorage.removeItem(KEY); localStorage.removeItem(TSK); } catch (e) {}
+    try { if (window.fbq) fbq("consent", "revoke"); } catch (e) {}
+    if (document.querySelector(".ck-bar")) return;
+    init();
+  };
+  function enlacesConfigurar() {
+    try {
+      var links = document.querySelectorAll('a[href="/cookies"]');
+      for (var i = 0; i < links.length; i++) {
+        var a = links[i];
+        if (!a.closest || !a.closest("footer") || a.getAttribute("data-ck-cfg")) continue;
+        a.setAttribute("data-ck-cfg", "1");
+        var cfg = document.createElement("a");
+        cfg.href = "#";
+        cfg.textContent = "Configurar cookies";
+        cfg.onclick = function (ev) { ev.preventDefault(); window.clyniaConfigurarCookies(); };
+        var li = a.parentNode && a.parentNode.tagName === "LI" ? a.parentNode : null;
+        if (li) { var nli = document.createElement("li"); nli.appendChild(cfg); li.parentNode.insertBefore(nli, li.nextSibling); }
+        else { a.parentNode.insertBefore(cfg, a.nextSibling); a.parentNode.insertBefore(document.createTextNode(" "), cfg); }
+      }
+      var btns = document.querySelectorAll("[data-configurar-cookies]");
+      for (var j = 0; j < btns.length; j++) {
+        btns[j].onclick = function (ev) { ev.preventDefault(); window.clyniaConfigurarCookies(); };
+      }
+    } catch (e) {}
+  }
+  if (document.body) enlacesConfigurar();
+  else document.addEventListener("DOMContentLoaded", enlacesConfigurar);
+
+  // Borra las cookies propias de medicion (Meta, Google y Contentsquare) al rechazar o retirar el consentimiento.
+  function borrarCookiesMedicion() {
+    try {
+      var host = location.hostname, dominios = ["", host, "." + host];
+      var partes = host.split(".");
+      if (partes.length > 2) { var base = partes.slice(-2).join("."); dominios.push(base, "." + base); }
+      document.cookie.split(";").forEach(function (c) {
+        var n = c.split("=")[0].trim();
+        if (!/^(_fbp|_fbc|_ga|_ga_.*|_gid|_gat.*|_cs_.*)$/.test(n)) return;
+        dominios.forEach(function (d) {
+          document.cookie = n + "=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/" + (d ? "; domain=" + d : "");
+        });
+      });
+    } catch (e) {}
+  }
+
+  var vigente = false;
   try {
     var v = localStorage.getItem(KEY);
     var ts = parseInt(localStorage.getItem(TSK) || "0", 10);
-    if (v && ts && (Date.now() - ts) < TTL) return; // eleccion vigente: no molestar
-    if (v) { localStorage.removeItem(KEY); localStorage.removeItem(TSK); } // caducada: se pregunta de nuevo
+    if (v && ts && (Date.now() - ts) < TTL) vigente = true; // eleccion vigente: no molestar
+    else if (v) { localStorage.removeItem(KEY); localStorage.removeItem(TSK); } // caducada: se pregunta de nuevo
   } catch (e) {}
 
   var css = ''
@@ -65,7 +115,9 @@
     + '@media(prefers-reduced-motion:reduce){.ck-bar,.ck-bar.ck-hide{animation:none;transition:none}}';
 
   function init() {
-    var st = document.createElement("style"); st.textContent = css; document.head.appendChild(st);
+    if (!document.getElementById("ck-style")) {
+      var st = document.createElement("style"); st.id = "ck-style"; st.textContent = css; document.head.appendChild(st);
+    }
     var bar = document.createElement("div"); bar.className = "ck-bar";
     bar.setAttribute("role", "region"); bar.setAttribute("aria-label", "Aviso de cookies");
     var card = document.createElement("div"); card.className = "ck-card";
@@ -83,8 +135,12 @@
       try { localStorage.setItem(KEY, v); localStorage.setItem(TSK, String(Date.now())); } catch (e) {}
       bar.classList.add("ck-hide");
       setTimeout(function () { if (bar.parentNode) bar.parentNode.removeChild(bar); }, 260);
-      // Meta Pixel: solo enviamos eventos si el usuario acepta todo (RGPD/AEPD). El pixel arranca con consent revocado.
+      // Meta Pixel: solo enviamos eventos si el usuario acepta todo (RGPD/AEPD). El pixel arranca con consent revocado
+      // y, desde el 5 oct 2026, el script de Meta (fbevents.js) ni siquiera se descarga hasta aceptar: lo carga
+      // clyniaLoadFb(), que define el snippet del <head> de cada pagina.
       try { if (window.fbq) fbq("consent", v === "all" ? "grant" : "revoke"); } catch (e) {}
+      try { if (v === "all" && window.clyniaLoadFb) window.clyniaLoadFb(); } catch (e) {}
+      if (v !== "all") borrarCookiesMedicion();
       // GA4: solo arranca (y vacia su cola de eventos) si el usuario acepta todo. Ver assets/js/ga.js.
       try { if (window.clyniaGAConsent) clyniaGAConsent(v); } catch (e) {}
       // Contentsquare: solo graba la sesion si el usuario acepta todo. Ver assets/js/cs.js. Si cs.js
@@ -103,6 +159,8 @@
     card.querySelector(".ck-reject").onclick = function () { choose("essential"); };
   }
 
-  if (document.body) init();
-  else document.addEventListener("DOMContentLoaded", init);
+  if (!vigente) {
+    if (document.body) init();
+    else document.addEventListener("DOMContentLoaded", init);
+  }
 })();

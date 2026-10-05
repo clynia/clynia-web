@@ -7,17 +7,19 @@
   {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
   n.callMethod.apply(n,arguments):n.queue.push(arguments)};
   if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-  n.queue=[];t=b.createElement(e);t.async=!0;
-  t.src=v;s=b.getElementsByTagName(e)[0];
-  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  n.queue=[];
+  // 5 oct 2026: fbevents.js solo se descarga con consentimiento (Aceptar todo vigente); si no, cookies.js lo carga al aceptar.
+  f.clyniaLoadFb=function(){if(f.__clyniaFbLoaded)return;f.__clyniaFbLoaded=1;
+  t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)};
+  try{if(localStorage.getItem('clynia_cookie_consent')==='all'&&(Date.now()-parseInt(localStorage.getItem('clynia_cookie_consent_ts')||'0',10))<15552000000)f.clyniaLoadFb()}catch(x){}
+  }(window, document,'script',
   'https://connect.facebook.net/en_US/fbevents.js');
   fbq('consent', 'revoke');
   fbq('init', '4585495085018912');
   try{ if(localStorage.getItem('clynia_cookie_consent')==='all' && (Date.now()-parseInt(localStorage.getItem('clynia_cookie_consent_ts')||'0',10))<15552000000){ fbq('consent','grant'); } }catch(e){}
   fbq('track', 'PageView');
   </script>
-  <noscript><img height="1" width="1" style="display:none"
-  src="https://www.facebook.com/tr?id=4585495085018912&ev=PageView&noscript=1"/></noscript>
   <!-- End Meta Pixel Code -->
 
 <meta charset="UTF-8"/>
@@ -73,7 +75,7 @@
 <h2>5. Relación de cookies utilizadas</h2>
 <p>A continuación se detallan las cookies utilizadas en el Sitio Web, agrupadas por proveedor. Las cookies marcadas con asterisco (*) pueden incluir variantes adicionales generadas por el proveedor con el mismo prefijo. Clynia actualizará esta relación cuando incorpore o retire proveedores.</p>
 <h3>5.1. Cookies propias de Clynia</h3>
-<div class="legal-table-wrap"><table><thead><tr><th>COOKIE</th><th>TIPO</th><th>DURACIÓN</th><th>FINALIDAD</th></tr></thead><tbody><tr><td data-label="COOKIE">cc_cookie</td><td data-label="TIPO">Técnica</td><td data-label="DURACIÓN">12 meses</td><td data-label="FINALIDAD">Recuerda y acredita el consentimiento de cookies que has dado a través del panel de configuración.</td></tr><tr><td data-label="COOKIE">session_id</td><td data-label="TIPO">Técnica</td><td data-label="DURACIÓN">Sesión</td><td data-label="FINALIDAD">Mantiene tu sesión durante la navegación por el Sitio Web.</td></tr></tbody></table></div>
+<div class="legal-table-wrap"><table><thead><tr><th>COOKIE</th><th>TIPO</th><th>DURACIÓN</th><th>FINALIDAD</th></tr></thead><tbody><tr><td data-label="COOKIE">clynia_cookie_consent (almacenamiento local)</td><td data-label="TIPO">Técnica</td><td data-label="DURACIÓN">6 meses</td><td data-label="FINALIDAD">Recuerda si has aceptado o rechazado las cookies, para no volver a preguntarte en cada visita.</td></tr><tr><td data-label="COOKIE">session_id</td><td data-label="TIPO">Técnica</td><td data-label="DURACIÓN">Sesión</td><td data-label="FINALIDAD">Mantiene tu sesión durante la navegación por el Sitio Web.</td></tr></tbody></table></div>
 <h3>5.2. Stripe (pasarela de pago)</h3>
 <div class="legal-table-wrap"><table><thead><tr><th>COOKIE</th><th>TIPO</th><th>DURACIÓN</th><th>FINALIDAD</th></tr></thead><tbody><tr><td data-label="COOKIE">__stripe_mid</td><td data-label="TIPO">Técnica</td><td data-label="DURACIÓN">12 meses</td><td data-label="FINALIDAD">Prevención del fraude en la pasarela de pago durante la contratación.</td></tr><tr><td data-label="COOKIE">__stripe_sid</td><td data-label="TIPO">Técnica</td><td data-label="DURACIÓN">30 minutos</td><td data-label="FINALIDAD">Prevención del fraude en la pasarela de pago durante la sesión de pago.</td></tr></tbody></table></div>
 <h3>5.3. Rewardful (programa de referidos)</h3>
@@ -87,7 +89,7 @@
 <h2>6. Base legal</h2>
 <p>El uso de cookies técnicas o estrictamente necesarias está amparado por el artículo 22.2 de la LSSI, que las exime del deber de consentimiento, y por nuestro interés legítimo en prestar el Sitio Web de forma segura y funcional. El uso del resto de cookies se basa exclusivamente en tu consentimiento, que solicitamos mediante el panel de configuración en tu primera visita y que puedes modificar o revocar en cualquier momento. Mientras no prestes tu consentimiento no se instala ninguna cookie que lo requiera.</p>
 <h2>7. Cómo dar, configurar o retirar tu consentimiento</h2>
-<p>En tu primera visita al Sitio Web se muestra un panel que te permite aceptar todas las cookies, rechazar todas las que requieren consentimiento o configurarlas por categorías. Aceptar y rechazar son igual de accesibles. Puedes cambiar tus preferencias en cualquier momento desde el panel de configuración de cookies, accesible de forma permanente en el Sitio Web.</p>
+<p>En tu primera visita al Sitio Web se muestra un aviso que te permite aceptar todas las cookies o rechazar todas las que requieren consentimiento, con un solo clic en cada caso. Aceptar y rechazar son igual de accesibles. Mientras no aceptes, no se carga ninguna herramienta de medición ni de publicidad. Puedes cambiar o retirar tu consentimiento en cualquier momento desde el enlace «Configurar cookies», presente en el pie de todas las páginas, o desde este botón: <a href="#" data-configurar-cookies>Configurar cookies</a>. Al retirarlo, dejamos de usar esas cookies y borramos de tu navegador las de medición.</p>
 <p>Adicionalmente, la mayoría de los navegadores permiten gestionar o bloquear la instalación de cookies desde su configuración:</p>
 <div class="legal-table-wrap"><table><thead><tr><th>NAVEGADOR</th><th>CÓMO GESTIONAR LAS COOKIES</th></tr></thead><tbody><tr><td data-label="NAVEGADOR">Google Chrome</td><td data-label="CÓMO GESTIONAR LAS COOKIES">support.google.com/chrome/answer/95647: Menú (tres puntos) &gt; Configuración &gt; Privacidad y seguridad &gt; Cookies.</td></tr><tr><td data-label="NAVEGADOR">Mozilla Firefox</td><td data-label="CÓMO GESTIONAR LAS COOKIES">support.mozilla.org/es/kb/habilitar-y-deshabilitar-cookies-sitios-web-rastrear-preferencias: Menú &gt; Ajustes &gt; Privacidad y seguridad.</td></tr><tr><td data-label="NAVEGADOR">Safari</td><td data-label="CÓMO GESTIONAR LAS COOKIES">support.apple.com/es-es/guide/safari/sfri11471/mac: Preferencias &gt; Privacidad.</td></tr><tr><td data-label="NAVEGADOR">Microsoft Edge</td><td data-label="CÓMO GESTIONAR LAS COOKIES">support.microsoft.com/es-es/microsoft-edge: Menú (tres puntos) &gt; Configuración &gt; Cookies y permisos del sitio.</td></tr></tbody></table></div>
 <p>Ten en cuenta: bloquear desde el navegador las cookies estrictamente necesarias afectará al funcionamiento de este y de muchos otros sitios web, y puede impedirte utilizar funcionalidades como el cuestionario o el pago.</p>
@@ -174,6 +176,6 @@
     </div>
   </footer>
 <script src="assets/js/cursor-glow.js" defer></script>
-  <script src="assets/js/cookies.js?v=20260724" defer></script>
+  <script src="assets/js/cookies.js?v=20261005" defer></script>
 </body>
 </html>
