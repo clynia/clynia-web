@@ -1,3 +1,7 @@
+# Codificacion de las paginas tambien en la cabecera (5 oct 2026): el <meta charset> va arriba del todo,
+# pero asi ningun navegador tiene que adivinarla.
+AddDefaultCharset UTF-8
+
 # Clynia: URLs limpias (sin .html) y canónicas
 # Hostinger usa LiteSpeed (compatible con .htaccess de Apache)
 

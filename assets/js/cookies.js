@@ -38,12 +38,15 @@
 
   // Retirar o cambiar el consentimiento en cualquier momento (art. 7.3 RGPD, 5 oct 2026): enlace
   // "Configurar cookies" junto a cada enlace del pie a /cookies y boton en la politica de cookies.
-  // Borra la decision guardada, revoca el pixel y vuelve a mostrar el aviso.
+  // Borra la decision guardada y las cookies de medicion, revoca lo que ya estaba cargado y RECARGA
+  // la pagina: asi no queda vivo ningun script de medicion (GA4 y Contentsquare no se pueden apagar
+  // en caliente) y el aviso vuelve a salir limpio para elegir de nuevo.
   window.clyniaConfigurarCookies = function () {
     try { localStorage.removeItem(KEY); localStorage.removeItem(TSK); } catch (e) {}
     try { if (window.fbq) fbq("consent", "revoke"); } catch (e) {}
-    if (document.querySelector(".ck-bar")) return;
-    init();
+    try { if (window.clyniaGAConsent) clyniaGAConsent("essential"); } catch (e) {}
+    borrarCookiesMedicion();
+    try { location.reload(); } catch (e) { if (!document.querySelector(".ck-bar")) init(); }
   };
   function enlacesConfigurar() {
     try {
