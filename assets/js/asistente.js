@@ -82,7 +82,7 @@
     + "@media (min-width:900px){.cla-lanzador{right:24px;bottom:24px}}"
 
     /* Panel */
-    + ".cla-panel{position:fixed;left:8px;right:8px;bottom:8px;z-index:2147482500;display:flex;flex-direction:column;"
+    + ".cla-panel{position:fixed;left:8px;right:8px;bottom:8px;z-index:2147483100;display:flex;flex-direction:column;"
     + "max-height:min(680px,calc(100dvh - 16px));background:#fff;color:#1c2421;border-radius:26px;overflow:hidden;"
     + "font:400 15px/1.5 'Hanken Grotesk',system-ui,sans-serif;"
     + "box-shadow:0 30px 80px -30px rgba(28,36,33,.5),0 0 0 1px rgba(28,36,33,.07);animation:claEntra .35s cubic-bezier(.22,1,.36,1)}"
