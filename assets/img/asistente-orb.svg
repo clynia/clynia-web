@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120" role="img" aria-label="Asistente virtual de Clynia">
+  <defs>
+    <radialGradient id="o" cx="36%" cy="32%" r="74%">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset=".18" stop-color="#e7efeb"/>
+      <stop offset=".38" stop-color="#d6e4dd"/>
+      <stop offset=".74" stop-color="#437066"/>
+      <stop offset="1" stop-color="#28433c"/>
+    </radialGradient>
+  </defs>
+  <circle cx="60" cy="60" r="60" fill="url(#o)"/>
+</svg>
