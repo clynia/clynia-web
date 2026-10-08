@@ -330,6 +330,8 @@
     };
   }
 
+  /* La voz va por WebRTC (audio más estable, sin cortes y con cancelación de eco); si no conecta, reintenta por WebSocket */
+  var sinWebrtc = false;
   function arrancar(tipo) {
     if (arrancando) return;
     arrancando = true;
@@ -349,7 +351,7 @@
     cargarSDK().then(function () {
       var opts = {
         agentId: AGENT_ID,
-        connectionType: "websocket",
+        connectionType: tipo === "voz" && !sinWebrtc ? "webrtc" : "websocket",
         userId: USER_ID,
         dynamicVariables: { pagina: path, seccion: SECCION },
         clientTools: herramientas(),
@@ -391,6 +393,12 @@
         window.setTimeout(function () {
           anadir("agente", "No tengo acceso a tu micrófono, así que seguimos por escrito. ¿En qué te puedo ayudar?");
         }, 50);
+        return;
+      }
+      if (tipo === "voz" && !sinWebrtc) {
+        sinWebrtc = true;
+        if (window.console) console.warn("[Asistente Clynia] WebRTC no conecta, paso a WebSocket", msg);
+        arrancar("voz");
         return;
       }
       setEstado("No he podido conectar. Inténtalo de nuevo en un momento.", "");
@@ -460,6 +468,8 @@
 
   /* ---------- Eventos ---------- */
   lanzador.addEventListener("click", abrirPanel);
+  /* La esfera de assets/js/esfera-asistente.js abre el mismo panel, con su aviso y consentimiento */
+  window.ClyniaAsistente = { abrir: function (origen) { if (origen) evento("asistente_abrir_" + origen); abrirPanel(); } };
   btnCerrar.addEventListener("click", cerrarPanel);
   btnHablar.addEventListener("click", function () { arrancar("voz"); });
   btnEscribir.addEventListener("click", function () { arrancar("texto"); });
