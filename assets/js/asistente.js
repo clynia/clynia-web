@@ -323,9 +323,9 @@
   /* Pantalla de inicio */
   var inicio = el("div", { "class": "cla-inicio" });
   inicio.appendChild(orbe(560));
-  inicio.appendChild(el("h2", { "class": "cla-h" }, "Hola, soy la asistente virtual de Clynia"));
+  inicio.appendChild(el("h2", { "class": "cla-h" }, "Pregúntame lo que quieras"));
   inicio.appendChild(el("p", { "class": "cla-p" },
-    "Soy una inteligencia artificial, no una persona. Te cuento cómo funciona Clynia, qué incluye y cuánto cuesta. Tu caso lo valora siempre un médico, en el cuestionario."));
+    "Cómo funciona Clynia, qué incluye y cuánto cuesta: te lo cuento por voz o por escrito, sin compromiso. Soy una inteligencia artificial, no una persona; tu caso lo valora siempre un médico."));
   var btnHablar = el("button", { type: "button", "class": "cla-btn cla-btn--pri" }, PUNTOS + "<span>Hablar con la asistente</span>");
   var btnEscribir = el("button", { type: "button", "class": "cla-btn cla-btn--sec" }, "Prefiero escribir");
   inicio.appendChild(btnHablar);
@@ -364,7 +364,7 @@
 
   /* Pantalla final */
   var fin = el("div", { "class": "cla-fin", hidden: "" });
-  var finTxt = el("p", { "class": "cla-p", style: "text-align:center" }, "Conversación terminada. Gracias por escribirnos.");
+  var finTxt = el("p", { "class": "cla-p", style: "text-align:center" }, "Conversación terminada. Cuando quieras, aquí estamos para atenderte.");
   var btnOtraVoz = el("button", { type: "button", "class": "cla-btn cla-btn--pri" }, PUNTOS + "<span>Volver a hablar</span>");
   var btnOtraTexto = el("button", { type: "button", "class": "cla-btn cla-btn--sec" }, "Escribir otra vez");
   fin.appendChild(finTxt);
