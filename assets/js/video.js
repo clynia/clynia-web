@@ -20,12 +20,13 @@
   var play = document.querySelector('.video__play');
 
   var base = 'assets/video/clynia-como-funciona-';
+  var V = '?v=20261009'; // sube al cambiar el video (9 oct 2026: la landing sale con la mujer nueva)
   var vertical = window.innerWidth < 720;
   // El poster del HTML es el horizontal: es el que ve Google y el que queda si esto no corre.
-  if (vertical) video.poster = base + 'poster-vertical.jpg';
+  if (vertical) video.poster = base + 'poster-vertical.jpg' + V;
 
-  var completo = base + (vertical ? 'vertical' : (window.innerWidth >= 1024 ? '1080' : '720')) + '.mp4';
-  var previa = base + 'preview' + (vertical ? '-vertical' : '') + '.mp4';
+  var completo = base + (vertical ? 'vertical' : (window.innerWidth >= 1024 ? '1080' : '720')) + '.mp4' + V;
+  var previa = base + 'preview' + (vertical ? '-vertical' : '') + '.mp4' + V;
 
   // Hay dos motivos para NO mover nada y dejar el poster quieto: que el usuario haya pedido
   // menos animacion en su sistema, o que este pagando los megas (ahorro de datos o una red
