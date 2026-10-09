@@ -4,7 +4,7 @@
 
    Decisiones:
    - Interfaz propia sobre el SDK oficial @elevenlabs/client 1.27.0 (servido desde clynia.es):
-     botón que dice claramente que es una IA, botón grande "Hablar con la asistente", sin el icono
+     botón que dice claramente que es una IA, botón grande "Hablar con tu asistente", sin el icono
      de teléfono del widget y un círculo animado que reacciona a la voz.
    - Nada de ElevenLabs se carga ni se conecta hasta que la persona pulsa Hablar o Escribir.
    - user-id aleatorio por visita, solo en memoria: no se guarda nada en el navegador.
@@ -304,7 +304,7 @@
     "aria-label": "Hablar con la asistente virtual de Clynia, una inteligencia artificial" });
   lanzador.appendChild(orbe(240));
   lanzador.appendChild(el("span", { "class": "cla-lanzador__txt" },
-    '<span class="cla-lanzador__t1">Habla con nuestra asistente</span>'
+    '<span class="cla-lanzador__t1">Habla con tu asistente</span>'
     + '<span class="cla-lanzador__t2">Es una IA, por voz o por escrito</span>'));
 
   /* Panel */
@@ -326,7 +326,7 @@
   inicio.appendChild(el("h2", { "class": "cla-h" }, "Pregúntame lo que quieras"));
   inicio.appendChild(el("p", { "class": "cla-p" },
     "Cómo funciona Clynia, qué incluye y cuánto cuesta: te lo cuento por voz o por escrito, sin compromiso. Soy una inteligencia artificial, no una persona; tu caso lo valora siempre un médico."));
-  var btnHablar = el("button", { type: "button", "class": "cla-btn cla-btn--pri" }, PUNTOS + "<span>Hablar con la asistente</span>");
+  var btnHablar = el("button", { type: "button", "class": "cla-btn cla-btn--pri" }, PUNTOS + "<span>Hablar con tu asistente</span>");
   var btnEscribir = el("button", { type: "button", "class": "cla-btn cla-btn--sec" }, "Prefiero escribir");
   inicio.appendChild(btnHablar);
   inicio.appendChild(btnEscribir);
