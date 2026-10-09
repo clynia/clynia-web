@@ -929,18 +929,47 @@
       // `current` sigue siendo el paso de planes: repintarlo devuelve a las tarjetas tal como estaban.
       var v = document.getElementById("cqPayBack"); if (v) v.onclick = function () { render(); };
     }
+    // n8n ha contestado que este caso no se cobra (estado distinto de "ok") y no trae adónde llevarlo.
+    // Reintentar daría lo mismo, así que no se ofrece: se manda a contacto.
+    function payNoDisponible() {
+      window.scrollTo(0, 0);
+      root.innerHTML = '<div class="cq__center stop"><h1>Este pago no está disponible</h1><p>No podemos abrir el pago desde este enlace. No se ha hecho ningún cargo. Escríbenos y lo revisamos contigo.</p><a class="btn" href="/contacto">Escribirnos</a></div>';
+    }
     // Ruta preferida si está configurada: Stripe Checkout Session creada en servidor (n8n) con el email BLOQUEADO.
+    // Lo que conteste n8n manda:
+    // - estado "error" (Airtable o Stripe han fallado o han tardado de más dentro de n8n): pantalla de
+    //   reintento, aunque traiga url. Es un fallo pasajero y un segundo intento suele sacar el pago; mandarla
+    //   a contacto lo daba por perdido (9 oct 2026). Nunca el Payment Link.
+    // - otro estado distinto de "ok" (pagado, no_disponible, invalido) y url: se va a esa url SIN
+    //   InitiateCheckout ni marca de vuelta, porque ahí no empieza ningún pago.
+    // - sin estado (el n8n de hoy) o estado "ok", y url: es la sesión de Stripe, como siempre.
+    // - contesta sin url (un 500 del flujo, por ejemplo): pantalla de reintento, NUNCA el Payment Link. Antes
+    //   caía al Payment Link y un "no" de n8n acababa en un cobro que se salta todos sus controles.
+    // El Payment Link de respaldo solo entra cuando n8n NO contesta: error de red, más de 6 s, o un 502/503/504
+    // del proxy que tiene delante (n8n caído).
     function proceedToPayment(casoId) {
       fireLead(casoId);
       if (!F.checkoutEndpoint || !casoId || !plan) { payViaLink(casoId); return; }
       var settled = false;
       var t = setTimeout(function () { if (settled) return; settled = true; payViaLink(casoId); }, 6000);
       fetch(F.checkoutEndpoint, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ casoId: casoId, email: answers.email || "", tipo_caso: answers.plan, codigo: answers._code || "" }) })
-        .then(function (r) { return r.json().catch(function () { return {}; }); })
-        .then(function (d) {
+        .then(function (r) {
+          return r.json().catch(function () { return {}; }).then(function (d) { return { status: r.status, d: d && typeof d === "object" ? d : {} }; });
+        })
+        .then(function (res) {
           if (settled) return; settled = true; clearTimeout(t);
-          if (d && d.url) { if (redirected) return; redirected = true; fireCheckout(casoId); markReturn(); window.location.href = d.url; }
-          else { payViaLink(casoId); }
+          if (res.status === 502 || res.status === 503 || res.status === 504) { payViaLink(casoId); return; }
+          if (redirected) return;
+          var d = res.d;
+          var url = typeof d.url === "string" ? d.url : "";
+          var estado = d.estado == null ? "" : String(d.estado).trim().toLowerCase();
+          if (estado === "error") { payFail(); return; }
+          if (estado && estado !== "ok") {
+            if (url) { redirected = true; window.location.href = url; } else { payNoDisponible(); }
+            return;
+          }
+          if (url) { redirected = true; fireCheckout(casoId); markReturn(); window.location.href = url; return; }
+          payFail();
         })
         .catch(function () { if (settled) return; settled = true; clearTimeout(t); payViaLink(casoId); });
     }
