@@ -9,7 +9,7 @@
    - Nada de ElevenLabs se carga ni se conecta hasta que la persona pulsa Hablar o Escribir.
    - user-id aleatorio por visita, solo en memoria: no se guarda nada en el navegador.
    - Si no hay micrófono (o se deniega), se pasa a conversación escrita.
-   - Herramienta de cliente abrir_pagina: solo los cuatro destinos de DESTINOS.
+   - Herramienta de cliente abrir_pagina: solo los destinos de DESTINOS (el blog desde el 9 oct 2026).
    - La voz va por WebSocket, NO por WebRTC. El agente tiene lista de webs permitidas y ElevenLabs
      exige la cabecera Origin; por WebRTC no llega y cierra la conversación al instante con
      "Client did not provide the origin header" (comprobado el 9 oct 2026 en su historial: todas
@@ -27,7 +27,8 @@
     cuestionario_peso: "/peso",
     cuestionario_salud_sexual: "/saludsexual",
     contacto: "/contacto",
-    lista_espera: "/lista"
+    lista_espera: "/lista",
+    blog: "/blog/"
   };
   var ESPERA_ANTES_DE_IR_MS = 1800;
 
