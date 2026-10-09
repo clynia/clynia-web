@@ -9,7 +9,14 @@
    - Nada de ElevenLabs se carga ni se conecta hasta que la persona pulsa Hablar o Escribir.
    - user-id aleatorio por visita, solo en memoria: no se guarda nada en el navegador.
    - Si no hay micrófono (o se deniega), se pasa a conversación escrita.
-   - Herramienta de cliente abrir_pagina: solo los cuatro destinos de DESTINOS. */
+   - Herramienta de cliente abrir_pagina: solo los cuatro destinos de DESTINOS.
+   - La voz va por WebSocket, NO por WebRTC. El agente tiene lista de webs permitidas y ElevenLabs
+     exige la cabecera Origin; por WebRTC no llega y cierra la conversación al instante con
+     "Client did not provide the origin header" (comprobado el 9 oct 2026 en su historial: todas
+     las de voz fallaron desde que se puso WebRTC el 8 oct a las 20:15, y la de las 20:01 por
+     WebSocket funcionó entera).
+   - La esfera de puntos (Esfera, abajo) es la misma en el botón, en el panel y en la sección de
+     la home (assets/js/esfera-asistente.js la usa a través de window.ClyniaEsfera). */
 (function () {
   "use strict";
 
@@ -52,20 +59,14 @@
   /* ---------- Estilos ---------- */
   var VERDE = "var(--green,#437066)";
   var css = ""
-    /* Círculo vivo: manchas verdes que giran y se hinchan con la voz (--nivel de 0 a 1) */
-    + ".cla-orb{--s:120px;--nivel:0;position:relative;width:var(--s);height:var(--s);border-radius:50%;flex:0 0 auto;"
-    + "background:radial-gradient(circle at 50% 50%,#ffffff 0,#e7efeb 45%,#d6e4dd 100%);overflow:hidden;isolation:isolate;"
-    + "box-shadow:0 18px 40px -18px rgba(54,91,82,.6),inset 0 0 0 1px rgba(255,255,255,.7);"
-    + "transform:scale(calc(1 + var(--nivel) * .16));transition:transform .09s linear}"
-    + ".cla-orb__b{position:absolute;inset:-25%;border-radius:50%;animation:claGira var(--d) linear infinite;filter:blur(calc(var(--s) * .07))}"
-    + ".cla-orb__b1{--d:7s;background:radial-gradient(circle at 32% 36%,rgba(67,112,102,.95) 0,rgba(67,112,102,0) 42%)}"
-    + ".cla-orb__b2{--d:11s;animation-direction:reverse;background:radial-gradient(circle at 70% 42%,rgba(40,67,60,.9) 0,rgba(40,67,60,0) 40%)}"
-    + ".cla-orb__b3{--d:9s;background:radial-gradient(circle at 46% 74%,rgba(61,101,92,.85) 0,rgba(61,101,92,0) 42%)}"
-    + ".cla-orb__b4{--d:5s;animation-direction:reverse;background:radial-gradient(circle at 58% 56%,rgba(255,255,255,.95) 0,rgba(255,255,255,0) 30%)}"
-    + ".cla-orb[data-estado=hablando] .cla-orb__b,.cla-orb[data-estado=pensando] .cla-orb__b{animation-duration:calc(var(--d) * .35)}"
+    /* Esfera de puntos en pequeño, sobre el mismo verde oscuro que la sección de la home.
+       Se hincha un poco con la voz (--nivel de 0 a 1); el movimiento lo pone la propia esfera. */
+    + ".cla-orb{--s:120px;--nivel:0;position:relative;width:var(--s);height:var(--s);border-radius:50%;flex:0 0 auto;overflow:hidden;"
+    + "background:radial-gradient(circle at 50% 45%,#1f4a41 0%,#132a25 62%,#0c1714 100%);"
+    + "box-shadow:0 18px 40px -18px rgba(12,23,20,.75),inset 0 0 0 1px rgba(159,216,196,.12);"
+    + "transform:scale(calc(1 + var(--nivel) * .08));transition:transform .09s linear}"
+    + ".cla-orb canvas{position:absolute;inset:0;width:100%;height:100%;display:block}"
     + ".cla-orb[data-estado=conectando]{animation:claRespira 1.4s ease-in-out infinite}"
-    + ".cla-orb--respira{animation:claRespira 3.4s ease-in-out infinite}"
-    + "@keyframes claGira{to{transform:rotate(360deg)}}"
     + "@keyframes claRespira{0%,100%{transform:scale(1)}50%{transform:scale(.93)}}"
 
     /* Botón de entrada */
@@ -141,7 +142,7 @@
     + ".cla-ctl--fin{background:#1c2421;color:#fff}.cla-ctl--fin:hover{background:#28433c}"
     + ".cla-fin{text-align:center;padding:10px 0}"
     + "html.cla-abierto .sticky-cta{display:none!important}"
-    + "@media (prefers-reduced-motion:reduce){.cla-orb__b,.cla-orb,.cla-puntos i,.cla-panel{animation:none!important;transition:none!important}}";
+    + "@media (prefers-reduced-motion:reduce){.cla-orb,.cla-puntos i,.cla-panel{animation:none!important;transition:none!important}}";
 
   function ponerEstilos() {
     var s = document.createElement("style");
@@ -150,13 +151,137 @@
     (document.head || document.documentElement).appendChild(s);
   }
 
+  /* ---------- Esfera de puntos ----------
+     Canvas 2D, sin WebGL, para que se vea en cualquier móvil. La usan el botón, el panel y la
+     sección de la home (esfera-asistente.js). Solo se anima mientras está a la vista.
+     Opciones: puntos (cuántos), radio (fracción del lado), interactiva (reacciona al ratón). */
+  function Esfera(canvas, op) {
+    op = op || {};
+    var ctx = canvas.getContext && canvas.getContext("2d");
+    if (!ctx) return null;
+    var reducido = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var N = op.puntos || (window.innerWidth < 600 ? 1100 : 1700);
+    var RADIO = op.radio || 0.37;
+    var pts = [], i;
+    var oro = Math.PI * (3 - Math.sqrt(5));
+    for (i = 0; i < N; i++) {
+      var y = 1 - (i / (N - 1)) * 2, r = Math.sqrt(1 - y * y), th = oro * i;
+      pts.push([Math.cos(th) * r, y, Math.sin(th) * r, Math.random()]);
+    }
+    var W = 0, H = 0, dpr = 1, escala = 1, raf = 0, t0 = performance.now();
+    var aLaVista = true;
+    var tx = 0, ty = 0, cx = 0, cy = 0, energia = 0, energiaObj = 0;
+    var ondas = [], proxOnda = 1.2;
+
+    function medir() {
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      var w = canvas.clientWidth, h = canvas.clientHeight;
+      W = Math.max(1, Math.round(w * dpr));
+      H = Math.max(1, Math.round(h * dpr));
+      canvas.width = W; canvas.height = H;
+      /* los puntos se encogen con la esfera: a 44 px no pueden medir lo mismo que a 480 */
+      escala = Math.max(0.5, Math.min(1, Math.min(w, h) / 360));
+    }
+
+    function nuevaOnda(t) {
+      var u = Math.random() * 2 - 1, f = Math.random() * Math.PI * 2, s = Math.sqrt(1 - u * u);
+      ondas.push({ x: Math.cos(f) * s, y: u, z: Math.sin(f) * s, t: t });
+      if (ondas.length > 4) ondas.shift();
+    }
+
+    function pintar(now) {
+      raf = 0;
+      if (Math.round(canvas.clientWidth * dpr) !== W || Math.round(canvas.clientHeight * dpr) !== H) medir();
+      if (W < 4 || H < 4) return;
+      var t = (now - t0) / 1000;
+      if (!reducido && t > proxOnda) { nuevaOnda(t); proxOnda = t + 1.6 + Math.random() * 1.8; }
+      cx += (tx - cx) * 0.05; cy += (ty - cy) * 0.05;
+      energia += (energiaObj - energia) * 0.06;
+
+      ctx.clearRect(0, 0, W, H);
+      ctx.globalCompositeOperation = "lighter";
+      var R = Math.min(W, H) * RADIO * (1 + 0.025 * Math.sin(t * 1.4) + energia * 0.06);
+      var ox = W / 2, oy = H / 2;
+      var ry = t * (0.32 + energia * 0.5) + cx * 0.8;
+      var rx = Math.sin(t * 0.21) * 0.45 + cy * 0.6;
+      var cY = Math.cos(ry), sY = Math.sin(ry), cX = Math.cos(rx), sX = Math.sin(rx);
+      var amp = 0.075 + energia * 0.06;
+      var minTam = 0.75 * dpr;
+
+      for (var k = 0; k < pts.length; k++) {
+        var p = pts[k], x = p[0], y = p[1], z = p[2];
+        /* superficie viva: dos campos de ondas que se cruzan y una respiración por punto */
+        var d = amp * Math.sin(3.1 * y + t * 2.2) * Math.cos(2.3 * x - t * 1.4)
+          + 0.05 * Math.sin(5.2 * z + t * 3.1 + p[3] * 6.28)
+          + 0.018 * Math.sin(t * 4 + p[3] * 40);
+        for (var o = 0; o < ondas.length; o++) {
+          var w = ondas[o], edad = t - w.t;
+          if (edad > 2.6) continue;
+          var ang = Math.acos(Math.max(-1, Math.min(1, x * w.x + y * w.y + z * w.z)));
+          var frente = ang - edad * 1.9;
+          d += 0.16 * Math.exp(-frente * frente * 26) * (1 - edad / 2.6);
+        }
+        var s = 1 + d;
+        var X = x * s, Y = y * s, Z = z * s;
+        var x1 = X * cY + Z * sY, z1 = -X * sY + Z * cY;
+        var y2 = Y * cX - z1 * sX, z2 = Y * sX + z1 * cX;
+        var f = 2.8 / (2.8 - z2);
+        var px = ox + x1 * R * f, py = oy + y2 * R * f;
+        var prof = (z2 + 1.25) / 2.5; /* 0 detrás, 1 delante */
+        if (prof < 0) prof = 0; else if (prof > 1) prof = 1;
+        var tam = (0.9 + prof * 2.3 + d * 6) * dpr * escala;
+        if (tam < minTam) tam = minTam;
+        var brillo = 0.22 + prof * 0.78 + Math.max(0, d) * 2.5;
+        if (brillo > 1) brillo = 1;
+        var cal = Math.max(0, d) * 6; if (cal > 1) cal = 1;
+        var rr = Math.round(70 + prof * 100 + cal * 85), g = Math.round(150 + prof * 75 + cal * 30), b2 = Math.round(130 + prof * 70 + cal * 55);
+        if (rr > 255) rr = 255;
+        ctx.fillStyle = "rgba(" + rr + "," + g + "," + b2 + "," + brillo.toFixed(3) + ")";
+        ctx.fillRect(px - tam / 2, py - tam / 2, tam, tam);
+      }
+      ctx.globalCompositeOperation = "source-over";
+      if (!reducido && aLaVista && !document.hidden) raf = window.requestAnimationFrame(pintar);
+    }
+
+    function arrancar() { if (!raf) raf = window.requestAnimationFrame(pintar); }
+
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(function (es) {
+        aLaVista = es[es.length - 1].isIntersecting;
+        if (aLaVista) arrancar();
+      }).observe(canvas);
+    }
+    document.addEventListener("visibilitychange", function () { if (!document.hidden && aLaVista) arrancar(); });
+    window.addEventListener("resize", function () { arrancar(); });
+
+    if (op.interactiva) {
+      var zona = canvas.parentNode;
+      zona.addEventListener("pointermove", function (e) {
+        var b = zona.getBoundingClientRect();
+        tx = ((e.clientX - b.left) / b.width - 0.5) * 2;
+        ty = ((e.clientY - b.top) / b.height - 0.5) * 2;
+      });
+      zona.addEventListener("pointerenter", function () { energiaObj = 1; });
+      zona.addEventListener("pointerleave", function () { energiaObj = 0; tx = 0; ty = 0; });
+      zona.addEventListener("pointerdown", function () { energiaObj = 1.6; nuevaOnda((performance.now() - t0) / 1000); });
+    }
+
+    arrancar();
+    return {
+      /* 0 en reposo; sube con la voz para que la superficie se agite y gire más rápido */
+      energia: function (v) { energiaObj = v; if (reducido) arrancar(); }
+    };
+  }
+  window.ClyniaEsfera = Esfera;
+
   /* ---------- Piezas ---------- */
-  function orbe(clase) {
+  function orbe(puntos) {
     var o = document.createElement("div");
-    o.className = "cla-orb" + (clase ? " " + clase : "");
+    o.className = "cla-orb";
     o.setAttribute("aria-hidden", "true");
-    o.innerHTML = '<span class="cla-orb__b cla-orb__b1"></span><span class="cla-orb__b cla-orb__b2"></span>'
-      + '<span class="cla-orb__b cla-orb__b3"></span><span class="cla-orb__b cla-orb__b4"></span>';
+    var c = document.createElement("canvas");
+    o.appendChild(c);
+    try { o.esfera = Esfera(c, { puntos: puntos, radio: 0.32 }); } catch (e) { o.esfera = null; }
     return o;
   }
   function el(tag, attrs, html) {
@@ -176,7 +301,7 @@
   /* Botón de entrada */
   var lanzador = el("button", { type: "button", "class": "cla-lanzador", "aria-haspopup": "dialog",
     "aria-label": "Hablar con la asistente virtual de Clynia, una inteligencia artificial" });
-  lanzador.appendChild(orbe("cla-orb--respira"));
+  lanzador.appendChild(orbe(240));
   lanzador.appendChild(el("span", { "class": "cla-lanzador__txt" },
     '<span class="cla-lanzador__t1">Habla con nuestra asistente</span>'
     + '<span class="cla-lanzador__t2">Es una IA, por voz o por escrito</span>'));
@@ -184,7 +309,7 @@
   /* Panel */
   var panel = el("div", { "class": "cla-panel", role: "dialog", "aria-modal": "false", "aria-label": "Asistente virtual de Clynia", lang: "es", hidden: "" });
   var cab = el("div", { "class": "cla-cab" });
-  cab.appendChild(orbe("cla-orb--respira"));
+  cab.appendChild(orbe(170));
   cab.appendChild(el("div", { "class": "cla-cab__t" },
     '<span class="cla-cab__t1">Asistente virtual de Clynia</span><span class="cla-cab__t2">Inteligencia artificial</span>'));
   var btnCerrar = el("button", { type: "button", "class": "cla-x", "aria-label": "Cerrar la asistente" }, ICO.cerrar);
@@ -196,7 +321,7 @@
 
   /* Pantalla de inicio */
   var inicio = el("div", { "class": "cla-inicio" });
-  inicio.appendChild(orbe("cla-orb--respira"));
+  inicio.appendChild(orbe(560));
   inicio.appendChild(el("h2", { "class": "cla-h" }, "Hola, soy la asistente virtual de Clynia"));
   inicio.appendChild(el("p", { "class": "cla-p" },
     "Soy una inteligencia artificial, no una persona. Te cuento cómo funciona Clynia, qué incluye y cuánto cuesta. Tu caso lo valora siempre un médico, en el cuestionario."));
@@ -213,7 +338,7 @@
   /* Pantalla de conversación */
   var sesion = el("div", { "class": "cla-sesion", hidden: "" });
   var escena = el("div", { "class": "cla-escena" });
-  var orbeVivo = orbe("");
+  var orbeVivo = orbe(560);
   escena.appendChild(orbeVivo);
   var estadoTxt = el("p", { "class": "cla-estado", "aria-live": "polite" }, "");
   escena.appendChild(estadoTxt);
@@ -291,12 +416,16 @@
     if (modo === "texto") orbeVivo.setAttribute("data-estado", "");
   }
 
-  /* El círculo se hincha con el volumen de quien habla en cada momento */
+  /* La esfera se agita y se hincha con el volumen de quien habla en cada momento */
+  function nivelEsfera(n) {
+    orbeVivo.style.setProperty("--nivel", n.toFixed(3));
+    if (orbeVivo.esfera) orbeVivo.esfera.energia(n * 1.6);
+  }
   function animar() {
-    if (!conv || modo !== "voz") { raf = 0; orbeVivo.style.setProperty("--nivel", "0"); return; }
+    if (!conv || modo !== "voz") { raf = 0; nivelEsfera(0); return; }
     var v = 0;
     try { v = modoHabla === "speaking" ? conv.getOutputVolume() : (silenciado ? 0 : conv.getInputVolume()); } catch (e) {}
-    orbeVivo.style.setProperty("--nivel", Math.min(1, (v || 0) * 1.8).toFixed(3));
+    nivelEsfera(Math.min(1, (v || 0) * 1.8));
     raf = window.requestAnimationFrame(animar);
   }
 
@@ -330,8 +459,8 @@
     };
   }
 
-  /* La voz va por WebRTC (audio más estable, sin cortes y con cancelación de eco); si no conecta, reintenta por WebSocket */
-  var sinWebrtc = false;
+  /* Voz y texto por WebSocket: por WebRTC ElevenLabs no recibe la cabecera Origin y, con la lista
+     de webs permitidas del agente, corta la conversación nada más empezar (ver la cabecera). */
   function arrancar(tipo) {
     if (arrancando) return;
     arrancando = true;
@@ -351,7 +480,7 @@
     cargarSDK().then(function () {
       var opts = {
         agentId: AGENT_ID,
-        connectionType: tipo === "voz" && !sinWebrtc ? "webrtc" : "websocket",
+        connectionType: "websocket",
         userId: USER_ID,
         dynamicVariables: { pagina: path, seccion: SECCION },
         clientTools: herramientas(),
@@ -395,12 +524,6 @@
         }, 50);
         return;
       }
-      if (tipo === "voz" && !sinWebrtc) {
-        sinWebrtc = true;
-        if (window.console) console.warn("[Asistente Clynia] WebRTC no conecta, paso a WebSocket", msg);
-        arrancar("voz");
-        return;
-      }
       setEstado("No he podido conectar. Inténtalo de nuevo en un momento.", "");
       verPantalla("inicio");
     });
@@ -410,7 +533,7 @@
     var eraConv = !!conv;
     conv = null;
     if (raf) { window.cancelAnimationFrame(raf); raf = 0; }
-    orbeVivo.style.setProperty("--nivel", "0");
+    nivelEsfera(0);
     quitarPensando();
     if (!panel.hidden && eraConv) verPantalla("fin");
   }
