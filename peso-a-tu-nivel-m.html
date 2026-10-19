@@ -96,11 +96,14 @@
     .plan__ahorro { margin: 0 0 6px; font-size: 13.5px; font-weight: 600; color: var(--green); }
     [hidden] { display: none !important; }
 
-    /* Plan único centrado. Ancho 460 y no 360: es la única tarjeta de la sección, y a 360 su texto
-       se queda en 42 caracteres por línea, demasiado estrecho para justificar sin ríos de blanco. */
-    .plans--solo { display: flex; justify-content: center; }
-    .plans--solo .plan { max-width: 460px; width: 100%; }
-    .plans--solo .plan--featured { transform: none; }
+    /* Las dos opciones lado a lado, el plan primero y Esencial al lado; en móvil, una encima de la
+       otra. Mismo patrón que peso-esencial-m.html: si se toca aquí, tocar allí (son dos copias).
+       Este bloque va después de styles.css, así que gana a su rejilla de tres columnas de 880 px. */
+    .plans--duo { max-width: 880px; margin-inline: auto; }
+    @media (min-width: 880px) {
+      .plans--duo { grid-template-columns: 1fr 1fr; }
+      .plans--duo .plan--featured { transform: none; }
+    }
 
     /* Justificado a ambos lados CON guiones, igual que en salud-sexual.html. Estas clases viven solo
        en esta página, así que la regla equivalente de styles.css no las alcanzaba. Las líneas sueltas
@@ -419,7 +422,7 @@
           <li class="step reveal-up">
             <span class="step__num">3</span>
             <h3 class="step__title">Si eres candidato y quieres, empiezas</h3>
-            <p class="step__text">Contratas el plan: 89 € al mes o 890 € al año, sin permanencia. Desde ese momento tienes a tu médico y tu portal: revisiones cada mes, ajustes y mensajería privada.</p>
+            <p class="step__text">Eliges cómo: Esencial, 49 € en un solo pago, con la revisión de tu caso completo y las indicaciones de tu médico por escrito; o el plan, 89 € al mes o 890 € al año sin permanencia, con revisiones cada mes, ajustes y mensajería privada en tu portal.</p>
           </li>
         </ol>
 
@@ -436,8 +439,8 @@
     <section class="section section--tint" id="planes">
       <div class="wrap">
         <header class="section__head reveal-up">
-          <h2 class="h2">Un solo plan.</h2>
-          <p class="lead">Todo lo de arriba por un precio; lo pagas mes a mes o por el año, y lo dejas cuando quieras desde tu portal.</p>
+          <h2 class="h2">Dos maneras de hacerlo.</h2>
+          <p class="lead">Todo lo de arriba mes a mes o por el año, y lo dejas cuando quieras desde tu portal. O una sola consulta, si por ahora es lo que necesitas.</p>
         </header>
 
         <div style="text-align:center">
@@ -453,7 +456,7 @@
           </div>
         </div>
 
-        <div class="plans plans--solo">
+        <div class="plans plans--duo">
           <article class="plan plan--featured reveal-up">
             <h3 class="plan__name">Seguimiento con tu médico</h3>
             <p class="plan__price">
@@ -475,6 +478,24 @@
             <p class="plan__for">Empiezas contando tu caso. No pagas nada hasta que un médico lo revise.</p>
             <a class="btn btn--primary" href="peso">Cuéntale tu caso</a>
           </article>
+
+          <article class="plan reveal-up">
+            <h3 class="plan__name">Esencial</h3>
+            <p class="plan__price">
+              <span class="plan__amount">49 €</span>
+              <span class="plan__unit">por consulta</span>
+            </p>
+            <p class="plan__meta">Solo lo que necesitas. Un solo pago: no se renueva ni genera cargos después.</p>
+            <ul class="plan__list">
+              <li>Tu médico revisa tu caso completo</li>
+              <li>Sus indicaciones, por escrito</li>
+              <li>Mensajes con tu médico mientras revisa tu caso</li>
+              <li>Tu caso, guardado en tu portal</li>
+              <li>Si algo no va bien, se lo avisas desde tu portal</li>
+            </ul>
+            <p class="plan__for">Si más adelante quieres el seguimiento cada mes, te pasas desde tu portal sin volver a contar tu caso.</p>
+            <a class="btn btn--ghost" href="peso">Cuéntale tu caso</a>
+          </article>
         </div>
 
         <p class="plans__note reveal-up">
@@ -482,6 +503,9 @@
           El plan se renueva solo hasta que lo canceles; te das de baja desde tu portal cuando quieras y
           conservas a tu médico hasta el final del periodo pagado. Si tu médico, ya dentro del plan,
           decide finalmente no iniciar tratamiento, te devolvemos el importe y te lo comunicamos por email.
+          Esencial es un solo pago por esa consulta: no se renueva, y los controles de cada mes y los
+          mensajes con tu médico después de su respuesta van en el plan. Si tu médico no llega a atender
+          tu caso, te devolvemos lo que hayas pagado.
           Pago con Visa, Mastercard, American Express, Apple Pay y Google Pay.
         </p>
       </div>
@@ -563,7 +587,7 @@
           </details>
           <details name="faq" class="faq__item reveal-up">
             <summary>¿Cuánto cuesta?</summary>
-            <div class="faq__body"><p>La valoración del médico no se cobra. Si eres candidato y decides empezar, el plan son 89 € al mes o 890 € al año (74,17 € al mes), sin permanencia. El medicamento, si tu médico te lo indica, va aparte.</p></div>
+            <div class="faq__body"><p>La valoración del médico no se cobra. Si eres candidato y decides empezar, eliges: Esencial, 49 € por consulta en un solo pago, o el plan con tu médico cada mes, 89 € al mes o 890 € al año (74,17 € al mes), sin permanencia. El medicamento, si tu médico te lo indica, va aparte.</p></div>
           </details>
           <details name="faq" class="faq__item reveal-up">
             <summary>¿Y si no soy candidato?</summary>

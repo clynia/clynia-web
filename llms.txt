@@ -2,11 +2,11 @@
 
 > Clynia es una plataforma española de telemedicina que conecta a pacientes con médicos colegiados independientes. No es una clínica ni un centro sanitario: la decisión clínica corresponde siempre al médico, después de valorar cada caso. Servicio solo para España y solo para mayores de 18 años.
 
-Cómo funciona: la persona cuenta su caso en un cuestionario de unos minutos, desde el móvil y por escrito. Un médico colegiado lo valora y responde por email en menos de 24 horas. Esa primera valoración no se cobra: solo se paga si el médico considera que puede ayudar y la persona decide empezar. A partir de ahí el seguimiento es con el mismo médico, mes a mes y por el portal, sin permanencia.
+Cómo funciona: la persona cuenta su caso en un cuestionario de unos minutos, desde el móvil y por escrito. Un médico colegiado lo valora y responde por email en menos de 24 horas. Esa primera valoración no se cobra: solo se paga si el médico considera que puede ayudar y la persona decide empezar: una sola consulta, o seguimiento mes a mes con el mismo médico por el portal, sin permanencia.
 
 Si el médico indica un medicamento, la persona lo compra en su farmacia con su receta electrónica. El medicamento nunca va incluido en el precio del servicio y Clynia no vende ni envía medicamentos.
 
-Áreas atendidas hoy: pérdida de peso (89 € al mes o 890 € al año) y salud sexual masculina (39 € al mes, 390 € al año o consulta puntual de 79 €). Menopausia, salud capilar y longevidad están anunciadas pero todavía no abiertas.
+Áreas atendidas hoy: pérdida de peso (49 € por consulta en un solo pago, u 89 € al mes o 890 € al año con seguimiento) y salud sexual masculina (39 € al mes, 390 € al año o consulta puntual de 79 €). Menopausia, salud capilar y longevidad están anunciadas pero todavía no abiertas.
 
 ## Páginas principales
 
