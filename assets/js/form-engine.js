@@ -984,8 +984,13 @@
       root.innerHTML = '<div class="cq__center stop"><h1>No se ha podido enviar</h1><p>Comprueba tu conexión y vuelve a intentarlo en un momento. Tus respuestas siguen guardadas en este dispositivo.</p><button class="btn" type="button" id="cqRetry1">Reintentar</button></div>';
       var b = document.getElementById("cqRetry1"); if (b) b.onclick = function () { finish(); };
     }
-    function afterIntake(cid) {
-      if (cid || plan) { proceedToPayment(cid); } else { finishFail(); }
+    // Un alta (medico, colaborador) no crea caso: su flujo contesta {ok:true, medicoId} y nunca trae
+    // casoId. Sin mirar ese `ok` se daba por fallido un envio que SI estaba guardado, el candidato le
+    // daba a Reintentar y se repetia: 5 fichas identicas del mismo medico en 20 segundos (17 oct 2026).
+    // El `ok` lo manda el nodo Responder, que va DETRAS de la escritura en Airtable, asi que no puede
+    // decir que si cuando no se ha guardado nada; si el flujo falla no contesta y se ve el reintento.
+    function afterIntake(cid, ok) {
+      if (cid || plan || ok) { proceedToPayment(cid); } else { finishFail(); }
     }
     // El plan solo cuenta si se envía desde el paso de planes (modo pago). Un answers.plan que sobra de
     // una visita anterior con ?pay=&plan= no puede convertir "Enviar mi consulta" en un cobro.
@@ -1023,7 +1028,7 @@
         if (files) payload.files = files;
         fetch(F.webhook, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) })
           .then(function (r) { return r.json().catch(function () { return {}; }); })
-          .then(function (data) { clearTimeout(failsafe); var cid = data && data.casoId ? data.casoId : null; if (cid) { answers._caso = cid; answers._casoFirma = firmaConsulta(); save(); } afterIntake(cid); })
+          .then(function (data) { clearTimeout(failsafe); var cid = data && data.casoId ? data.casoId : null; if (cid) { answers._caso = cid; answers._casoFirma = firmaConsulta(); save(); } afterIntake(cid, !!(data && data.ok === true)); })
           .catch(function () {
             clearTimeout(failsafe);
             // El respaldo _pending va SIN los ficheros: un base64 de varios MB no cabe en la
