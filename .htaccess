@@ -15,6 +15,15 @@ RewriteEngine On
 RewriteCond %{HTTP_HOST} ^dev\.clynia\.es$ [NC]
 RewriteRule ^(.*)$ https://clynia.es/$1 [R=302,L]
 
+# 0b) GPTBot al espejo (25 oct 2026). Hostinger le devuelve 429 al servir paginas: es un
+#     limite del servidor compartido que su soporte confirmo que no se puede quitar. Las
+#     redirecciones si le llegan (probado 8 de 8), asi que lo mandamos al espejo de solo
+#     lectura del VPS (/docker/clynia-espejo), que devuelve a clynia.es a cualquier otro
+#     visitante. Solo coincide "GPTBot": ChatGPT-User y OAI-SearchBot siguen aqui.
+#     Para deshacerlo, borrar estas dos lineas.
+RewriteCond %{HTTP_USER_AGENT} GPTBot [NC]
+RewriteRule ^(.*)$ https://ia.clynia.es/$1 [R=302,L]
+
 # 1) Redirige la versión con extensión /pagina.html -> /pagina (301, canónica para SEO)
 RewriteCond %{THE_REQUEST} \s/+([^?\s]+?)\.html[\s?] [NC]
 RewriteRule ^ /%1 [R=301,L]
