@@ -19,9 +19,12 @@ RewriteRule ^(.*)$ https://clynia.es/$1 [R=302,L]
 #     limite del servidor compartido que su soporte confirmo que no se puede quitar. Las
 #     redirecciones si le llegan (probado 8 de 8), asi que lo mandamos al espejo de solo
 #     lectura del VPS (/docker/clynia-espejo), que devuelve a clynia.es a cualquier otro
-#     visitante. Solo coincide "GPTBot": ChatGPT-User y OAI-SearchBot siguen aqui.
-#     Para deshacerlo, borrar estas dos lineas.
-RewriteCond %{HTTP_USER_AGENT} GPTBot [NC]
+#     visitante. Solo coinciden GPTBot y meta-externalagent (26 oct: de 29 robots de IA
+#     probados, son los dos unicos que Hostinger frena por nombre); ChatGPT-User,
+#     OAI-SearchBot, meta-externalfetcher y facebookexternalhit siguen aqui.
+#     La lista del espejo (/docker/clynia-espejo/nginx.conf) tiene que ser la misma o
+#     el robot entra en bucle. Para deshacerlo, borrar estas dos lineas.
+RewriteCond %{HTTP_USER_AGENT} (GPTBot|meta-externalagent) [NC]
 RewriteRule ^(.*)$ https://ia.clynia.es/$1 [R=302,L]
 
 # 1) Redirige la versión con extensión /pagina.html -> /pagina (301, canónica para SEO)
