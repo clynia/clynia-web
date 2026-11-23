@@ -90,7 +90,7 @@ window.CLYNIA_FORM = {
     // Con Esencial a la vista, las dos suscripciones llevan encima el separador "Con tu médico cada
     // mes", que es como se presenta la suscripción al lado del pago único (decisión del 24 sep). Sin
     // Esencial no hay nada que separar y el paso queda exactamente como estaba.
-    { id: "sub_mensual", nombre: "Pagando mes a mes", precio: 89, unidad: "al mes", tag: "Más popular", featured: true, sep: ESENCIAL_VISIBLE ? "Con tu médico cada mes" : undefined, desc: "Se cobra cada mes. Sin permanencia.", icono: '<svg viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="16.5" rx="2.5"/><path d="M8 2.5v4M16 2.5v4M3 10h18"/></svg>', pago: "https://buy.stripe.com/fZu8wR77zdV89WwdGtfEk06" },
+    { id: "sub_mensual", nombre: "Pagando mes a mes", precio: 89, unidad: "al mes", tag: "La más completa", featured: true, sep: ESENCIAL_VISIBLE ? "Con tu médico cada mes" : undefined, desc: "Se cobra cada mes. Sin permanencia.", icono: '<svg viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="16.5" rx="2.5"/><path d="M8 2.5v4M16 2.5v4M3 10h18"/></svg>', pago: "https://buy.stripe.com/fZu8wR77zdV89WwdGtfEk06" },
     { id: "sub_anual", nombre: "Pagando el año entero", precio: 890, precioUI: "74,17", unidad: "al mes", antes: 89, desc: "890 € en un solo pago. Ahorras 178 € al año.", icono: '<svg viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="16.5" rx="2.5"/><path d="M8 2.5v4M16 2.5v4M3 10h18"/><path d="M8.8 15.4l2.1 2.1 4.3-4.3"/></svg>', pago: "https://buy.stripe.com/00w9AVdvXcR41q01XLfEk07" }
   ].concat(ESENCIAL_VISIBLE ? [
     // ESENCIAL: pago único de 49 EUR, tercera tarjeta y debajo de las dos suscripciones, en el MISMO
@@ -104,9 +104,10 @@ window.CLYNIA_FORM = {
     // Reintentar, nunca la pantalla de gracias.
     // Copia: se dice lo que incluye y cómo se paga, en positivo. Nada de "sin seguimiento" ni de
     // "receta" como objeto de la compra; el medicamento y lo que añade la suscripción van en el note.
+    // 23 nov 2026: Alfonso pide lo contrario; Esencial se presenta como consulta única y sin seguimiento, en todas partes.
     // Sin "Cada consulta se paga al hacerla" (25 sep): da por hecho que se puede volver a consultar,
     // y la fase 2 no existe todavía.
-    { id: "pago_unico", nombre: "Esencial", precio: 49, unidad: "por consulta", sep: "¿Prefieres un solo pago?", meta: "Un solo pago. Sin cuota mensual.", desc: "Solo lo que necesitas: tu médico revisa tu caso completo y te deja sus indicaciones por escrito.", icono: '<svg viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h4"/></svg>' }
+    { id: "pago_unico", nombre: "Esencial", precio: 49, unidad: "consulta única", sep: "¿Solo quieres una consulta?", meta: "Un solo pago. No se renueva.", desc: "Tu médico revisa tu caso una vez y te deja sus indicaciones por escrito. Sin seguimiento después.", icono: '<svg viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h4"/></svg>' }
   ] : []),
 
   steps: [
@@ -210,7 +211,7 @@ window.CLYNIA_FORM = {
     // (Volver a pedir) ya existe en el portal (28 sep, sin espera para Esencial desde el 29 sep),
     // pero la web no la promete hasta que Alfonso lo decida. Si se añade, sin plazos ni esperas.
     { id: "plans", section: false, type: "plans", key: "plan", q: "Ya puedes empezar. Elige cómo prefieres pagarlo", help: ESENCIAL_VISIBLE ? "Al terminar completas tu cuestionario clínico y tu médico revisa tu caso completo." : "El seguimiento médico es el mismo, solo cambia cada cuánto se te cobra. Al terminar completas tu cuestionario clínico y tu médico prepara tu tratamiento.", note: function (a) {
-      if (a.plan === "pago_unico") return "Esencial es un solo pago: no se renueva ni genera cargos después. Incluye la revisión de tu caso completo y las indicaciones de tu médico por escrito; los controles de cada mes y los mensajes con tu médico cuando los necesites van en \"Con tu médico cada mes\". El medicamento no está incluido en los 49 €. La receta electrónica, la pauta y la dosis las decide tu médico según tu caso; el medicamento lo compras en tu farmacia. Médicos colegiados en España. Pago seguro con Stripe.";
+      if (a.plan === "pago_unico") return "Esencial es una consulta única, en un solo pago: no se renueva ni genera cargos después. Incluye la revisión de tu caso completo y las indicaciones de tu médico por escrito; los controles de cada mes y los mensajes con tu médico cuando los necesites van en \"Con tu médico cada mes\". El medicamento no está incluido en los 49 €. La receta electrónica, la pauta y la dosis las decide tu médico según tu caso; el medicamento lo compras en tu farmacia. Médicos colegiados en España. Pago seguro con Stripe.";
       return "Se renueva automáticamente hasta que la canceles: te das de baja desde tu portal cuando quieras, sin permanencia ni penalización. El medicamento no está incluido en la cuota: lo compras en tu farmacia con tu receta electrónica. La pauta y la dosis las decide tu médico según tu caso. Médicos colegiados en España. Pago seguro con Stripe.";
     }, cta: "Continuar al pago" },
 
