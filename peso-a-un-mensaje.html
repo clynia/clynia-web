@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <!-- Meta Pixel Code (igual que el resto de landings: nada sale a Meta sin "Aceptar todo") -->
+  <script>
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];
+  f.clyniaLoadFb=function(){if(f.__clyniaFbLoaded)return;f.__clyniaFbLoaded=1;
+  t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)};
+  try{if(localStorage.getItem('clynia_cookie_consent')==='all'&&(Date.now()-parseInt(localStorage.getItem('clynia_cookie_consent_ts')||'0',10))<15552000000)f.clyniaLoadFb()}catch(x){}
+  }(window, document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('consent', 'revoke');
+  fbq('init', '4585495085018912');
+  try{ if(localStorage.getItem('clynia_cookie_consent')==='all' && (Date.now()-parseInt(localStorage.getItem('clynia_cookie_consent_ts')||'0',10))<15552000000){ fbq('consent','grant'); } }catch(e){}
+  fbq('track', 'PageView');
+  </script>
+  <!-- End Meta Pixel Code -->
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tu médico, a un mensaje de distancia · Clynia</title>
+  <meta name="description" content="Le cuentas tu caso a un médico colegiado desde casa, por escrito y sin cita. Si sigues, tienes un médico asignado, el mismo cada mes, por 89 € al mes sin permanencia, o un solo pago de 49 €." />
+  <!-- Landing de la campaña "A un mensaje" (23 nov 2026). Página NUEVA y aparte: no sustituye ni
+       toca ninguna landing anterior. Fuera del índice a propósito; la página madre indexable sigue
+       siendo /perdida-de-peso.
+       Reglas de esta página (compliance del 23 nov, criterio conservador):
+       - Oferta: valoración inicial sin cobro; si sigue, 89 € al mes sin permanencia (opción
+         principal) o Esencial, 49 € en un solo pago (añadido el 23 nov por decisión de Alfonso; la
+         tarjeta copia la de peso-esencial-m.html). El anual va como línea discreta en la tarjeta de 89 €, igual que en el correo del apto v5.
+         El anuncio no lleva precio (RD 1416/1994 art. 1.2).
+       - Sin fotos generadas con IA, sin pacientes, sin reseñas de pacientes, sin médicos con nombre
+         (RD 1907/1996 arts. 4.7 y 5.1). La única cara es Tania, del equipo, rotulada como tal.
+       - Sin nombres de medicamentos; el medicamento solo aparece para decir que no está incluido
+         y que lo decide el médico (RD 1416/1994; TRLGDCU art. 20). -->
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="theme-color" content="#f6f4ef" />
+  <link rel="icon" type="image/png" href="assets/img/favicon.png" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Hanken+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="assets/css/styles.css?v=20260917ig" />
+  <link rel="canonical" href="https://clynia.es/peso-a-un-mensaje" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Clynia" />
+  <meta property="og:locale" content="es_ES" />
+  <meta property="og:title" content="Tu médico, a un mensaje de distancia · Clynia" />
+  <meta property="og:description" content="Le cuentas tu caso a un médico colegiado desde casa, por escrito y sin cita. Si sigues, tienes un médico asignado, el mismo cada mes." />
+  <meta property="og:url" content="https://clynia.es/peso-a-un-mensaje" />
+  <meta property="og:image" content="https://clynia.es/assets/img/og-default.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <style>
+    /* Todo lo que es propio de esta página vive aquí, para no tocar styles.css (lo comparten las
+       demás landings). */
+    [hidden] { display: none !important; }
+
+    /* En móvil la foto se recorta más baja que en las otras landings: aquí el titular, el botón y
+       el precio tienen que verse sin bajar. La foto de Tania se encuadra con la cara arriba. */
+    @media (max-width: 879px) {
+      .hero__media { aspect-ratio: 5 / 4; }
+      .hero__media img { object-position: 50% 30%; }
+    }
+
+    /* Rótulo de Tania sobre la foto. Va fijo: el art. 4.7 del RD 1907/1996 nos obliga a que nadie
+       la confunda con una paciente. */
+    .rotulo {
+      position: absolute; z-index: 2; left: 14px; bottom: 14px;
+      display: inline-flex; flex-direction: column; gap: 1px;
+      padding: 9px 14px; border-radius: 14px;
+      background: rgba(255, 255, 255, .94); color: var(--ink);
+      box-shadow: 0 10px 24px -14px rgba(20, 30, 27, .55);
+      font-size: 14px; line-height: 1.25;
+    }
+    .rotulo strong { font-weight: 700; }
+    .rotulo span { color: var(--ink-soft); font-size: 12.5px; }
+
+    /* Oferta en la primera pantalla: precio completo y lo que no incluye, antes de pedir nada. */
+    .oferta {
+      margin: 22px 0 0; padding: 18px 20px; border-radius: 18px;
+      background: #fff; box-shadow: inset 0 0 0 1px var(--line);
+    }
+    .oferta__fila { display: flex; gap: 12px; align-items: flex-start; }
+    .oferta__fila + .oferta__fila { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line); }
+    .oferta__fila svg { flex: none; width: 20px; height: 20px; margin-top: 2px; color: var(--green); }
+    .oferta__fila p { margin: 0; font-size: 15px; line-height: 1.5; color: var(--ink); }
+    .oferta__nota {
+      margin: 12px 0 0; font-size: 13px; line-height: 1.5; color: var(--ink-soft);
+      text-align: justify; -webkit-hyphens: auto; hyphens: auto;
+    }
+
+    /* Ejemplo de conversación en el portal, hecho en HTML y no en imagen: sin nombre de médico,
+       sin síntomas, sin fármacos y rotulado como ejemplo (misma regla que la pieza B del anuncio). */
+    .chat {
+      max-width: 430px; margin: 0 auto; border-radius: 26px; overflow: hidden;
+      background: #fff; box-shadow: var(--shadow-card), inset 0 0 0 1px var(--line);
+    }
+    .chat__head {
+      display: flex; align-items: center; gap: 12px; padding: 16px 18px;
+      border-bottom: 1px solid var(--line);
+    }
+    .chat__av {
+      display: grid; place-items: center; width: 42px; height: 42px; border-radius: 50%;
+      background: var(--green-tint); color: var(--green);
+    }
+    .chat__av svg { width: 22px; height: 22px; }
+    .chat__who { display: flex; flex-direction: column; line-height: 1.25; }
+    .chat__who strong { font-family: "Fraunces", Georgia, serif; font-weight: 500; font-size: 18px; }
+    .chat__who span { font-size: 12.5px; color: var(--ink-soft); }
+    .chat__body { padding: 18px 16px 8px; background: var(--bg); display: flex; flex-direction: column; gap: 10px; }
+    .chat__msg {
+      max-width: 82%; padding: 11px 14px 8px; border-radius: 16px;
+      font-size: 14.5px; line-height: 1.45;
+    }
+    .chat__msg time { display: block; margin-top: 4px; font-size: 11px; opacity: .7; text-align: right; }
+    .chat__msg--yo { align-self: flex-end; background: var(--green); color: #fff; border-bottom-right-radius: 5px; }
+    .chat__msg--med { align-self: flex-start; background: #fff; color: var(--ink); box-shadow: inset 0 0 0 1px var(--line); border-bottom-left-radius: 5px; }
+    .chat__input {
+      display: flex; align-items: center; gap: 10px; padding: 12px 14px 14px; background: var(--bg);
+    }
+    .chat__input span {
+      flex: 1; padding: 11px 16px; border-radius: 999px; background: #fff;
+      box-shadow: inset 0 0 0 1px var(--line); font-size: 14px; color: var(--ink-soft);
+    }
+    .chat__input i {
+      display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%;
+      background: var(--green); color: #fff;
+    }
+    .chat__input svg { width: 18px; height: 18px; }
+    .chat__ejemplo { margin: 12px 0 0; text-align: center; font-size: 12.5px; color: var(--ink-soft); }
+
+    /* Dos opciones lado a lado (como en peso-esencial-m.html), el plan mensual primero. En móvil una encima de otra. */
+    .plans--duo { max-width: 880px; margin-inline: auto; }
+    @media (min-width: 880px) {
+      .plans--duo { grid-template-columns: 1fr 1fr; }
+      .plans--duo .plan--featured { transform: none; }
+    }
+    /* Esencial, en segundo plano: consulta única sin seguimiento. */
+    .plan__lema { margin: 4px 0 0; font-family: "Fraunces", Georgia, serif; font-style: italic; font-weight: 500; font-size: 17px; color: var(--green); }
+    .plan--suelta { background: transparent; box-shadow: none; }
+    .plan--suelta .plan__lema { color: var(--ink-soft); }
+    .plan--suelta .plan__amount { font-size: 38px; color: var(--ink-soft); }
+    .plan__price { display: flex; align-items: baseline; justify-content: flex-start; gap: 8px; margin: 14px 0 4px; }
+    .plan__amount { font-family: "Fraunces", Georgia, serif; font-weight: 500; font-size: 46px; line-height: 1; color: var(--ink); }
+    .plan__unit { font-size: 15px; color: var(--ink-soft); }
+    .plans__note, .plan__list li, .plan__for, .pillar span, .faq__body p, .closing__sub, .hero__sub {
+      text-align: justify; -webkit-hyphens: auto; hyphens: auto;
+    }
+    .plan__list li { position: relative; padding-left: 27px; }
+    .plan__list li::before {
+      content: ""; position: absolute; left: 0; top: .3em; width: 17px; height: 17px;
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23437066' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E") no-repeat center / 17px 17px;
+    }
+
+    /* Dato de tiempo de respuesta, con su fecha de cálculo. */
+    .dato {
+      display: flex; gap: 14px; align-items: center; max-width: 560px; margin: 26px auto 0;
+      padding: 16px 20px; border-radius: 18px; background: var(--green-tint);
+    }
+    .dato__num { font-family: "Fraunces", Georgia, serif; font-size: 34px; line-height: 1; color: var(--green-900); white-space: nowrap; }
+    .dato p { margin: 0; font-size: 14px; line-height: 1.45; color: var(--ink); text-align: justify; -webkit-hyphens: auto; hyphens: auto; }
+    .dato small { display: block; margin-top: 3px; color: var(--ink-soft); font-size: 12px; }
+  </style>
+  <script src="assets/js/ga.js?v=20260702b"></script>
+</head>
+<body>
+
+  <!-- ===================== NAV ===================== -->
+  <header class="topnav" id="topnav">
+    <div class="topnav__inner">
+      <a class="topnav__brand" href="/" aria-label="Clynia, inicio">
+        <img src="/assets/logos/clynia-wordmark.png" alt="Clynia" />
+      </a>
+      <nav class="topnav__links" aria-label="Navegación">
+        <a href="/blog">Blog</a>
+        <a href="/mision">Misión</a>
+        <a href="/contacto">Contacto</a>
+      </nav>
+      <div class="topnav__actions">
+        <a class="topnav__login" href="https://portal.clynia.es" aria-label="Acceso a tu portal de Clynia">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" x2="3" y1="12" y2="12"/></svg>
+          <span class="topnav__login-full">Acceso a tu portal</span>
+          <span class="topnav__login-short">Portal</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- ===================== HERO ===================== -->
+    <section class="hero">
+      <div class="wrap">
+        <div class="hero__inner">
+
+          <!-- Foto de Tania elegida por Alfonso el 25 nov 2026: generada con IA a partir de un retrato real
+               suyo (su cara, pose de referencia 4), con su consentimiento de imagen. Sustituir por la foto
+               oficial cuando la haga. -->
+          <figure class="hero__media reveal d1">
+            <img src="assets/img/tania-equipo.webp" alt="Tania B., fundadora de Clynia" width="1080" height="1350" fetchpriority="high" />
+            <figcaption class="rotulo"><strong>Tania B.</strong><span>Fundadora de Clynia</span></figcaption>
+          </figure>
+
+          <div class="hero__copy">
+            <h1 class="hero__title reveal d3">
+              Tu médico, <em>a un mensaje de distancia.</em>
+            </h1>
+            <p class="hero__sub reveal d4">
+              Le cuentas tu caso a un médico colegiado desde casa, por escrito y sin cita. Normalmente
+              te responde en menos de 24 horas. Si sigues, tienes un médico asignado, el mismo cada mes,
+              y le escribes cuando lo necesites.
+            </p>
+
+            <div class="reveal d5">
+              <a class="btn btn--primary" href="peso" data-cta="peso">
+                Cuéntale tu caso
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
+              </a>
+
+              <div class="oferta">
+                <div class="oferta__fila">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+                  <p><strong>La valoración inicial no se cobra.</strong> Si el médico ve que no es para ti, te lo explica y no pagas nada.</p>
+                </div>
+                <div class="oferta__fila">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+                  <p><strong>Si sigues, 89 € al mes, sin permanencia:</strong> tu médico asignado, un control cada mes y mensajes con él todo el tiempo que sigas. Si solo quieres una consulta, sin seguimiento, son 49 € en un solo pago.</p>
+                </div>
+                <p class="oferta__nota">El precio cubre la atención de tu médico; lo que él te indique va aparte.</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== CÓMO FUNCIONA (los mismos pasos que la pieza B del anuncio) ===================== -->
+    <section class="section section--tint" id="como-funciona">
+      <div class="wrap">
+        <header class="section__head reveal-up">
+          <h2 class="h2">Así de sencillo.</h2>
+          <p class="lead">Tres pasos, por escrito y desde el móvil.</p>
+        </header>
+
+        <ol class="steps steps--flow reveal-up">
+          <li class="step reveal-up">
+            <span class="step__num">1</span>
+            <h3 class="step__title">Cuentas tu caso desde casa</h3>
+            <p class="step__text">Un cuestionario en unos minutos, sin cita y a la hora que te venga bien. Si algo de lo que respondes desaconseja seguir, te lo dice en el acto.</p>
+          </li>
+          <li class="step reveal-up">
+            <span class="step__num">2</span>
+            <h3 class="step__title">Un médico colegiado lo revisa</h3>
+            <p class="step__text">Te responde por escrito, normalmente en menos de 24 horas. La respuesta la revisa y firma el médico; si necesita aclarar algo, te lo pregunta.</p>
+          </li>
+          <li class="step reveal-up">
+            <span class="step__num">3</span>
+            <h3 class="step__title">Si sigues, un médico asignado</h3>
+            <p class="step__text">El mismo cada mes, que ya conoce tu caso. Le escribes desde tu portal y, si un día lo quieres dejar, te das de baja desde ahí mismo.</p>
+          </li>
+        </ol>
+
+        <!-- Dato calculado el 23 nov 2026 en Airtable (Casos, Tipo=Consulta, Producto=Pérdida de
+             peso, creados en los 90 días anteriores): de createdTime a "Veredicto en", tiempo de
+             reloj con fines de semana. 75 respondidas; 88,0 % en menos de 24 h (87,1 % quitando 5
+             posibles pruebas de menos de 15 min); mediana 10,4 h (11,4 h sin esas 5). Se usa la
+             versión conservadora. Recalcular antes de cada campaña nueva y, si baja del 80 %,
+             cambiar el "normalmente en menos de 24 horas" aquí y en el anuncio. -->
+        <div class="dato reveal-up">
+          <span class="dato__num">87 %</span>
+          <p>de las consultas de peso, respondidas por el médico en menos de 24 horas, contando fines de semana. La mitad, en menos de 12 horas.<small>75 consultas de los últimos 90 días, según los registros de la plataforma a 23 de noviembre de 2026.</small></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== A UN MENSAJE ===================== -->
+    <section class="section" id="mensaje">
+      <div class="wrap">
+        <div class="program">
+          <div class="program__copy">
+            <header class="section__head section__head--left reveal-up">
+              <h2 class="h2">Lo que tienes cada mes, si sigues.</h2>
+              <p class="lead">89 € al mes, sin permanencia.</p>
+            </header>
+            <ul class="pillars pillars--rich">
+              <li class="pillar reveal-up">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+                <span><strong>Un médico asignado, el mismo cada mes.</strong> Conoce tu caso y no tienes que contarlo de nuevo cada vez.</span>
+              </li>
+              <li class="pillar reveal-up">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                <span><strong>Le escribes cuando lo necesites.</strong> Una duda, un cambio de planes, algo que no esperabas: se lo escribes por la mensajería privada de tu portal y te responde por escrito.</span>
+              </li>
+              <li class="pillar reveal-up">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="m9 15 2 2 4-4"/></svg>
+                <span><strong>Un control al mes.</strong> Lo rellenas en tu portal y tu médico lo revisa y te contesta.</span>
+              </li>
+              <li class="pillar reveal-up">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                <span><strong>Todo por escrito, en un solo sitio.</strong> Lo que has contado y lo que tu médico te ha indicado, ordenado en tu portal.</span>
+              </li>
+            </ul>
+          </div>
+          <figure class="program__media reveal-up">
+            <div class="chat" role="img" aria-label="Ejemplo de conversación en el portal de Clynia: una paciente escribe a su médico y él le responde">
+              <div class="chat__head">
+                <span class="chat__av"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></span>
+                <span class="chat__who"><strong>Tu médico</strong><span>Mensajería privada de tu portal</span></span>
+              </div>
+              <div class="chat__body">
+                <p class="chat__msg chat__msg--yo">Hola. Esta semana estoy de viaje por trabajo. ¿Puedo hacer el control del mes a la vuelta?<time>9:12</time></p>
+                <p class="chat__msg chat__msg--med">Hola. Sí, sin problema: hazlo cuando vuelvas y lo reviso en cuanto lo reciba. Si mientras tanto te surge cualquier duda, escríbeme por aquí.<time>10:05</time></p>
+              </div>
+              <div class="chat__input">
+                <span>Escribe a tu médico</span>
+                <i aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg></i>
+              </div>
+            </div>
+            <figcaption class="chat__ejemplo">Ejemplo con una cuenta de prueba.</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== PRECIO (plan mensual y Esencial; tarjeta de Esencial copiada de peso-esencial-m.html) ===================== -->
+    <section class="section section--tint" id="planes">
+      <div class="wrap">
+        <header class="section__head reveal-up">
+          <h2 class="h2">Cuánto cuesta.</h2>
+          <p class="lead">Empiezas contando tu caso. No pagas nada hasta que un médico lo revise y tú decidas seguir.</p>
+        </header>
+
+        <div class="plans plans--duo">
+          <article class="plan plan--featured reveal-up">
+            <span class="plan__tag">La más completa</span>
+            <h3 class="plan__name">Con tu médico cada mes</h3>
+            <p class="plan__lema">Tu médico contigo, todo el tiempo que sigas</p>
+            <p class="plan__price">
+              <span class="plan__amount">89 €</span>
+              <span class="plan__unit">al mes</span>
+            </p>
+            <p class="plan__meta">Sin permanencia: te das de baja cuando quieras. ¿Prefieres pagar el año? 890 € al año, 2 meses gratis.</p>
+            <ul class="plan__list">
+              <li>Un médico asignado, el mismo cada mes</li>
+              <li>Mensajes con tu médico por tu portal, todo el tiempo que sigas</li>
+              <li>Un control al mes: revisa cómo vas y te contesta</li>
+              <li>Ajusta lo que te ha indicado cuando tu caso lo pida</li>
+              <li>Todo por escrito, ordenado en tu portal</li>
+            </ul>
+            <p class="plan__for">La valoración inicial no se cobra.</p>
+            <a class="btn btn--primary" href="peso">Cuéntale tu caso</a>
+          </article>
+
+          <article class="plan plan--suelta reveal-up">
+            <h3 class="plan__name">Esencial</h3>
+            <p class="plan__lema">Una consulta, una sola vez</p>
+            <p class="plan__price">
+              <span class="plan__amount">49 €</span>
+              <span class="plan__unit">consulta única</span>
+            </p>
+            <p class="plan__meta">Un solo pago. No se renueva.</p>
+            <ul class="plan__list">
+              <li>Tu médico revisa tu caso una vez</li>
+              <li>Sus indicaciones, por escrito</li>
+              <li>Mensajes con tu médico mientras revisa tu caso</li>
+              <li>Tu caso, guardado en tu portal</li>
+            </ul>
+            <p class="plan__for">Sin seguimiento: después de su respuesta no hay controles ni mensajes con tu médico.</p>
+            <a class="btn btn--ghost" href="peso">Cuéntale tu caso</a>
+          </article>
+        </div>
+
+        <p class="plans__note reveal-up">
+          El medicamento no está incluido en ninguna de las dos opciones: si tu médico lo considera adecuado
+          tras valorar tu caso, lo indica él y lo compras en la farmacia que prefieras. Clynia no vende ni
+          dispensa medicamentos. Esencial es un solo pago y no se renueva. El plan mensual se renueva cada
+          mes hasta que lo canceles; te das de baja desde tu portal
+          y conservas a tu médico hasta el final del mes pagado. Si ya dentro del plan tu médico decide
+          no iniciar tratamiento, te devolvemos el importe. Pago con Visa, Mastercard, American Express,
+          Apple Pay y Google Pay.
+        </p>
+      </div>
+    </section>
+
+    <!-- ===================== FAQ ===================== -->
+    <section class="section" id="faq">
+      <div class="wrap">
+        <header class="section__head reveal-up">
+          <h2 class="h2">Preguntas frecuentes.</h2>
+        </header>
+        <div class="faq">
+          <details name="faq" class="faq__item reveal-up">
+            <summary>¿Tengo que pedir cita o hacer una videollamada?</summary>
+            <div class="faq__body"><p>No. Todo es por escrito y desde el móvil: cuentas tu caso, un médico lo revisa y te responde por escrito, normalmente en menos de 24 horas. No hay salas de espera ni desplazamientos.</p></div>
+          </details>
+          <details name="faq" class="faq__item reveal-up">
+            <summary>¿Cuánto cuesta?</summary>
+            <div class="faq__body"><p>La valoración inicial no se cobra. Si el médico ve que puede llevarte y decides seguir, son 89 € al mes, sin permanencia, con tu médico asignado y su seguimiento (o 890 € si pagas el año, 2 meses gratis). Si solo quieres una consulta, Esencial son 49 € en un solo pago, sin seguimiento después. El medicamento, si tu médico lo indica, va aparte y se compra en la farmacia.</p></div>
+          </details>
+          <details name="faq" class="faq__item reveal-up">
+            <summary>¿Quién me atiende?</summary>
+            <div class="faq__body"><p>Médicos colegiados independientes con los que Clynia te pone en contacto; la decisión clínica es siempre suya. Si sigues, tienes un médico asignado, el mismo cada mes.</p></div>
+          </details>
+          <details name="faq" class="faq__item reveal-up">
+            <summary>¿Y si no es para mí?</summary>
+            <div class="faq__body"><p>El médico te lo explica por escrito y no pagas nada. Lo decide siempre un médico con tu caso delante; y si algo de lo que respondes en el cuestionario desaconseja seguir, te lo dice en el acto.</p></div>
+          </details>
+          <details name="faq" class="faq__item reveal-up">
+            <summary>¿Y si lo quiero dejar?</summary>
+            <div class="faq__body"><p>Te das de baja desde tu portal cuando quieras y sin dar explicaciones. Conservas a tu médico hasta el final del mes pagado, así que nada se corta de un día para otro.</p></div>
+          </details>
+          <details name="faq" class="faq__item reveal-up">
+            <summary>¿Qué pasa con mis datos?</summary>
+            <div class="faq__body"><p>Van cifrados y se tratan conforme al RGPD. Tus datos de salud solo se usan para atenderte y nunca con fines publicitarios. Tienes el detalle en la <a href="/privacidad">política de privacidad</a>.</p></div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== CTA FINAL ===================== -->
+    <section class="closing" id="empezar">
+      <div class="wrap">
+        <div class="closing__inner reveal-up">
+          <h2 class="closing__title">Cuéntale tu caso a un médico, sin salir de casa.</h2>
+          <p class="closing__sub">Unos minutos desde el móvil, sin cita. Un médico colegiado lo revisa y te responde por escrito. La valoración inicial no se cobra.</p>
+          <a class="btn btn--light" id="ctaFinal" href="peso">
+            Cuéntale tu caso
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer class="site-footer">
+    <div class="wrap">
+      <div class="site-footer__top">
+        <a class="site-footer__home" href="/" aria-label="Clynia, inicio">
+          <img src="/assets/logos/clynia-wordmark.png" alt="Clynia" />
+        </a>
+        <a class="site-footer__social" href="https://www.instagram.com/clynia.es/" target="_blank" rel="noopener" aria-label="Clynia en Instagram, @clynia.es">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="2.5" width="19" height="19" rx="5.5"/><circle cx="12" cy="12" r="4.3"/><circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none"/></svg>
+          <span>@clynia.es</span>
+        </a>
+      </div>
+      <div class="site-footer__cols">
+        <div>
+          <h4>Clynia</h4>
+          <ul>
+            <li><a href="/mision">Misión</a></li>
+            <li><a href="/blog">Blog</a></li>
+            <li><a href="/informacion">Información</a></li>
+            <li><a href="/contacto">Contacto</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Legal</h4>
+          <ul>
+            <li><a href="/avisolegal">Aviso legal</a></li>
+            <li><a href="/privacidad">Privacidad (RGPD)</a></li>
+            <li><a href="/cookies">Cookies</a></li>
+            <li><a href="/terminos">Términos</a></li>
+          </ul>
+        </div>
+      </div>
+      <p class="site-footer__legal">
+        Pérdida de peso. Solo mayores de 18 años. Clynia es una plataforma que conecta pacientes con
+        médicos colegiados independientes en España. No es un centro sanitario ni una clínica. Cada
+        decisión clínica corresponde al médico colegiado responsable, que actúa con su propio criterio e
+        independencia. La información de esta web tiene carácter general y no sustituye una consulta
+        médica. Los tratamientos sólo se facilitan cuando un médico colegiado los considera adecuados
+        tras valorar cada caso de forma individual. Tania es fundadora de Clynia; no es
+        paciente ni profesional sanitario. Tratamos tus datos conforme al RGPD y a la normativa
+        española de protección de datos.
+      </p>
+      <div class="site-footer__pay">
+        <span class="site-footer__pay-label">Pago seguro</span>
+        <span class="pay-badges">
+          <img src="/assets/img/pay/visa.svg" alt="Visa" width="44" height="27" loading="lazy">
+          <img src="/assets/img/pay/mastercard.svg" alt="Mastercard" width="44" height="27" loading="lazy">
+          <img src="/assets/img/pay/amex.svg" alt="American Express" width="44" height="27" loading="lazy">
+          <img src="/assets/img/pay/apple-pay.svg" alt="Apple Pay" width="44" height="27" loading="lazy">
+          <img src="/assets/img/pay/google-pay.svg" alt="Google Pay" width="44" height="27" loading="lazy">
+        </span>
+      </div>
+      <p class="site-footer__copy">© Clynia. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+  <!-- ===================== STICKY CTA (móvil) ===================== -->
+  <div class="sticky-cta" id="stickyCta" aria-hidden="true">
+    <div class="sticky-cta__inner">
+      <span class="sticky-cta__hint">La valoración inicial no se cobra.</span>
+      <a class="btn btn--primary" href="peso">
+        Cuéntale tu caso
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
+      </a>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var reveals = document.querySelectorAll('.reveal-up');
+      if (reduce || !('IntersectionObserver' in window)) {
+        reveals.forEach(function (el) { el.classList.add('is-in'); });
+      } else {
+        var ro = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            if (e.isIntersecting) { e.target.classList.add('is-in'); ro.unobserve(e.target); }
+          });
+        }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+        reveals.forEach(function (el) { ro.observe(el); });
+      }
+
+      // CTA fijo en móvil: aparece al pasar el botón del hero y se esconde en el cierre.
+      var heroCta = document.querySelector('.hero [data-cta="peso"]');
+      var sticky = document.getElementById('stickyCta');
+      var finalCta = document.getElementById('ctaFinal');
+      var pastHero = false, atFinal = false;
+      function syncSticky() {
+        var show = pastHero && !atFinal;
+        sticky.classList.toggle('is-visible', show);
+        sticky.setAttribute('aria-hidden', show ? 'false' : 'true');
+      }
+      if (heroCta && sticky && 'IntersectionObserver' in window) {
+        new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            pastHero = !e.isIntersecting && e.boundingClientRect.top < 0;
+            syncSticky();
+          });
+        }, { threshold: 0 }).observe(heroCta);
+        if (finalCta) {
+          new IntersectionObserver(function (entries) {
+            entries.forEach(function (e) { atFinal = e.isIntersecting; syncSticky(); });
+          }, { threshold: 0 }).observe(finalCta);
+        }
+      }
+    })();
+  </script>
+  <!-- Sin oferta-bienvenida.js (caducada) ni asistente.js (el asistente de voz habla de Esencial
+       y no está revisado para esta campaña). -->
+  <script src="assets/js/utm.js?v=20260815" defer></script>
+  <script src="assets/js/cursor-glow.js" defer></script>
+  <script src="assets/js/cookies.js?v=20261005b" defer></script>
+</body>
+</html>
