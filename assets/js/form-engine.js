@@ -111,6 +111,10 @@
   // --- Meta Pixel: evento de INICIO del cuestionario (se dispara una sola vez, al primer
   // avance). Sirve para etiquetar a quien empieza y no termina (retargeting) y medir el embudo. ---
   var started = false;
+  // A Meta no le decimos de que va el formulario (peso, salud sexual...): seria un dato de salud
+  // (RGPD art. 9 y politica de Meta sobre informacion prohibida). Valor neutro en todos los eventos.
+  // Compliance, 25 nov 2026.
+  var PX_NEUTRO = "consulta";
   function px(ev, params) { try { if (window.fbq) fbq("trackCustom", ev, params || {}); } catch (e) {} }
   // Decision de cookies que viaja a n8n (5 oct 2026). Misma fuente y caducidad que el pixel y cookies.js:
   // localStorage clynia_cookie_consent ("all" = Aceptar todo) con su _ts de menos de 180 dias. Devuelve
@@ -149,7 +153,7 @@
     // Privacidad: a Meta enviamos SOLO la posición en el embudo (step_index), nunca el id del paso
     // (que revelaría el tema de salud, p. ej. "embarazo"/"contraindicaciones"). El id se conserva
     // solo en analítica de primera parte (GA), útil para el embudo y sobre propiedad propia.
-    px("QStep", { step_index: sidx, content_name: F.product, content_category: F.category || F.product });
+    px("QStep", { step_index: sidx, content_name: PX_NEUTRO, content_category: PX_NEUTRO });
     ga("question_step", { step: sid, step_index: sidx, product: F.product });
   }
 
@@ -214,7 +218,7 @@
       if (!sent) { try { fetch(F.leadWebhook, { method: "POST", headers: { "Content-Type": "text/plain" }, body: body, keepalive: true, mode: "no-cors" }); } catch (e) {} }
       partialSent = true; answers._partialSent = true; save();
       // Señal a Meta (solo si hay consentimiento de cookies): captación de contacto, distinta del Lead final.
-      px("LeadPartial", { content_name: F.product, content_category: F.category || F.product });
+      px("LeadPartial", { content_name: PX_NEUTRO, content_category: PX_NEUTRO });
     } catch (e) {}
   }
 
@@ -273,7 +277,7 @@
   function go(step, push) {
     if (!step) return;
     if (push && current) history.push(current.id);
-    if (push && !started) { started = true; px("StartQuestionnaire", { content_name: F.product, content_category: F.category || F.product }); ga("start_questionnaire", { product: F.product, category: F.category || F.product }); }
+    if (push && !started) { started = true; px("StartQuestionnaire", { content_name: PX_NEUTRO, content_category: PX_NEUTRO }); ga("start_questionnaire", { product: F.product, category: F.category || F.product }); }
     if (push) pxStep(step);
     current = step;
     vars = F.computeVars ? F.computeVars(answers) : {};
@@ -894,7 +898,7 @@
     function mTrack(ev, params, eid) { try { if (window.fbq) fbq("track", ev, params || {}, eid ? { eventID: eid } : undefined); } catch (e) {} }
     function fireLead(casoId) {
       if (leadFired) return; leadFired = true;
-      mTrack("Lead", { content_name: F.product, content_category: F.category || F.product, value: plan ? plan.precio : undefined, currency: "EUR" }, "lead_" + (casoId || ("anon_" + new Date().getTime())));
+      mTrack("Lead", { content_name: PX_NEUTRO, content_category: PX_NEUTRO, value: plan ? plan.precio : undefined, currency: "EUR" }, "lead_" + (casoId || ("anon_" + new Date().getTime())));
       ga("generate_lead", { currency: "EUR", value: plan ? plan.precio : 0, product: F.product });
     }
     function fireCheckout(casoId) {
@@ -1067,7 +1071,7 @@
           if (done) return;
           if (d && d.ok) {
             done = true;
-            px("P2Complete", { content_name: F.product, content_category: F.category || F.product });
+            px("P2Complete", { content_name: PX_NEUTRO, content_category: PX_NEUTRO });
             ga("p2_complete", { product: F.product });
             clearStore();
             go(byId("ending_p2_ok"), false);
